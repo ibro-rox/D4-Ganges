@@ -1,8 +1,3 @@
-/*  Author: Steve Gunn
- * Licence: This work is licensed under the Creative Commons Attribution License. 
- *           View this license at http://creativecommons.org/about/licenses/
- *   Notes: F_CPU must be defined to match the clock frequency
- */
 #include <avr/io.h>
 #include <util/delay.h>
 #define PWM_DUTY_MAX 240
@@ -13,14 +8,18 @@ int main(void)
 {
 	/* set LED pin as an output */
 	DDRB |= _BV(PINB7);
-	int x0 = 5;
-	int x1 = 50;
-	int x2 = 125;
-	int x3 = 240;
+	int x0 = 0;
+	int x1 = 0;
+	int x2 = 0;
+	int x3 = 0;
 	init_pwm();
 	/* forever loop (embedded programs never normally terminate) */
 	for (;;) 
 	{
+		x0=(x0<PWM_DUTY_MAX) ? x0+1:0;
+		x1=(x1<PWM_DUTY_MAX) ? x1+2:0;
+		x2=(x2<PWM_DUTY_MAX) ? x2+3:0;
+		x3=(x3<PWM_DUTY_MAX) ? x3+4:0;
 		pwm_duty(x0,x1,x2,x3); 
 		_delay_ms(10);
 	}
@@ -31,8 +30,6 @@ void init_pwm(void)
     /* TIMER 2 */
     DDRD |= _BV(PD6); /* PWM out */
     DDRD |= _BV(PD7); /* inv. PWM out */
-    
-
     TCCR2A = 	_BV(WGM20) | /* fast PWM/MAX */
 	     		_BV(WGM21) | /* fast PWM/MAX */
 	     		_BV(COM2A1)| /* A output */	
@@ -43,8 +40,6 @@ void init_pwm(void)
     /* TIMER 0 */
     DDRB |= _BV(PB4); /* PWM out */
     DDRB |= _BV(PB3); /* inv. PWM out */
-    
-
     TCCR0A = 	_BV(WGM00) | /* fast PWM/MAX */
 	     		_BV(WGM01) | /* fast PWM/MAX */
 	     		_BV(COM0A1)| /* A output */	
@@ -52,17 +47,9 @@ void init_pwm(void)
     TCCR0B = 	_BV(CS02)  ; /* /258 prescaling */ 
 }
 
-
-/* Adjust PWM duty cycle
-   Keep in mind this is not monotonic
-   a 100% duty cycle has no switching
-   and consequently will not boost.  
-*/
 void pwm_duty(uint8_t x0,uint8_t x1,uint8_t x2,uint8_t x3) 
 {
     //x = (x > PWM_DUTY_MAX) ? PWM_DUTY_MAX : x;
-    
-    //printf(" PWM=%3u  ==>  ", x);  
 
     OCR2A = x0;
     OCR2B = x1;
