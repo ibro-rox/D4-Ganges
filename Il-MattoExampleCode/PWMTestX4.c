@@ -13,29 +13,15 @@ int main(void)
 {
 	/* set LED pin as an output */
 	DDRB |= _BV(PINB7);
-	int x0 = 0;
-	int x1 = 0;
+	int x0 = 5;
+	int x1 = 50;
+	int x2 = 125;
+	int x3 = 240;
 	init_pwm();
 	/* forever loop (embedded programs never normally terminate) */
 	for (;;) 
 	{
-		pwm_duty(x0,x1,x0,x1); 
-		if(x0<PWM_DUTY_MAX)
-		{
-			x0++;
-		}
-		else
-		{
-			x0=0;
-		}
-		if(x1<PWM_DUTY_MAX)
-		{
-			x1= x1+2;
-		}
-		else
-		{
-			x1=0;
-		}
+		pwm_duty(x0,x1,x2,x3); 
 		_delay_ms(10);
 	}
 }
