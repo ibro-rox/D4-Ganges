@@ -1,0 +1,22 @@
+Abstract
+
+There is considerable research being done into the feasibility of short range Unmanned Aerial Vehicles (UAVs), for delivery of goods from online retailers such as Itchen. 
+In order to transport the cargo effectively the UAV must have a high maximum cargo weight to UAV weight ratio, enough battery life to transport the cargo then return to the base-station and produce a stable flight. 
+
+
+The Pilot operates two sets of X-Y joystick potentiometers, values of which are translated into desired Thrust, Pitch, Yaw and Roll values.
+Ground control communicates with the UAV via two separate sets of RFM12B-S2 transceivers.
+There are seperate onboard communcations and control microprocessors allowing the control system to operate as quickly as possible.
+The UAV consists of 4 brushless DC motors controlled by a bank of ESCs. 
+The ESCs take input from a microcontroller, which takes measurements from a gyroscope-accelerometer module, to form the PID controller for the UAV.
+This controller system devolves much of the responsibility for stability from the pilot.
+Cargo is collected by a hooking mechanism actuated by a micro-servo such that the torque on the loaded servo is zero.
+The UAV has an IR proximity sensor
+
+    
+
+
+
+
+
+
