@@ -1,0 +1,5 @@
+drone_comms.c: In function 'main':
+drone_comms.c:25: warning: assignment makes integer from pointer without a cast
+drone_comms.c: In function 'Decode_data':
+drone_comms.c:37: warning: assignment makes integer from pointer without a cast
+drone_comms.c:44: warning: no return statement in function returning non-void
