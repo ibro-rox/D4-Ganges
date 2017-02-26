@@ -339,7 +339,7 @@ ISR(RFM12_INT_VECT, ISR_NOBLOCK)
 * \warning Warning, if you do not call this function periodically, then no packet will get transmitted.
 * \see rfm12_tx() and rfm12_start_tx()
 */
-void rfm12_tick(void)
+void rfm12_tick(void)// <-------------------------------
 {	
 	//collision detection is enabled by default
 	#if !(RFM12_NOCOLLISIONDETECTION)
@@ -539,13 +539,13 @@ rfm12_tx(uint8_t len, uint8_t type, uint8_t *data)
 //if receive mode is not disabled (default)
 #if !(RFM12_TRANSMIT_ONLY)
 	//! Function to clear buffer complete/occupied status.
-	/** This function will set the current receive buffer status to free and switch
+	/** This function will set the current receive buffer status to free and switch       <-------------------------------
 	* to the other buffer, which can then be read using rfm12_rx_buffer().
 	*
 	* \see rfm12_rx_status(), rfm12_rx_len(), rfm12_rx_type(), rfm12_rx_buffer() and rf_rx_buffers
 	*/
 	//warning: without the attribute, gcc will inline this even if -Os is set
-	void __attribute__((noinline)) rfm12_rx_clear(void)
+	void __attribute__((noinline)) rfm12_rx_clear(void) //<-------------------------------
 	{
 			//mark the current buffer as empty
 			ctrl.rf_buffer_out->status = STATUS_FREE;

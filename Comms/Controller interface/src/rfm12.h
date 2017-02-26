@@ -48,7 +48,7 @@
 //! Indicates that the buffer is free
 #define STATUS_FREE 0
 //! Indicates that the buffer is in use by the library
-#define STATUS_OCCUPIED 1
+#define STATUS_OCCUPIED 1 // <-------------------------------
 //! Indicates that a receive buffer holds a complete transmission
 #define STATUS_COMPLETE 2
 //@}
@@ -240,7 +240,7 @@ extern rfm12_control_t ctrl;
 	/** \returns STATUS_FREE or STATUS_COMPLETE
 	* \see \ref rxtx_states "rx buffer states", rfm12_rx_len(), rfm12_rx_type(), rfm12_rx_buffer(), rfm12_rx_clear() and rf_rx_buffer_t
 	*/
-	static inline uint8_t rfm12_rx_status(void)
+	static inline uint8_t rfm12_rx_status(void)  // <-------------------------------
 	{
 		return ctrl.rf_buffer_out->status;
 	}
@@ -258,7 +258,7 @@ extern rfm12_control_t ctrl;
 	/** \returns The packet type from the packet header type field
 	* \see rfm12_rx_status(), rfm12_rx_len(), rfm12_rx_buffer(), rfm12_rx_clear() and rf_rx_buffer_t
 	*/
-	static inline uint8_t rfm12_rx_type(void)
+	static inline uint8_t rfm12_rx_type(void)// <-------------------------------
 	{
 		return ctrl.rf_buffer_out->type;
 	}
@@ -267,7 +267,7 @@ extern rfm12_control_t ctrl;
 	/** \returns A pointer to the current receive buffer contents
 	* \see rfm12_rx_status(), rfm12_rx_len(), rfm12_rx_type(), rfm12_rx_clear() and rf_rx_buffer_t
 	*/
-	static inline uint8_t *rfm12_rx_buffer(void)
+	static inline uint8_t *rfm12_rx_buffer(void)// <-------------------------------
 	{
 		return (uint8_t*) ctrl.rf_buffer_out->buffer;
 	}

@@ -7,8 +7,15 @@
 #include <avr/io.h>
 #include <stdio.h>
 #include <util/delay.h>
-#include "rfm12.h"
+#include "rfm12.h" // for uplink trasceiver 
+// #include "rfm12.h" // for downlink transceiver 
 uint16_t thrust,yaw,pitch,roll;
+//**** 
+#define THRUST_TYPE 00 // 0x00 isnt a the actual vallue
+#define PITCH_TYPE 01
+#define YAW_TYPE 10
+#define ROLL_TYPE 11
+//****
 // initialzie adc
 void adc_init()//[1]
 {
@@ -64,24 +71,63 @@ void send_string(char *str)
 int main()
 {
 	adc_init();
-	rfm12_init();// initialize rfm12 transceiver
+	uplink_rfm12_init();// initialize rfm12 transceiver
+	downlink_rfm12_init();
 	sei();// enable the ISR in the rfm12.h
-	uint16_t throttle;
-	char ch[20];
 	while(1)// main forver loop
 	{
 		thrust = adc_read(0);// 10 bit value
 		// split the 10 bit to 2 bits()
-		// transmit it - rfrm12_tx() and afrm_tick()
+		// transmit it - rfm12_tx() and rfm_tick()
+		// rfm12_tx() - fills the tx buffer with this packet
+		// rfm_tick() waits if the Tx buffer is empty
 		yaw = adc_read(1);
 		// split the 10 bit to 2 bits()
-		// transmit it - - rfrm12_tx() and afrm_tick()
+		// transmit it - - rfm12_tx() and rfm_tick()
 		pitch = adc_read(2);
 		// split the 10 bit to 2 bits()
-		// transmit it - rfrm12_tx() and afrm_tick()
+		// transmit it - rfm12_tx() and rfm_tick()
 		roll = adc_read(3);
 		// split the 10 bit to 2 bits()
-		// transmit it - rfrm12_tx() and afrm_tick()
+		// transmit it - rfrm12_tx() and rfm_tick()
 		//_delay_ms(100); ptoential delay to worry about ater 
+		// this base station code needs to do reception as well in this while loop 
+		// functions for down link transceiver
+
+		if (rfm12_rx_status() == STATUS_COMPLETE)// if receiveing data is done, then read the buffer
+		{
+			uint8_t channel_type = rfm12_rx_type(); // read the 8- bit type
+			uint8_t channel_data = rfm12_rx_buffer();// read the 8 - bit data
+			// important to clear the receiver buffer
+			rfm12_rx_clear();
+			// then re-obtain the 10-bit data from the 8-bit packet and 8- bit type
+			// joel's code bit
+			//look at the data type and identify which channel it is
+			char ch[20];
+			switch (channel_type)
+			{
+				case THRUST_TYPE: {
+									sprintf(ch,"THRUST = %d",channel_data);
+									send_string(ch);
+									}
+								break;
+				case PITCH_TYPE: {
+									sprintf(ch,"PITCH = %d",channel_data);
+									send_string(ch);
+									}
+								break;
+				case ROLL_TYPE: {
+									sprintf(ch,"ROLL = %d",channel_data);
+									send_string(ch);
+									}
+								break;
+				case YAW_TYPE: {
+									sprintf(ch,"ROLL= %d",channel_data);
+									send_string(ch);
+									}
+								break;
+			}
+		}
+		
 	}
 }
