@@ -53,7 +53,8 @@
 //Pin that the RFM12's slave select is connected to
 #define DDR_SS DDRB
 #define PORT_SS PORTB
-#define BIT_SS 4
+#define BIT_SS_UP 4 // Slave select for uplink
+#define BIT_SS_DOWN 3 // Slave select for downlink
 
 //SPI port
 #define DDR_SPI DDRB
@@ -62,7 +63,8 @@
 #define BIT_MOSI 5
 #define BIT_MISO 6
 #define BIT_SCK  7
-#define BIT_SPI_SS 4
+#define BIT_SPI_SS_UP 4 // Slave select for uplink
+#define BIT_SPI_SS_DOWN 3 // Slave select for downlink
 //this is the hardware SS pin of the AVR - it 
 //needs to be set to output for the spi-interface to work 
 //correctly, independently of the CS pin used for the RFM12
@@ -92,28 +94,42 @@
 
 
 /************************
- * INTERRUPT VECTOR
+ * DOWNLINK INTERRUPT VECTOR
  * set the name for the interrupt vector here
  */
  
 //the interrupt vector
-#define RFM12_INT_VECT (INT1_vect)
+#define RFM12_INT_VECT_DOWN (INT0_vect)
 
 //the interrupt mask register
 #define RFM12_INT_MSK EIMSK
 
 //the interrupt bit in the mask register
-#define RFM12_INT_BIT (INT1)
+#define RFM12_INT_BIT_DOWN (INT0)
 
 //the interrupt flag register
 #define RFM12_INT_FLAG EIFR
 
 //the interrupt bit in the flag register
-#define RFM12_FLAG_BIT (INTF1)
+#define RFM12_FLAG_BIT_DOWN (INTF0)
 
-//setup the interrupt to trigger on negative edge
-#define RFM12_INT_SETUP()   MCUCR |= (1<<ISC11)
+//setup both interrupts to trigger on negative edge
+#define RFM12_INT_SETUP()   EICRA |= (1<<ISC01) | (1<<ISC11)
 
+
+/************************
+* UPINK INTERRUPT VECTOR
+* set the name for the interrupt vector here
+*/
+
+//the interrupt vector
+#define RFM12_INT_VECT_UP (INT1_vect)
+
+//the interrupt bit in the mask register
+#define RFM12_INT_BIT_UP (INT1)
+
+//the interrupt bit in the flag register
+#define RFM12_FLAG_BIT_UP (INTF1)
 
 /************************
  * FEATURE CONFIGURATION
