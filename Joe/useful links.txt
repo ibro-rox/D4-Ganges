@@ -1,0 +1,7 @@
+Hyperlinks
+https://secure.ecs.soton.ac.uk/notes_so/elec1201/Lectures/SerialCommunication.pdf
+http://www.invensense.com/wp-content/uploads/2015/02/MPU-6000-Register-Map1.pdf
+https://www.invensense.com/wp-content/uploads/2015/02/MPU-6000-Datasheet1.pdf
+http://davidegironi.blogspot.co.uk/2013/02/avr-atmega-mpu6050-gyroscope-and.html#.WLGv1juLQuU
+http://www.atmel.com/images/doc2593.pdf
+http://www.robot-electronics.co.uk/i2c-tutorial
