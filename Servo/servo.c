@@ -1,3 +1,14 @@
+/*
+*	Pointless little servo test program
+*	Controlled by IR sensor
+*	ADC pin - PA0
+*	PWM pin - PD7
+*	RXD pin - PD0 Orange
+*	TXD pin - PD1 Yellow
+*/
+
+
+
 #include <avr/io.h>
 #include <util/delay.h>
 #include "debug.h"
