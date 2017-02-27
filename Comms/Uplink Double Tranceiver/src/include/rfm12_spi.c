@@ -24,11 +24,11 @@
  ******************************************************/
  
 //hardware spi helper macros
-#define SS_ASSERT_DOWN() PORT_SS &= ~(1<<BIT_SS_DOWN)
-#define SS_RELEASE_DOWN() PORT_SS |= (1<<BIT_SS_DOWN)
+#define SS_ASSERT_TX() PORT_SS &= ~(1<<BIT_SS_TX)
+#define SS_RELEASE_TX() PORT_SS |= (1<<BIT_SS_TX)
 
-#define SS_ASSERT_UP() PORT_SS &= ~(1<<BIT_SS_UP)
-#define SS_RELEASE_UP() PORT_SS |= (1<<BIT_SS_UP)
+#define SS_ASSERT_RX() PORT_SS &= ~(1<<BIT_SS_RX)
+#define SS_RELEASE_RX() PORT_SS |= (1<<BIT_SS_RX)
 
 #if RFM12_SPI_SOFTWARE
 /* @description Actual sending function to send raw data to the Module
@@ -58,9 +58,9 @@ static uint8_t spi_data(uint8_t c)
 
 //non-inlined version of rfm12_data
 //warning: without the attribute, gcc will inline this even if -Os is set
-void __attribute__ ((noinline)) rfm12_data(uint16_t d, uint8_t uplink)
+void __attribute__ ((noinline)) rfm12_data(uint16_t d, uint8_t receiver)
 {
-	if (uplink == 1) { SS_ASSERT_UP(); } else { SS_ASSERT_DOWN(); };
+	if (receiver == 1) { SS_ASSERT_RX(); } else { SS_ASSERT_TX(); };
 	#if !(RFM12_SPI_SOFTWARE)
 	SPDR = d>>8;
 	while(!(SPSR & (1<<SPIF)));
@@ -72,16 +72,16 @@ void __attribute__ ((noinline)) rfm12_data(uint16_t d, uint8_t uplink)
 	spi_data(d >> 8   );
 	spi_data(d &  0xff);
 	#endif
-	if (uplink == 1) { SS_RELEASE_UP(); } else { SS_RELEASE_DOWN(); };
+	if (receiver == 1) { SS_RELEASE_RX(); } else { SS_RELEASE_TX(); };
 }
 
 
 //non-inlined version of rfm12_read
 //warning: without the attribute, gcc will inline this even if -Os is set
-uint16_t __attribute__ ((noinline)) rfm12_read(uint16_t c, uint8_t uplink)
+uint16_t __attribute__ ((noinline)) rfm12_read(uint16_t c, uint8_t receiver)
 {
 	uint16_t retval;
-	if (uplink == 1) { SS_ASSERT_UP(); } else { SS_ASSERT_DOWN(); };
+	if (receiver == 1) { SS_ASSERT_RX(); } else { SS_ASSERT_TX(); };
 	
 	#if !(RFM12_SPI_SOFTWARE)
 	SPDR = c>>8;
@@ -96,7 +96,7 @@ uint16_t __attribute__ ((noinline)) rfm12_read(uint16_t c, uint8_t uplink)
 	retval <<= 8;
 	retval |= spi_data(c &  0xff);
 	#endif
-	if (uplink == 1) { SS_RELEASE_UP(); } else { SS_RELEASE_DOWN(); };
+	if (receiver == 1) { SS_RELEASE_RX(); } else { SS_RELEASE_TX(); };
 	return retval;
 }
 
@@ -104,13 +104,13 @@ uint16_t __attribute__ ((noinline)) rfm12_read(uint16_t c, uint8_t uplink)
 /* @description reads the upper 8 bits of the status
  * register (the interrupt flags)
  */
- uint8_t rfm12_read_int_flags_inline(uint8_t uplink)
+ uint8_t rfm12_read_int_flags_inline(uint8_t receiver)
 {
-	if (uplink == 1) { SS_ASSERT_UP(); } else { SS_ASSERT_DOWN(); };
+	if (receiver == 1) { SS_ASSERT_RX(); } else { SS_ASSERT_TX(); };
 	#if !(RFM12_SPI_SOFTWARE)
 	SPDR = 0;
 	while(!(SPSR & (1<<SPIF)));
-	if (uplink == 1) { SS_RELEASE_UP(); } else { SS_RELEASE_DOWN(); };
+	if (receiver == 1) { SS_RELEASE_RX(); } else { SS_RELEASE_TX(); };
 	return SPDR;
 
 	#else
@@ -124,7 +124,7 @@ uint16_t __attribute__ ((noinline)) rfm12_read(uint16_t c, uint8_t uplink)
 		}
 		PORT_SCK &= ~(1<<BIT_SCK);
 	}
-	(uplink == 1) ? SS_RELEASE_UP() : SS_RELEASE_DOWN();
+	(receiver == 1) ? SS_RELEASE_RX() : SS_RELEASE_TX();
 	return d;
 	#endif
 }
@@ -132,9 +132,9 @@ uint16_t __attribute__ ((noinline)) rfm12_read(uint16_t c, uint8_t uplink)
 
 /* @description inline version of rfm12_data for use in interrupt
  */
-void rfm12_data_inline(uint8_t cmd, uint8_t d, uint8_t uplink)
+void rfm12_data_inline(uint8_t cmd, uint8_t d, uint8_t receiver)
 {
-	if (uplink == 1) { SS_ASSERT_UP(); } else { SS_ASSERT_DOWN(); };
+	if (receiver == 1) { SS_ASSERT_RX(); } else { SS_ASSERT_TX(); };
 
 	#if !(RFM12_SPI_SOFTWARE)
 	SPDR = cmd;
@@ -147,15 +147,15 @@ void rfm12_data_inline(uint8_t cmd, uint8_t d, uint8_t uplink)
 	spi_data( cmd );
 	spi_data( d   );
 	#endif
-	if (uplink == 1) { SS_RELEASE_UP(); } else { SS_RELEASE_DOWN(); };
+	if (receiver == 1) { SS_RELEASE_RX(); } else { SS_RELEASE_TX(); };
 }
 
 
 /* @description inline function for reading the fifo
  */
-uint8_t rfm12_read_fifo_inline(uint8_t uplink)
+uint8_t rfm12_read_fifo_inline(uint8_t receiver)
 {
-	if (uplink == 1) { SS_ASSERT_UP(); } else { SS_ASSERT_DOWN(); };
+	if (receiver == 1) { SS_ASSERT_RX(); } else { SS_ASSERT_TX(); };
 
 	#if !(RFM12_SPI_SOFTWARE)
 	SPDR =  ( RFM12_CMD_READ >> 8 );
@@ -164,7 +164,7 @@ uint8_t rfm12_read_fifo_inline(uint8_t uplink)
 	SPDR = 0;
 	while(!(SPSR & (1<<SPIF)));
 
-	if (uplink == 1) { SS_RELEASE_UP(); } else { SS_RELEASE_DOWN(); };
+	if (receiver == 1) { SS_RELEASE_RX(); } else { SS_RELEASE_TX(); };
 	return SPDR;
 	
 	#else
@@ -172,16 +172,16 @@ uint8_t rfm12_read_fifo_inline(uint8_t uplink)
 	spi_data( RFM12_CMD_READ >> 8 );
 	retval = spi_data( 0   );
 
-	(uplink == 1) ? SS_RELEASE_UP() : SS_RELEASE_DOWN();
+	(receiver == 1) ? SS_RELEASE_RX() : SS_RELEASE_TX();
 	return retval;
 	#endif
 }
 
-void spi_init(uint8_t uplink)
+void spi_init(uint8_t receiver)
 {
 	DDR_MOSI   |= (_BV(BIT_MOSI));
 	DDR_SCK    |= (_BV(BIT_SCK));
-	DDR_SPI_SS |= (_BV((uplink == 1) ? BIT_SPI_SS_UP : BIT_SPI_SS_DOWN));
+	DDR_SPI_SS |= (_BV((receiver == 1) ? BIT_SPI_SS_RX : BIT_SPI_SS_TX));
 	DDR_MISO   &= ~(_BV(BIT_MISO));
 
 	#if !(RFM12_SPI_SOFTWARE)

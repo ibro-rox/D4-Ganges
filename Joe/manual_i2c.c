@@ -1,4 +1,4 @@
-/**
+#/**
  See http://www.invensense.com/wp-content/uploads/2015/02/MPU-6000-Register-Map1.pdf
   for the register mappings.
 
@@ -20,11 +20,7 @@ void init_i2c_master(void)
 void i2c_start(void)
 {
 	TWCR = _BV(TWINT) | _BV(TWSTA) | _BV(TWEN);
-	while(!(TWCR & _BV(TWINT)))//;
-	{
-	fprintf(stderr,"LOOPING");
-	// program hangs here in this loop waiting for TWINT to go high
-	}
+	while(!(TWCR & _BV(TWINT)));	
 }
 
 void i2c_stop(void)
@@ -59,15 +55,15 @@ uint8_t i2c_rx_nack(void)
 
 void readGyro(void)
 {
-	fprintf(stderr,"starting read");
+	/*fprintf(stderr,"starting read");
 	//select register to read
 	i2c_start();
-	fprintf(stderr,"start sent");
+	fprintf(stderr,"start sent ");
 	i2c_tx(0xD0); // address 110100; device 0; mode 0 (write)
 	fprintf(stderr,"SLA sent");
 	i2c_rx_ack();
-	fprintf(stderr,"ACK received");
-	i2c_tx(67); // register address; gyro_x_h
+	fprintf(stderr,"ACK received ");
+	i2c_tx(68); // register address; gyro_x_l
 	i2c_rx_ack();
 	
 	i2c_start();
@@ -84,6 +80,14 @@ void readGyro(void)
 	fprintf(stderr,"\n");
 	
 	i2c_stop();
+	*/
+	
+	//FROM THE Il Matto Quick Reference
+	
+	i2c_start();
+	i2c_tx()
+	
+	
 	
 }
 

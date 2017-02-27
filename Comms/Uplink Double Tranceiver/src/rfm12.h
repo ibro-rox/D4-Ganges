@@ -73,8 +73,8 @@
 */
 
 //see rfm12.c for more documentation
-void rfm12_init_up(void);
-void rfm12_init_down(void);
+void rfm12_init_rx(void);
+void rfm12_init_tx(void);
 void rfm12_tick(uint8_t uplink);
 
 //if receive mode is not disabled (default)
@@ -228,7 +228,7 @@ extern rf_tx_buffer_t rf_tx_buffer;
 #endif /* !(RFM12_TRANSMIT_ONLY) */
 
 //the control struct
-extern rfm12_control_t ctrl;
+extern rfm12_control_t ctrl_rx, ctrl_tx;
 
 
 /************************
@@ -243,7 +243,7 @@ extern rfm12_control_t ctrl;
 	*/
 	static inline uint8_t rfm12_rx_status(void)
 	{
-		return ctrl.rf_buffer_out->status;
+		return ctrl_rx.rf_buffer_out->status;
 	}
 
 	//! Inline function to return the rx buffer length field.
@@ -252,7 +252,7 @@ extern rfm12_control_t ctrl;
 	*/
 	static inline uint8_t rfm12_rx_len(void)
 	{
-		return ctrl.rf_buffer_out->len;
+		return ctrl_rx.rf_buffer_out->len;
 	}
 
 	//! Inline function to return the rx buffer type field.
@@ -261,7 +261,7 @@ extern rfm12_control_t ctrl;
 	*/
 	static inline uint8_t rfm12_rx_type(void)
 	{
-		return ctrl.rf_buffer_out->type;
+		return ctrl_rx.rf_buffer_out->type;
 	}
 
 	//! Inline function to retreive current rf buffer contents.
@@ -270,7 +270,7 @@ extern rfm12_control_t ctrl;
 	*/
 	static inline uint8_t *rfm12_rx_buffer(void)
 	{
-		return (uint8_t*) ctrl.rf_buffer_out->buffer;
+		return (uint8_t*) ctrl_rx.rf_buffer_out->buffer;
 	}
 #endif /* !(RFM12_TRANSMIT_ONLY) */
 

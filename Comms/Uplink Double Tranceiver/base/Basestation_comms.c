@@ -17,7 +17,7 @@ int main(void)
 
 	while (1)
 	{
-		rfm12_tick();
+		rfm12_tick(0);
 		
 		// ### CODE FOR TEST ###
 		testdata++;
