@@ -204,15 +204,15 @@
 //macros to turn the int on and off
 //if polling is used, just define these macros as empty
 #if !(RFM12_USE_POLLING)
-	#define RFM12_INT_ON_UP(uplink) RFM12_INT_MSK |= (1<<RFM12_INT_BIT_UP)
-	#define RFM12_INT_OFF_UP(uplink) RFM12_INT_MSK &= ~(1<<RFM12_INT_BIT_UP)
-	#define RFM12_INT_ON_DOWN(uplink) RFM12_INT_MSK |= (1<<RFM12_INT_BIT_DOWN)
-	#define RFM12_INT_OFF_DOWN(uplink) RFM12_INT_MSK &= ~(1<<RFM12_INT_BIT_DOWN)
+	#define RFM12_INT_ON_RX() RFM12_INT_MSK |= (1<<RFM12_INT_BIT_RX)
+	#define RFM12_INT_OFF_RX() RFM12_INT_MSK &= ~(1<<RFM12_INT_BIT_RX)
+	#define RFM12_INT_ON_TX() RFM12_INT_MSK |= (1<<RFM12_INT_BIT_TX)
+	#define RFM12_INT_OFF_TX() RFM12_INT_MSK &= ~(1<<RFM12_INT_BIT_TX)
 #else
-	#define RFM12_INT_ON_UP()
-	#define RFM12_INT_OFF_UP()
-	#define RFM12_INT_ON_DOWN()
-	#define RFM12_INT_OFF_DOWN()
+	#define RFM12_INT_ON_RX()
+	#define RFM12_INT_OFF_RX()
+	#define RFM12_INT_ON_TX()
+	#define RFM12_INT_OFF_TX()
 #endif /* !(RFM12_USE_POLLING) */
 
 /*
