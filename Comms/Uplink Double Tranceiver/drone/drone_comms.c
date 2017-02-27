@@ -8,7 +8,8 @@
 int main(void)
 {	
 	// Initialise rfm12 and interrupts
-	rfm12_init_down();
+	rfm12_init_tx();
+	rfm12_init_rx();
 	sei();
 
 	uint8_t receivedpackettype;
@@ -22,7 +23,7 @@ int main(void)
 		if (rfm12_rx_status() == STATUS_COMPLETE)
 		{	
 			receivedpackettype = rfm12_rx_type();
-			receiveddata = rfm12_rx_buffer();
+			receiveddata = *rfm12_rx_buffer();
 			rfm12_rx_clear();
 			// Extract 10-bit ADC value and packet type from the received packet
 			Decode_data(&receivedpackettype, &receiveddata);
@@ -30,11 +31,11 @@ int main(void)
 	}
 }
 
-uint16_t Decode_data(uint8_t* packettype, uint16_t* data)
+void Decode_data(uint8_t* packettype, uint16_t* data)
 {
 	// Get full 16 bits
 	uint16_t totalpacket;
-	totalpacket = (*packettype << 8) + data;
+	totalpacket = (*packettype << 8) + *data;
 
 	// Get 10-bit data from the 16 bit
 	*data = totalpacket & (uint16_t)1023;
