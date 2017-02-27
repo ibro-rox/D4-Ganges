@@ -1,9 +1,14 @@
+//checks the status of the git repository
 git status
 
+// download the latest version of the repository from the remote server
 git pull
 
+// add all modified files to a commit; -A can be replaced with filenames for specified files
 git add -A 
 
+//commits the added changes to the local version of the current branch
 git commit -m "your message here"
 
+// pushes the local branch to the remote repository
 git push
