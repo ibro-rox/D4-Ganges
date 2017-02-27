@@ -1,3 +1,8 @@
+==========================
+===  GIT SHELL BASICS  ===
+==========================
+
+
 //checks the status of the git repository
 git status
 
@@ -10,5 +15,8 @@ git add -A
 //commits the added changes to the local version of the current branch
 git commit -m "your message here"
 
-// pushes the local branch to the remote repository
+// pushes the local branch to the remote repository. You may need to 
 git push
+
+//shows the exact changes made to added files
+git diff
