@@ -327,9 +327,9 @@ ISR(RFM12_INT_VECT, ISR_NOBLOCK)
 
 //! The tick function implements collision avoidance and initiates transmissions.
 /** This function has to be called periodically.
-* It will read the rfm12 status register to check if a carrier is being received,
-* which would indicate activity on the chosen radio channel. \n
-* If there has been no activity for long enough, the channel is believed to be free.
+* It will read the rfm12 status register to check if a carrier is being received,  <-------------------------------
+* which would indicate activity on the chosen radio channel. \n <-------------------------------
+* If there has been no activity for long enough, the channel is believed to be free. <-------------------------------
 *
 * When there is a packet waiting for transmission and the collision avoidance
 * algorithm indicates that the air is free, then the interrupt control variables are

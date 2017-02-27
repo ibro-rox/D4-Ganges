@@ -79,14 +79,17 @@ int main()
 		thrust = adc_read(0);// 10 bit value
 		// split the 10 bit to 2 bits()
 		// transmit it - rfm12_tx() and rfm_tick()
-		// rfm12_tx() - fills the tx buffer with this packet
-		// rfm_tick() waits if the Tx buffer is empty
+		// rfm12_tx() - fills the tx buffer and transmits the 8-bit type and 8-bit data
+		// rfm_tick() checks if channel is free to send next data packet
+		// potential delay for sync 
 		yaw = adc_read(1);
 		// split the 10 bit to 2 bits()
 		// transmit it - - rfm12_tx() and rfm_tick()
+		// potential delay for sync 
 		pitch = adc_read(2);
 		// split the 10 bit to 2 bits()
 		// transmit it - rfm12_tx() and rfm_tick()
+		// potential delay for sync 
 		roll = adc_read(3);
 		// split the 10 bit to 2 bits()
 		// transmit it - rfrm12_tx() and rfm_tick()
