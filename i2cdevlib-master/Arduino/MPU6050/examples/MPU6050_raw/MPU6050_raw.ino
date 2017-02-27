@@ -90,6 +90,14 @@ void setup() {
     Serial.println("Testing device connections...");
     Serial.println(accelgyro.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
 
+    accelgyro.setXGyroOffset(33);
+    accelgyro.setYGyroOffset(23);
+    accelgyro.setZGyroOffset(-3);
+    accelgyro.setXAccelOffset(1758);
+    accelgyro.setYAccelOffset(2650);    
+    accelgyro.setZAccelOffset(1514);
+            
+    
     // use the code below to change accel/gyro offset values
     /*
     Serial.println("Updating internal sensor offsets...");
