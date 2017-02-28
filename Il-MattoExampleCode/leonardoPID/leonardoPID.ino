@@ -3,6 +3,10 @@
 #include "stdint.h"
 #include "Engines.h"
 #include "Definitions.h"
+
+//functions
+void getThrottle();
+
 unsigned long previousTime = 0;
 unsigned long currentTime = 0;
 unsigned long deltaTime = 0;
@@ -10,6 +14,16 @@ unsigned long deltaTime = 0;
 PID rollPID = PID(6.1, 0.0, 0.9);
 PID pitchPID = PID(6.1, 0.0, 0.9);
 PID yawPID = PID(6.0, 0, 0.0);
+
+//all the following can be put in a class to make life easy for getting and storing values
+
+int targetRoll;
+int targetPitch;
+int targetYaw;
+
+int currentRoll;
+int currentPitch;
+int currentYaw;
 
 Engines engines;
 
@@ -27,7 +41,7 @@ void loop() {
       currentTime = micros();
       deltaTime = currentTime - previousTime;
       previousTime = currentTime; //reset previous on arming
-
+      getThrottle();
       if (engines.isArmed()){
         if (currentRoll > 90 || currentRoll < -90 || currentPitch > 90 || currentPitch < -90)
         {
@@ -36,9 +50,9 @@ void loop() {
     
         float G_Dt = deltaTime / 1000000.0; // Delta time in seconds
 
-        /*targetRoll = 
-          targetPitch = 
-          targetYaw = */
+          targetRoll =  0;
+          targetPitch = 0;
+          targetYaw =   0;
     
         // Negative values mean the right side is up
         // Constrain to 45 degrees, because beyond that, we're fucked anyway
@@ -57,7 +71,6 @@ void loop() {
           engines.setEngineSpeed(throttle - rollAdjust - pitchAdjust + headingAdjust, 
                                  throttle + rollAdjust - pitchAdjust - headingAdjust, 
                                  throttle - rollAdjust + pitchAdjust - headingAdjust, 
-                                 
                                  throttle + rollAdjust + pitchAdjust + headingAdjust);
          }
          else{
@@ -66,22 +79,30 @@ void loop() {
       }
       else{
         // Reset state
-        levelRollPID.resetError();
-        levelPitchPID.resetError();
-        headingHoldPID.resetError();
+        rollPID.resetError();
+        pitchPID.resetError();
+        yawPID.resetError();
       } 
-    
-      if (receiver.getSmoothedChannel(THROTTLE_CHANNEL) < 1100 && receiver.getSmoothedChannel(YAW_CHANNEL) > 1850){
-        engines.arm();
-      } 
-      // Disarm the engines by putting the left stick in the lower-left corner
-      if (receiver.getSmoothedChannel(THROTTLE_CHANNEL) < 1100 && receiver.getSmoothedChannel(YAW_CHANNEL) < 1100){
-        engines.disarm();
-      }
-      // Process throttle
-      engines.setThrottle(receiver.getSmoothedChannel(THROTTLE_CHANNEL));
     }
   //send telemetry only if engine is armed
+}
+
+
+
+void getThrottle(){
+  // Arm the engines by putting the left stick in the lower-right corner
+  //might be worth making a data class to store all values 
+  if (1/*getthrrottlefromreciver < 50? && getyawfromreciver > 1000?*/){
+    engines.arm();
+  }
+  
+  // Disarm the engines by putting the left stick in the lower-left corner
+  else if (1/*getthrrottlefromreciver< 50 && getyawfromreciver < 50*/){
+    engines.disarm();
+  }
+  
+  // Process throttle
+  engines.setThrottle(/*get throtte from reciever and normalise to 1000 to 2000 us*/5); // Engines expect throttle to be 0-based
 }
 //[1]http://robot-kingdom.com/pid-controller-tutorial-for-robots/
 //[2]https://github.com/grantmd/QuadCopter
