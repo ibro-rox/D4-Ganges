@@ -1,0 +1,4 @@
+MPU6050 Statisitics
+
+about 100 samples/second after DMP processing
+^ 'New Data' Interrupt fires roughly 100 times/second
