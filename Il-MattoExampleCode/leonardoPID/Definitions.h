@@ -39,20 +39,6 @@
 #define YAXIS 1
 #define ZAXIS 2
 
-// Measured raw accel values by putting the quadcopter on all 6 sides (need to do )
-#define MAX_ACCEL_ROLL 
-#define MAX_ACCEL_PITCH 
-#define MAX_ACCEL_YAW
-  
-#define MIN_ACCEL_ROLL 
-#define MIN_ACCEL_PITCH 
-#define MIN_ACCEL_YAW
-
-
-// Battery monitor
-#define BATTERY_PIN 0 // This is the same on every arduino
-#define BATTERY_R1 14560.0 // 15k resistor measured with a multimeter, must be a float!
-#define BATTERY_R2 7390.0 // 7.5k resistor measured with a multimeter, must be a float!
-#define BATTERY_AREF 5.0 // Arduino Mega runs at 5v
-#define BATTERY_DIODE 0.9 // On-board diode, measured with a multimeter
-#define ALARM_VOLTAGE 9.0
+#define TIMER_TOP 40000
+#define PWM_DUTY_MIN 2000
+#define PWM_DUTY_MAX 4000

@@ -3,6 +3,7 @@
 #include "stdint.h"
 #include "Engines.h"
 #include "Definitions.h"
+#include "PWM.h"
 
 //functions
 void getThrottle();
@@ -30,7 +31,7 @@ Engines engines;
 void setup() {
   // put your setup code here, to run once:
   engines.init();
-  
+  init_pwm();
   previousTime = micros();
 }
 
@@ -87,22 +88,19 @@ void loop() {
   //send telemetry only if engine is armed
 }
 
-
-
 void getThrottle(){
   // Arm the engines by putting the left stick in the lower-right corner
   //might be worth making a data class to store all values 
-  if (1/*getthrrottlefromreciver < 50? && getyawfromreciver > 1000?*/){
+  if (1/*getthrrottlefromclass < 50? && getyawfromclass > 1000?*/){
     engines.arm();
   }
-  
   // Disarm the engines by putting the left stick in the lower-left corner
-  else if (1/*getthrrottlefromreciver< 50 && getyawfromreciver < 50*/){
+  else if (1/*getthrrottlefromclass< 50 && getyawfromclass < 50*/){
     engines.disarm();
   }
   
   // Process throttle
-  engines.setThrottle(/*get throtte from reciever and normalise to 1000 to 2000 us*/5); // Engines expect throttle to be 0-based
+  engines.setThrottle(/*get throtte from class and normalise to 1000 to 2000 us*/5); // Engines expect throttle to be 0-based
 }
 //[1]http://robot-kingdom.com/pid-controller-tutorial-for-robots/
 //[2]https://github.com/grantmd/QuadCopter

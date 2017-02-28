@@ -21,7 +21,7 @@
 #include "Definitions.h"
 #include "stdint.h"
   #include "Arduino.h"
-
+#include "PWM.h"
 Engines::Engines(){  
   // Setup engines
 }
@@ -37,6 +37,10 @@ void Engines::allStop(){
 }
 
 void Engines::setEngineSpeed(int speed_A, int speed_B, int speed_C, int speed_D){
+  speed_A += MIN_MOTOR_SPEED;
+  speed_B += MIN_MOTOR_SPEED;
+  speed_C += MIN_MOTOR_SPEED;
+  speed_D += MIN_MOTOR_SPEED;
   speed_A = constrain(speed_A, MIN_MOTOR_SPEED, MAX_MOTOR_SPEED);
   speed_B = constrain(speed_B, MIN_MOTOR_SPEED, MAX_MOTOR_SPEED);
   speed_C = constrain(speed_C, MIN_MOTOR_SPEED, MAX_MOTOR_SPEED);
@@ -45,6 +49,7 @@ void Engines::setEngineSpeed(int speed_A, int speed_B, int speed_C, int speed_D)
   // Using 125-250 for motor setting 1000-2000
   //analogWrite(engines[engine], speed / 8);
   //convert to pwm and output
+    pwm_duty(2*speed_A,2*speed_B,2*speed_C, 2* speed_D);
 
     engine_speeds[LEFT_FRONT_MOTOR] = speed_A;
     engine_speeds[RIGHT_FRONT_MOTOR] = speed_B;
