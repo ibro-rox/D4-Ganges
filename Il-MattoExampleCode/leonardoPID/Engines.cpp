@@ -16,41 +16,44 @@
   You should have received a copy of the GNU General Public License 
   along with this program. If not, see <http://www.gnu.org/licenses/>. 
 */
-#include "Arduino.h"
+
 #include "Engines.h"
 #include "Definitions.h"
-#define LEFT_FRONT_MOTOR
+#include "stdint.h"
+  #include "Arduino.h"
 
 Engines::Engines(){  
+  // Setup engines
 }
 
 void Engines::init(){
   allStop();
+  _armed =false;
 }
 
 void Engines::allStop(){
   throttle = 0;
-  setAllSpeed(0);
+  setEngineSpeed(0,0,0,0);
 }
 
-void Engines::setEngineSpeed(byte engine, int speed){
-  speed = constrain(speed, MIN_MOTOR_SPEED, MAX_MOTOR_SPEED);
-  
+void Engines::setEngineSpeed(int speed_A, int speed_B, int speed_C, int speed_D){
+  speed_A = constrain(speed_A, MIN_MOTOR_SPEED, MAX_MOTOR_SPEED);
+  speed_B = constrain(speed_B, MIN_MOTOR_SPEED, MAX_MOTOR_SPEED);
+  speed_C = constrain(speed_C, MIN_MOTOR_SPEED, MAX_MOTOR_SPEED);
+  speed_D = constrain(speed_D, MIN_MOTOR_SPEED, MAX_MOTOR_SPEED);
   // Analog write supports commands from 0-255 => 0 - 100% duty cycle
   // Using 125-250 for motor setting 1000-2000
   //analogWrite(engines[engine], speed / 8);
-                                //!!need to implement this!!
-  engine_speeds[engine] = speed;
+  //convert to pwm and output
+
+    engine_speeds[LEFT_FRONT_MOTOR] = speed_A;
+    engine_speeds[RIGHT_FRONT_MOTOR] = speed_B;
+    engine_speeds[LEFT_REAR_MOTOR] = speed_C;
+    engine_speeds[RIGHT_REAR_MOTOR] = speed_D;
 }
 
-int Engines::getEngineSpeed(byte engine){
+int Engines::getEngineSpeed(uint8_t engine){
   return engine_speeds[engine];
-}
-
-void Engines::setAllSpeed(int speed){
-  for (byte engine = 0; engine < ENGINE_COUNT; engine++){
-    setEngineSpeed(engine, speed);
-  }
 }
 
 // Increase/decrease throttle. Flight Control takes care of applying this to the engines
@@ -62,12 +65,11 @@ int Engines::getThrottle(){
   return throttle;
 }
 
-void Engines::arm(byte method){
+void Engines::arm(){
   if (_armed) return;
-  setAllSpeed(MIN_MOTOR_SPEED);
-  }
+  setEngineSpeed(MIN_MOTOR_SPEED,MIN_MOTOR_SPEED,MIN_MOTOR_SPEED,MIN_MOTOR_SPEED);
 
-  _armed = true;
+  _armed = 1;
 }
 
 void Engines::disarm(){
@@ -76,7 +78,7 @@ void Engines::disarm(){
   setThrottle(0);
   allStop();
   
-  _armed = false;
+  _armed = 0;
 }
 
 boolean Engines::isArmed(){

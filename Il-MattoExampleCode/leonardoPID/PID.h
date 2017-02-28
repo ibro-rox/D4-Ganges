@@ -1,6 +1,7 @@
 /*
-  Engines.h - Library for controlling a set of Quadcopter engines (aka motors)
+  PID.h - Library for implementing a PID control loop. Used to ensure engines don't overshoot when reaching target roll/pitch.
   Created by Myles Grant <myles@mylesgrant.com>
+  Based on: http://www.arduino.cc/playground/Main/BarebonesPIDForEspresso#pid
   See also: https://github.com/grantmd/QuadCopter
   
   This program is free software: you can redistribute it and/or modify 
@@ -16,36 +17,38 @@
   You should have received a copy of the GNU General Public License 
   along with this program. If not, see <http://www.gnu.org/licenses/>. 
 */
-#ifndef Engines_h
-#define Engines_h
+#ifndef PID_h
+#define PID_h
 
+//#include "WProgram.h"
+//#include "Definitions.h"
 
-#include "Definitions.h"
+#define WINDUP_GUARD_GAIN 500.0
 
-class Engines
+class PID
 {
   public:
-    Engines();
-    void init();
-    void allStop();
-    void setEngineSpeed(byte, int);
-    int getEngineSpeed(byte);
-    void setAllSpeed(int);
-    void setThrottle(int);
+    PID();
+    PID(float, float, float);
     
-    int getThrottle();
+    float getP();
+    float getI();
+    float getD();
     
-    void arm(byte);
-    void disarm();
-    bool isArmed();
+    void setP(float);
+    void setI(float);
+    void setD(float);
     
+    float updatePID(float, float, float);
+    
+    void resetError();
+  
   private:
+    float pgain, igain, dgain; 
+    float pTerm, iTerm, dTerm;
     
-    int engine_speeds[ENGINE_COUNT];
-
-    int throttle;
-    
-    boolean _armed;
+    float iState;
+    float last;
 };
 
 #endif

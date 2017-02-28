@@ -19,25 +19,24 @@
 #ifndef Engines_h
 #define Engines_h
 
-
+#include "Arduino.h"
 #include "Definitions.h"
-
+#include "stdint.h"
 class Engines
 {
   public:
     Engines();
     void init();
     void allStop();
-    void setEngineSpeed(byte, int);
-    int getEngineSpeed(byte);
-    void setAllSpeed(int);
+    void setEngineSpeed(int, int, int, int);
+    int getEngineSpeed(uint8_t);
     void setThrottle(int);
     
     int getThrottle();
     
-    void arm(byte);
+    void arm();
     void disarm();
-    bool isArmed();
+    boolean isArmed();
     
   private:
     

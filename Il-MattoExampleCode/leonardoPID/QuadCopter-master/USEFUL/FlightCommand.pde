@@ -37,7 +37,6 @@ void processReceiverCommands(){
   // Arm the engines by putting the left stick in the lower-right corner
   if (receiver.getSmoothedChannel(THROTTLE_CHANNEL) < 1100 && receiver.getSmoothedChannel(YAW_CHANNEL) > 1850){
     engines.arm(0);
-    baro.setGroundAltitude();
   }
   
   // Disarm the engines by putting the left stick in the lower-left corner
@@ -49,7 +48,7 @@ void processReceiverCommands(){
   engines.setThrottle(receiver.getSmoothedChannel(THROTTLE_CHANNEL)-MIN_MOTOR_SPEED); // Engines expect throttle to be 0-based
 }
 
-void processAutoPilot(){
+/*void processAutoPilot(){
   if (commandTime == 0) commandTime = currentTime + 5000000;
   
   int throttle = engines.getThrottle();
@@ -98,4 +97,4 @@ void processAutoPilot(){
       } 
     }
   }
-}
+}*/
