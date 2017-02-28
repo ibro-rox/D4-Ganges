@@ -20,13 +20,13 @@ int main(void)
 		
 		// Wait for data to be fully received
 		if (rfm12_rx_status() == STATUS_COMPLETE)
-		{	
+		{
+			// Get the received packet type and data
 			receivedpackettype = rfm12_rx_type();
 			receiveddata = rfm12_rx_buffer();
-
 			
-			// Extract 10-bit ADC value and packet type from the received packet
-			Decode_data(&receivedpackettype, &receiveddata);
+			// Decrypt (if enabled) and extract 10-bit data and packet type from the received packet 
+			Retrieve_data(&receivedpackettype, &receiveddata);
 		}
 	}
 }
@@ -50,7 +50,7 @@ void Retrieve_data(uint8_t* type, uint16_t* data)
 
 uint16_t Decode_data(uint8_t* type, uint16_t* data, uint16_t totalpacket)
 {
-	// Get 10-bit data from the 16 bit
+	// Get 10-bit data from the 16 bit packet
 	*data = totalpacket & (uint16_t)1023;
 	
 	// Get packet type
@@ -75,11 +75,3 @@ uint16_t Decrypt_data(uint16_t packet)
 
 	return decrypted_packet;
 }
-
-// Send relevant data to the control Il Matto
-/*
-void Send_controls()
-{
-
-}
-*/
