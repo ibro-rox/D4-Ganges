@@ -32,7 +32,7 @@ void setup() {
   // put your setup code here, to run once:
   engines.init();
   init_pwm();
-  previousTime = micros();
+  previousTime = micros();//check this
 }
 
 void loop() {
@@ -42,6 +42,7 @@ void loop() {
       currentTime = micros();
       deltaTime = currentTime - previousTime;
       previousTime = currentTime; //reset previous on arming
+      //get readings
       getThrottle();
       if (engines.isArmed()){
         if (currentRoll > 90 || currentRoll < -90 || currentPitch > 90 || currentPitch < -90)
