@@ -32,4 +32,20 @@ Also use any relevant measurement tools (eg. multimeters) for checking the volta
 Controlled Sesnitivity: 2
 Controlled Likelihood: 2
 Controlled Risk: 4
-5.) 
+5.) Losing wireless communications from the Human operator.
+Sensitivity: 4
+Likelihood: 4
+Risk: 16
+Control : Need to implement a solution for countering the problem of receiving data from other other transmitters operating in the same channel/ band.
+In terms of other drones receiving our transmitted data we are considering the implementation of encryption so that the data received by ohter drones becomes redundant. More immportantly incase due to technical issues with the transceiver modules the communication link stops working, we can implement an emergency landing feature to the drone to help ensure the drones safety.
+Controlled Sensitivity : 2
+Controlled Likelihood : 2
+Controlled Risk : 4
+6.) Non availability of members during certain weekends
+Sensitivity: 3
+Likelihood: 4
+Risk: 12
+Control : We have 2 sub teams, one for control of motors and sensors and the other for communication between the base station and drone. these teams consist of 2 team members who should be aware of there sub team members work in order to establish complete understanding of the sub system and also for the sake of integration.
+Controlled Sensitivity: 1
+Controlled Likelihood: 2
+Controlled Risk: 2
