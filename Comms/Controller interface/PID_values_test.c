@@ -69,7 +69,7 @@ int main()
 		receive_string(ki);
 		//f = atof(ki);
 		 f = atof(ki);	
-	     //if (f < 10.23)
+	    //if (f < 10.23)
 		 //{
 			f_temp = f*100;
 			ten_bit = (uint16_t) (f_temp+0.5);
