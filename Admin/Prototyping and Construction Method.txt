@@ -1,0 +1,18 @@
+Prototyping and Construction Method
+- Briefly describe your proposed method(s) of prototyping and construction, including whether you will use any surface mount packages.
+-----------------------------------------------------------------------------------------------------------------------------------------------
+In order to test the dimensions of the drone we are planning on constructing a full-scale model of the chassis using cardboard and glue. We will be achieving this by cutting out cardboard according to our laser-cut design. This will allow us to ensure that the design has enough space for routing wires; identify areas where size can be reduced; and gain a basic knowledge of its structural integrity.
+
+Initially, we will utilise the breadboards on the Il Mattos to allow quick and easy testing of various systems. Such systems include the IR sensors interfacing with the microcontroller and the controller (joysticks, buttons etc.) with the Il Matto on the ground.
+
+To make the debug process easier and more efficient, various sub-systems will be tested in isolation (starting with the most critical parts) before being slowly integrated together. Firstly, we will test communications between the Il Matto and the Arduino on the UAV as well as the PWM from the Arduino to the ESCs. After this functionality has been fully verified and any issues have been corrected these systems can be combined. Similarly, the HID controller and the Il Matto on the ground will be prototyped and tested, then linked directly to the Il Matto on the drone. Later on we can then introduce the wireless radio communications. Finally, the less crucial components (SD card logging, cargo acquisition servo, computer interface) will be added into the system.
+
+After prototyping has been completed we will construct the chassis. This involves using the on-campus facilities to laser cut 5mm acrylic according to the outline we will have created and using acrylic glue to hold the pieces together. Tabs in the design will allow perpendicular parts to be fitted together. As we are planning a two-tiered design, the top layer will not be constructed until the components on the bottom tier (Il Matto, Arduino####) have been successfully fitted. The chassis' design will enable components to be easily accessible and make construction ####EASIER.
+
+Sticky tape will be used to attach most of the various components to the chassis. An exception is the motors which will be attached using the provided screws, through holes in the motor pads of the chassis.
+
+The ESCs will be mounted underneath the second tier, with power distribution achieved by soldering onto stripboard. The gyroscope will be placed ######WHERE?### and connected to the Arduino using flying leads. The pin header on the breakout board will be flipped through desoldering and resoldering on the other side.
+
+The servo for cargo acquisition will be accommodated on the bottom side of the drone through a gap in the acryllic.
+
+We will only be using pre-made surface mount packages.
