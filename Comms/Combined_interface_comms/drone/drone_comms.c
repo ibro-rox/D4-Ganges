@@ -27,11 +27,6 @@ int main(void)
 			
 			// Decrypt (if enabled) and extract 10-bit data and packet type from the received packet 
 			Retrieve_data(&receivedpackettype, &receiveddata);
-
-			#if UPLINK_TEST
-				// Send data to UART
-			#endif
-
 		}
 	}
 }

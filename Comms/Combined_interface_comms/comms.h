@@ -15,6 +15,3 @@
 
 // Enable encryption
 #define ENCRYPTION_ENABLED 1
-
-// Enable uplink test
-#define UPLINK_TEST 1
