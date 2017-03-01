@@ -95,7 +95,8 @@ void send_string(char *str)
 	for( i = 0; str[i]; i++) uart_transmit(str[i]);
 }//***************
 char k[CHAR_MAX];
-volatile int counter = 0;
+volatile uint8_t counter = 0;// itss uint8_t for size saving
+volatile uint8_t pid_enter_check = 0; // used to ensure number(eg: 10.230) is not passed to k[] when asked to enter p or i or d
 volatile char pid;
 char buff[10];
 ISR(USART0_RX_vect)
@@ -112,14 +113,21 @@ ISR(USART0_RX_vect)
 		counter = 0;//reset the counter to zero so that u can start re-writing to the k[] array
 		send_string("\n\r Re-enter K value: ");
 	}
-	else if ( (temp[counter] < 47 || temp[counter] > 57) && (temp[counter] != 46) )// if asked to enter p or i or d and
+	else if ( (pid_enter_check == 1) && (temp[counter] > 47 || temp[counter] < 58) )
 	{
-		send_string("\n\r Please enter p or i or d: "); // you enter other letters/numbers this condition executes
-	// if its any other character is entered need to clear the 
-		counter = 0;// if numbers were ented when asked to enter p or i or d 
+		uart_transmit(temp[counter]);
+		send_string("\n\r p or i or d pls!: ");
+		counter = 0;// ensure buffer isnt filled with these numbers by re-setting this counter
+		pid_enter_check = 0;
+	}
+	//  ASCII : 47 < x < 75 corresponds to integers 0-9 and x = 46 whihc is a 'dot' which we EXCLUDE in this condition to DEAL with the "other characters" apart fron 'p' or 'i' or 'd'
+	else if ( (temp[counter] < 47 || temp[counter] > 57) && (temp[counter] != 46) )// if what you entered are letters like 'l' or 'z' etc. when asked to enter p or i or d and 
+	{
+		send_string("\n\r Please enter p or i or d: "); // ask to re enter p or i or d
+		counter = 0;// BUT if numbers were ented when asked to enter p or i or d 
 		// re-write the the k[] buffer to get rid of those numbers entered
 	}
-	else 
+	else // if numbers or dots were entered
 		{
 			k[counter] = temp[counter];// can store digits or dots and incremet counter
 			uart_transmit(k[counter]);// print it to see what we enter
@@ -147,7 +155,7 @@ int main()
 	float f, f_temp;
 	uint16_t ten_bit;
 	send_string("\n\r Enter a K type (p or i or d): ");
-
+	pid_enter_check = 1;// always set this variable to 1 when asked to enter p or i or d
 	uint16_t adc_value;
 	uint8_t pwm_value;
 
@@ -185,7 +193,7 @@ int main()
 			send_string(ch);
 			// transmit its 
 			send_string("\n\r Enter a K type (p or i or d): ");
-
+			pid_enter_check = 1;// always set this variable to 1 when asked to enter p or i or d
 		}
 		else
 			continue;
