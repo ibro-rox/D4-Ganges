@@ -13,59 +13,6 @@
 #include "basestation_comms.h"
 
 uint8_t encryption_key;
-// Include adc_init()
-void adc_init()//[1]
-{
-	
-	// In ADCSRA Enable ADC (set ADEN) and prescaler of 64
-	ADCSRA |= _BV(ADEN) | _BV(ADPS2) | _BV(ADPS1);
-}
-// include adc funcition
-uint16_t adc_read(int n)//[1]
-{
-	ADMUX = n;// represents PA2
-	// start conversion
-	ADCSRA |= _BV(ADSC);
-	// wait for conversion to complete
-	//while(!(ADCSRA & _BV(ADIF))){};
-	while(ADCSRA & _BV(ADSC));
-	ADC = (ADCH << 8) | ADCL;// [1]
-	return ADC;
-}
-// Include the uart init() , transmit() and send_string() for printing data / for debuggig purpose
-#define BAUD 9600                                   // define baud
-#define BAUDRATE ((F_CPU)/(BAUD*16UL)-1)            // set baud rate value for UBRR
-
-void init_uart1()// initialize UART
-{
-	 //1. set the baud rate, lets configure to 9600;
-	// set the baud rate registers Ref: [1],[2]
-	UBRR0H = BAUDRATE >> 8;// UBRRnH is 8 bits left
-	UBRR0L = BAUDRATE;
-
-	 //2. setting up data packet: 8 bits ,no parity 1 stop bit
-		// setting 8 bits got to UCSCR register Ref:[3], pg 185 of data sheet
-
-	UCSR0C = _BV(UCSZ00) | _BV(UCSZ01); // 8 bits, USBS1 = 0 for 1 stop bit
-
-		// note: havnt set up the stop bit in Ref [2] slides
-	// 3. from Ref[2] we now enable Transmission and receive n UCSRnB register
-	UCSR0B = _BV(TXEN0) | _BV(RXEN0);
-
-}
-// transmit data function
-void uart_transmit( char data)
-{
-	while(!( UCSR0A &  _BV(UDRE0) ) ); //  data register enable bit is 1 if tx buffer is empy
-	// if its 1 we load data onto UDR- Uart Data Register(buffer)
-	UDR0 = data;
-}
-
-void send_string(char *str)
-{
-	int i;
-	for( i = 0; str[i]; i++) uart_transmit(str[i]);
-}//***************
 
 int main(void)
 {
@@ -92,16 +39,13 @@ int main(void)
 			testdata++;
 			if (testdata == 1024) break;
 			_delay_ms(1000);
-		#else
+		#elseif ENABLE_CONTROLS
 			thrust = adc_read(0);
 			sprintf(ch,"\n\r ADC = %d",thrust);// To see what we are transmitting
 			send_string(ch);
-			// ### CODE FOR TEST ###
-			//4testdata++;
-			_delay_ms(1000);
+			//_delay_ms(1000);
 			Send_data(OP_ROLL, thrust);
 		#endif
-		// #######
 	}
 	
 }
@@ -135,6 +79,7 @@ void Encode_data(uint8_t* type, uint8_t* data, uint16_t totalpacket)
 	*type = (totalpacket >> DATA_BIT_SIZE);
 }
 
+#if ENCRYPTION_ENABLED
 uint16_t Encrypt_data(uint16_t packet)
 {
 	// Retrieve bits that are shifted out when the right shift is done
@@ -154,4 +99,58 @@ uint16_t Encrypt_data(uint16_t packet)
 	if (encryption_key == 0) encryption_key = 5;
 
 	return encrypted_packet;
+}
+#endif
+
+// include adc function
+uint16_t adc_read(int n)//[1]
+{
+	ADMUX = n;// represents PA2
+			  // start conversion
+	ADCSRA |= _BV(ADSC);
+	// wait for conversion to complete
+	//while(!(ADCSRA & _BV(ADIF))){};
+	while (ADCSRA & _BV(ADSC));
+	ADC = (ADCH << 8) | ADCL;// [1]
+	return ADC;
+}
+
+void send_string(char *str)
+{
+	int i;
+	for (i = 0; str[i]; i++) uart_transmit(str[i]);
+}
+
+void init_uart1()// initialize UART
+{
+	//1. set the baud rate, lets configure to 9600;
+	// set the baud rate registers Ref: [1],[2]
+	UBRR0H = BAUDRATE >> 8;// UBRRnH is 8 bits left
+	UBRR0L = BAUDRATE;
+
+	//2. setting up data packet: 8 bits ,no parity 1 stop bit
+	// setting 8 bits got to UCSCR register Ref:[3], pg 185 of data sheet
+
+	UCSR0C = _BV(UCSZ00) | _BV(UCSZ01); // 8 bits, USBS1 = 0 for 1 stop bit
+
+										// note: havnt set up the stop bit in Ref [2] slides
+										// 3. from Ref[2] we now enable Transmission and receive n UCSRnB register
+	UCSR0B = _BV(TXEN0) | _BV(RXEN0);
+
+}
+
+// transmit data function
+void uart_transmit(char data)
+{
+	while (!(UCSR0A &  _BV(UDRE0))); //  data register enable bit is 1 if tx buffer is empy
+									 // if its 1 we load data onto UDR- Uart Data Register(buffer)
+	UDR0 = data;
+}
+
+// Include adc_init()
+void adc_init()//[1]
+{
+
+	// In ADCSRA Enable ADC (set ADEN) and prescaler of 64
+	ADCSRA |= _BV(ADEN) | _BV(ADPS2) | _BV(ADPS1);
 }
