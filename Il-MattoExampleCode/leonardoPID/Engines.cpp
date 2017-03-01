@@ -49,7 +49,7 @@ void Engines::setEngineSpeed(int speed_A, int speed_B, int speed_C, int speed_D)
   // Using 125-250 for motor setting 1000-2000
   //analogWrite(engines[engine], speed / 8);
   //convert to pwm and output
-    pwm_duty(2*speed_A,2*speed_B,2*speed_C, 2* speed_D);
+    //pwm_duty(2*speed_A,2*speed_B,2*speed_C, 2* speed_D);
 
     engine_speeds[LEFT_FRONT_MOTOR] = speed_A;
     engine_speeds[RIGHT_FRONT_MOTOR] = speed_B;

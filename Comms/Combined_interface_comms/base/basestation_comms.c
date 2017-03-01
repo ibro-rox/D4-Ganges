@@ -23,22 +23,15 @@ int main(void)
 	{
 		rfm12_tick();
 		
-		#if UPLINK_TEST
-			Send_data(OP_ROLL, testdata);
-			testdata++;
-			if (testdata == 1024) break;
-			_delay_ms(1000);
-		#endif
-		
+		// ### CODE FOR TEST ###
+		testdata++;
+		_delay_ms(1000);
+		Send_data(OP_ROLL, testdata);
+		// #######
 	}
-	while (1) {};
+	
 }
 
-//!
-/*  Process data and send it to the transceiver for transmission. 
-	If encryption is enabled in the basestation_comms.h then the data will be encrypted. 
-	The 10-bit data is encoded such that the 2 MSBs are stored in the packet type.
-*/
 void Send_data(uint8_t type, uint16_t data)
 {
 	// Combine packet type and data into a single 16-bit int
@@ -59,9 +52,6 @@ void Send_data(uint8_t type, uint16_t data)
 	rfm12_tx(sizeof(datapacket), type, &datapacket);
 }
 
-//!
-/*  Encode the total packet into the type and data
-*/
 void Encode_data(uint8_t* type, uint8_t* data, uint16_t totalpacket)
 {
 	// Data is equal to the 8 LSBs
@@ -71,10 +61,6 @@ void Encode_data(uint8_t* type, uint8_t* data, uint16_t totalpacket)
 	*type = (totalpacket >> DATA_BIT_SIZE);
 }
 
-//!
-/*  Encrypt the packet type and data using an encryption key.
-	This encryption key changes every time the data is encrypted.
-*/
 uint16_t Encrypt_data(uint16_t packet)
 {
 	// Retrieve bits that are shifted out when the right shift is done

@@ -148,6 +148,7 @@ uint8_t teapotPacket[14] = { '$', 0x02, 0,0, 0,0, 0,0, 0,0, 0x00, 0x00, '\r', '\
 // ===               INTERRUPT DETECTION ROUTINE                ===
 // ================================================================
 
+
 volatile bool mpuInterrupt = false;     // indicates whether MPU interrupt pin has gone high
 void dmpDataReady() {
     mpuInterrupt = true;
@@ -183,8 +184,9 @@ void setup() {
     // initialize device
     Serial.println(F("Initializing I2C devices..."));
     mpu.initialize();
+    
     pinMode(INTERRUPT_PIN, INPUT);
-
+    
     // verify connection
     Serial.println(F("Testing device connections..."));
     Serial.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
@@ -213,7 +215,8 @@ void setup() {
 
         // enable Arduino interrupt detection
         Serial.println(F("Enabling interrupt detection (Arduino external interrupt 0)..."));
-		
+
+
 		// set up ISR        cause 								ISR_name    mode
         attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), dmpDataReady, RISING);
         mpuIntStatus = mpu.getIntStatus();
@@ -222,6 +225,7 @@ void setup() {
         Serial.println(F("DMP ready! Waiting for first interrupt..."));
         dmpReady = true;
 
+      
         // get expected DMP packet size for later comparison
         packetSize = mpu.dmpGetFIFOPacketSize();
     } else {
@@ -245,8 +249,11 @@ void setup() {
 // ================================================================
 
 void loop() {
+  
     // if programming failed, don't try to do anything
     if (!dmpReady) return;
+
+
 
     // wait for MPU interrupt or extra packet(s) available
     while (!mpuInterrupt && fifoCount < packetSize) {
@@ -266,6 +273,7 @@ void loop() {
     mpuInterrupt = false;
     mpuIntStatus = mpu.getIntStatus();
 
+
     // get current FIFO count
     fifoCount = mpu.getFIFOCount();
 
@@ -274,6 +282,7 @@ void loop() {
         // reset so we can continue cleanly
         mpu.resetFIFO();
         Serial.println(F("FIFO overflow!"));
+
 
     // otherwise, check for DMP data ready interrupt (this should happen frequently)
     } else if (mpuIntStatus & 0x02) {
