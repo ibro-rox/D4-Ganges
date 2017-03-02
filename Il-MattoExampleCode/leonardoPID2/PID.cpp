@@ -119,3 +119,5 @@ float PID::updatePID(float target, float cur, float deltaTime){
 void PID::resetError(){
   iState = 0;
 }
+//[1]http://robot-kingdom.com/pid-controller-tutorial-for-robots/
+//[2]https://github.com/grantmd/QuadCopter

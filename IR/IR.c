@@ -7,7 +7,6 @@
 // avr-objcopy -O ihex IR.elf IR.hex
 // avrdude -c usbasp -p m644p -U flash:w:IR.hex
 
-
 void init_adc(void)
 {
 	ADCSRA |= _BV(ADPS2) | _BV(ADPS1) | _BV(ADEN);		
@@ -25,15 +24,10 @@ uint16_t read_adc(void)
 double to_distance(uint16_t adc_value)
 {
 	double distance,volts;
-	
-	volts = (adc_value*3.3)/1024; 	
-
+	volts = (adc_value*3.3)/1024; 
 	distance = 24/volts;
-
 	return distance;
 }
-
-
 
 int main(void)
 {
@@ -41,8 +35,6 @@ int main(void)
 	double voltage;
 	
 	init_debug_uart0();
-	
-		
 	init_adc();
 	
 	for (;;) 
@@ -51,7 +43,6 @@ int main(void)
 		
 		voltage = to_distance(result);
 		printf("%.6f\n",voltage);
-		
 		result = 0x0000;
 		voltage = 0;
 		

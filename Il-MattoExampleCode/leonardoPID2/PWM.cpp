@@ -73,7 +73,8 @@ c = throttle - roll + pitch + yaw
 d = throttle + roll + pitch - yaw
 b = throttle - roll - pitch - yaw
 a = throttle + roll - pitch + yaw
-[1]http://robotics.stackexchange.com/questions/5116/how-to-find-a-solution-for-quadcopter-pid-control
+[1]http://robotics.stackexchange.com/questions/5116/
+how-to-find-a-solution-for-quadcopter-pid-control
 //seems to be inverted pitch so we changed it
   pwm_duty(LEFT_FRONT_MOTOR, (uint16_t)(throttle - roll + pitch + yaw));
   pwm_duty(RIGHT_FRONT_MOTOR, (uint16_t)(throttle + roll + pitch - yaw));
