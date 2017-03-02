@@ -1,0 +1,44 @@
+costing:
+Development:
+	Unmanned Tech: £79.03
+	other components:
+		ardunio leonardo: £18.50
+		mirco servo: £7.70
+		gyroscope: £1.50
+		misc components + boards: £8
+		transciever: £5.65
+		atmel chip x 2: £12.62
+		A2 acrylic sheet: £10.55
+	TOTAL: £143.55
+Production:
+	Unmanned Tech: £79.03
+	other components:
+		ardunio leonardo: £12.49
+		mirco servo: £2
+		gyroscope: £1.50
+		misc components + boards: £4
+		transciever: £5.09
+		atmel chip x 2: £8.04
+		A2 acrylic sheet: £8
+
+		2 hours of constuction cost(£20 per hour): £40 
+	TOTAL: £160.15
+
+Project hours per person:
+	Over a span of 2 weeks of designing and testing an estimate of total 88 hours (based on current work time)
+	total of 440 man hours: (guess split of those hours)
+	160hours developing software
+	40hours board production and building
+	240 hours total debugging
+
+	at £75 per man hour total cost of £33000
+	CE mark: £2000
+	Manufacturing costs: £100000
+
+	Total Development costs and manufacturing costs: £135143.55
+
+Making money!
+ to make money if they are being sold at £300 (profit margin of 53%)
+ we need to make 965 units (assuming 100% yeild)
+ at 90% yeild (worst case) we need 1073 units before breaking even
+

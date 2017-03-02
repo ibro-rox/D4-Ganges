@@ -8,6 +8,11 @@
 #define OP_KI 6
 #define OP_KD 7
 
+// Define data code for the button command
+#define BTN_CARGO_HOOK 0
+#define	BTN_PID_MODE 1 // Allow setting of K values and disable telemetry
+#define	BTN_FLIGHT_MODE 2 // Receive telemetry
+
 // Define bit sizes for the packets
 #define DATA_BIT_SIZE 10
 #define COMMAND_BIT_SIZE 3
@@ -15,3 +20,16 @@
 
 // Enable encryption
 #define ENCRYPTION_ENABLED 1
+
+// Enable uplink test
+#define UPLINK_TEST 1
+#define DOWNLINK_TEST 0
+
+// Enable UI via UART to Putty
+#define UI_ENABLED 0
+
+// Enable controls
+#define CONTROLS_ENABLED 1
+
+// Enable double transceivers
+#define DOUBLE_TRANSCEIVERS 0
