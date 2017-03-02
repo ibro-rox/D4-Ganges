@@ -34,12 +34,29 @@ int main(void)
 			#if UPLINK_TEST
 				send_string("\n\rReceived transmission:");
 				// Send received packet type to UART
-				sprintf(ch,"\n\r Packet type: %d",receiveddata);
+				sprintf(ch,"\n\r Packet type: %d",receivedpackettype);
 				send_string(ch);
 				// Send received data to UART
 				sprintf(ch, "\n\r Data = %d", receiveddata);
 				send_string(ch);
+			#elif ENABLE_CONTROLS
+				switch(receivedpackettype)
+				{
+					case OP_THRUST : sprintf(ch, "\n\r Thrust = %u", receiveddata);
+										send_string(ch);
+									break;
+					case OP_ROLL : sprintf(ch, "\n\r Roll = %u", receiveddata);
+										send_string(ch);
+									break;
+					case OP_YAW : sprintf(ch, "\n\r Yaw = %u", receiveddata);
+										send_string(ch);
+									break;
+					case OP_PITCH : sprintf(ch, "\n\r Pitch = %u", receiveddata);
+										send_string(ch);
+									break;
+				}
 			#endif
+
 			// print off the adc data
 
 		}
@@ -57,7 +74,7 @@ void Retrieve_data(uint8_t* type, uint16_t* data)
 	totalpacket = type;
 	totalpacket = (totalpacket << DATA_BIT_SIZE) + data;
 
-	#if ENCRYPTION_ENABLED
+	#if ENABLE_ENCRYPTION
 		// Decrypt the received packet
 		totalpacket = Decrypt_data(totalpacket);
 	#endif // ENCRYPTION_ENABLED
@@ -82,7 +99,7 @@ uint16_t Decode_data(uint8_t* type, uint16_t* data, uint16_t totalpacket)
 /*
 	Decrypts the packet and removes the encryption key.
 */
-#if ENCRYPTION_ENABLED
+#if ENABLE_ENCRYPTION
 uint16_t Decrypt_data(uint16_t packet)
 {
 	// Retrieve the encryption key
