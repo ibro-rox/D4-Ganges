@@ -1,0 +1,20 @@
+Additional Project Tasks
+
+(JH) Testing UART communications between Arduino and Il Matto
+
+Construct power distibution
+
+Establish power draw and test 
+
+Test ESCs with motors
+
+Construct HID controller
+
+Establish cargo hook PWM parameters
+
+Tune PID controller constants
+
+
+
+
+
