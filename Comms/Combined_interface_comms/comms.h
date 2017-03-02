@@ -19,17 +19,17 @@
 #define ENCRYPT_KEY_BIT_SIZE 3
 
 // Enable encryption
-#define ENCRYPTION_ENABLED 1
+#define ENABLE_ENCRYPTION 1
 
 // Enable uplink test
 #define UPLINK_TEST 1
 #define DOWNLINK_TEST 0
 
 // Enable UI via UART to Putty
-#define UI_ENABLED 0
+#define ENABLE_UI 0
 
 // Enable controls
-#define CONTROLS_ENABLED 1
+#define ENABLE_CONTROLS 1
 
 // Enable double transceivers
 #define DOUBLE_TRANSCEIVERS 0

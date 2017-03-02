@@ -58,7 +58,7 @@ void Send_data(uint8_t type, uint16_t data)
 	totalpacket = (totalpacket << DATA_BIT_SIZE) + data;
 
 	// Encrypt data
-	#if ENCRYPTION_ENABLED
+	#if ENABLE_ENCRYPTION
 		totalpacket = Encrypt_data(totalpacket);
 	#endif
 
@@ -79,7 +79,7 @@ void Encode_data(uint8_t* type, uint8_t* data, uint16_t totalpacket)
 	*type = (totalpacket >> DATA_BIT_SIZE);
 }
 
-#if ENCRYPTION_ENABLED
+#if ENABLE_ENCRYPTION
 uint16_t Encrypt_data(uint16_t packet)
 {
 	// Retrieve bits that are shifted out when the right shift is done
