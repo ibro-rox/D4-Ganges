@@ -1,0 +1,10 @@
+Module Title: Chassis Design
+People Involved: Lawrence
+
+The chassis will be built from 5mm thick acyrlic chosen for its rigidity and wide availability. 
+As the chassis will be produced using a laser cutter, triangle cutouts add little to the complexity of manufacture and provide valuable weight savings without compromising too much structural integrity.
+
+Propellor diameters of 5-6 inches meant that the motors had to be positioned away from the main body of the vehicle. To avoid excessive weight, the motors will be mounted on struts in an I-shape, keeping the additional weight low whilst allowing the propellors sufficient clearance. 
+
+A twin tier design leaves plenty of space for the battery in its fireproof bag whilst maintaining accessibility for the rest of the electronics for inspections and light maintenace purposes. The feet of the chassis form a separate I-shaped structure to reinforce the motor struts and improve the rigidity of the chassis. The servo mount for the hook is located in this structure to provide support and enable the hook to be stowed out  of the way for landing procedures.
+
