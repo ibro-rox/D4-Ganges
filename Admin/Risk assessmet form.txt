@@ -1,35 +1,35 @@
 HAZARD
-1.) Ground control User interface may interfer with transmission of joystick controls 
-Sensitivity: 4 
+1.) Ground control User interface may interfere with transmission of joystick controls 
+Sensitivity: 3
 Likelihood : 4
-Risk : 16
+Risk : 12
 Control: Implement interrupts-conditional statemets methodology to prevent UI from blocking the transmission of joystick values for a significant amount of time, ensuring smooth ground control.
-Controlled sensitivity: 4
+Controlled sensitivity: 2
 Controlled Likelihood: 1
-Risk: 4
+Risk: 2
 2.) Mishandling of the ESC.
 Sensitivity : 4
 Linkeihood : 3
 Risk : 12
-Control: Ensure we comply with ESC's handling guidelines.Confirm correct wiring of the ESC's before applying power. Make sure each ECS is calibrated to control the motors with the given control signals.
+Control: Ensure we comply with ESC's handling guidelines. Confirm correct wiring of the ESC's before applying power. Make sure each ECS is calibrated to control the motors with the given control signals.
 Controlled sensitivity: 3
 Controlled Likelihood: 2
 Risk: 6
 3.) Lack of protection from propellers
-Sensitvity: 2
-Linkeihood :5
-Risk: 10
-Control: make sure that the motors are not running when a team member is close to them. Considerations are made to the shattie design to include blade guards.
+Sensitvity: 3
+Likelihood :5
+Risk: 15
+Control: make sure that the motors are not running when a team member is close to them. Considerations are made to the chassis design to include blade guards.
 Controlled Sensitvity : 2
 Controlled Likelihood : 2
 Controlled Risk: 4
-4.) Improper use of the power supply
+4.) Improper use of the battery
 Sensitivity: 4
 Likelihood : 3
 Risk : 12
-Control : Read the online resources and spec sheets to properly utilise this suppply to deliver the adequate power needed to run all four motors. Ensure the supply is charged for an adaquate amount of time.
+Control : Read the online resources and spec sheets to properly utilise the battery to deliver the adequate power needed to run all four motors. Ensure the battery is charged for an adequate amount of time.
 Also use any relevant measurement tools (eg. multimeters) for checking the voltages and currents between the supply to the ESCs to the Motors.
-Controlled Sesnitivity: 2
+Controlled Sensitivity: 2
 Controlled Likelihood: 2
 Controlled Risk: 4
 5.) Losing wireless communications from the Human operator.
@@ -37,7 +37,7 @@ Sensitivity: 4
 Likelihood: 4
 Risk: 16
 Control : Need to implement a solution for countering the problem of receiving data from other other transmitters operating in the same channel/ band.
-In terms of other drones receiving our transmitted data we are considering the implementation of encryption so that the data received by ohter drones becomes redundant. More immportantly incase due to technical issues with the transceiver modules the communication link stops working, we can implement an emergency landing feature to the drone to help ensure the drones safety.
+In terms of other drones receiving our transmitted data we are considering the implementation of identification in the transmitted packet so that the data received by other drones becomes redundant. More immportantly if, due to technical issues with the transceiver modules, the communication link stops working, we will implement an emergency landing feature to the drone to help ensure the drones safety.
 Controlled Sensitivity : 2
 Controlled Likelihood : 2
 Controlled Risk : 4
@@ -45,7 +45,7 @@ Controlled Risk : 4
 Sensitivity: 3
 Likelihood: 4
 Risk: 12
-Control : We have 2 sub teams, one for control of motors and sensors and the other for communication between the base station and drone. these teams consist of 2 team members who should be aware of there sub team members work in order to establish complete understanding of the sub system and also for the sake of integration.
+Control : We have 2 sub teams, one for control of motors and sensors and the other for communication between the base station and drone. These teams consist of 2 team members who should be aware of their sub team member's work in order to establish complete understanding of the sub system and also for the sake of integration. This will allow other members to handle work required in case of absences.
 Controlled Sensitivity: 1
 Controlled Likelihood: 2
 Controlled Risk: 2
@@ -53,7 +53,7 @@ Controlled Risk: 2
 Sensitivity : 4
 Likelihood: 2
 Risk: 8
-Control : We will laser cut an extra set of chassis parts in case one of the parts gets deformed or is completely broken. Thus allows us to replace parts quickly and easily.
+Control : We will laser cut an extra set of chassis parts in case one of the parts gets deformed or is completely broken. This allows us to replace parts quickly and easily.
 Controlled Sensitivity: 2
 Contolled Likelihood: 1
 Controlled Risk: 2

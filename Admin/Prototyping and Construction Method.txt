@@ -11,8 +11,10 @@ After prototyping has been completed we will construct the chassis. This involve
 
 Sticky tape will be used to attach most of the various components to the chassis. An exception is the motors which will be attached using the provided screws, through holes in the motor pads of the chassis.
 
-The ESCs will be mounted underneath the second tier, with power distribution achieved by soldering onto stripboard. The gyroscope will be placed ######WHERE?### and connected to the Arduino using flying leads. The pin header on the breakout board will be flipped through desoldering and resoldering on the other side.
+The ESCs will be mounted underneath the second tier, with power distribution achieved by soldering onto stripboard. The gyroscope will be placed in the centre of the drone and connected to the Arduino using flying leads. The pin header on the breakout board will be flipped through desoldering and resoldering on the other side.
 
 The servo for cargo acquisition will be accommodated on the bottom side of the drone through a gap in the acryllic.
+
+######HID CONTROLLER########
 
 We will only be using pre-made surface mount packages.
