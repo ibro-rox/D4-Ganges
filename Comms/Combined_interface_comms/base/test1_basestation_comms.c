@@ -10,9 +10,7 @@
 #include <math.h>
 
 #include "rfm12.h"
-//#include "basestation_comms.h"
-
-uint8_t encryption_key;
+#include "basestation_comms.h"
 
 int main(void)
 {
@@ -22,49 +20,58 @@ int main(void)
 	init_uart1();
 	sei();
 
-	encryption_key = 5;
+	#if ENABLE_ENCRYPTION
+		encryption_key = 5;
+	#endif
 
-	// Send test data
-	uint16_t testdata;
-	// adc channels 
-	uint16_t thrust,yaw,pitch,roll;
-	testdata = 0;
-	uint16_t thrust;// start with one channel transmisssion sinc eat this time we have one pot
+	#if UPLINK_TEST
+		uint16_t testdata;
+		testdata = 0;
+	#endif
+
+	// ADC channels 
+	uint16_t thrust, yaw, pitch, roll;
+
 	char ch[30];
 	while (1)
 	{
 		rfm12_tick();
 		#if UPLINK_TEST
 			Send_data(OP_ROLL, testdata);
-			sprintf(ch,"\n\rTestdata = %d",testdata)
+			sprintf(ch, "\n\rTestdata = %d", testdata);
 			send_string(ch);
 			testdata++;
 			if (testdata == 1024) break;
-			_delay_ms(1000);
-		#elif ENABLE_CONTROLS
-			thrust = adc_read(0);
+			_delay_ms(500);
+		#endif
+		#if ENABLE_CONTROLS
+			thrust = adc_read(PIN_THRUST);
 			sprintf(ch,"\n\r thrust = %d",thrust);// To see what we are transmitting
 			send_string(ch);
-			_delay_ms(1000);
+			_delay_ms(500);
 			Send_data(OP_THRUST, thrust);
-			yaw = adc_read(1);
+
+			yaw = adc_read(PIN_YAW);
 			sprintf(ch,"\n\r Yaw = %d",yaw);// To see what we are transmitting
 			send_string(ch);
-			_delay_ms(1000);
+			_delay_ms(500);
 			Send_data(OP_YAW, yaw);
-			pitch = adc_read(0);
+
+			pitch = adc_read(PIN_PITCH);
 			sprintf(ch,"\n\r Pitch = %d",pitch);// To see what we are transmitting
 			send_string(ch);
-			_delay_ms(1000);
+			_delay_ms(500);
 			Send_data(OP_PITCH, pitch);
-			roll = adc_read(0);
+
+			roll = adc_read(PIN_ROLL);
 			sprintf(ch,"\n\r Roll = %d",roll);// To see what we are transmitting
 			send_string(ch);
-			_delay_ms(1000);
+			_delay_ms(500);
 			Send_data(OP_ROLL, roll);
-
 		#endif
 	}
-	
+
+	// Allows program to stop
+	while (1) {};
 }
 

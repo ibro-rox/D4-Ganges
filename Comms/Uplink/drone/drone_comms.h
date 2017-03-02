@@ -1,3 +1,10 @@
+/*
+	drone_comms.h
+	Header file for drone_comms.c
+	Author: Joel Trickey
+*/
 #include "../comms.h"
 
-uint16_t Decode_data(uint8_t* packettype, uint16_t* data);
+void Decode_data(uint8_t* type, uint16_t* data, uint16_t totalpacket);
+void Retrieve_data(uint8_t* type, uint16_t* data);
+uint16_t Decrypt_data(uint16_t packet);

@@ -1,3 +1,8 @@
+/*
+	basestation_comms.c
+	Implements communications from ground to air on the basestation.
+	Author: Joel Trickey
+*/
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
@@ -6,7 +11,7 @@
 #include "rfm12.h"
 #include "basestation_comms.h"
 
-uint8_t encryption_key;
+volatile uint8_t encryption_key;
 
 int main(void)
 {
@@ -35,7 +40,8 @@ int main(void)
 }
 
 //!
-/*  Process data and send it to the transceiver for transmission. 
+/*  
+	Process data and send it to the transceiver for transmission. 
 	If encryption is enabled in the basestation_comms.h then the data will be encrypted. 
 	The 10-bit data is encoded such that the 2 MSBs are stored in the packet type.
 */
@@ -60,7 +66,8 @@ void Send_data(uint8_t type, uint16_t data)
 }
 
 //!
-/*  Encode the total packet into the type and data
+/*  
+	Encode the total packet into the type and data
 */
 void Encode_data(uint8_t* type, uint8_t* data, uint16_t totalpacket)
 {
@@ -72,7 +79,8 @@ void Encode_data(uint8_t* type, uint8_t* data, uint16_t totalpacket)
 }
 
 //!
-/*  Encrypt the packet type and data using an encryption key.
+/*  
+	Encrypt the packet type and data using an encryption key.
 	This encryption key changes every time the data is encrypted.
 */
 uint16_t Encrypt_data(uint16_t packet)

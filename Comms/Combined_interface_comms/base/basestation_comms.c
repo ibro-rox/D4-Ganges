@@ -6,13 +6,17 @@
 #include "rfm12.h"
 #include "basestation_comms.h"
 
-// initialzie adc
+#if ENABLE_ENCRYPTION
+volatile uint8_t encryption_key;
+#endif
+
+// initialise adc
 void adc_init()//[1]
 {
-	
 	// In ADCSRA Enable ADC (set ADEN) and prescaler of 64
 	ADCSRA |= _BV(ADEN) | _BV(ADPS2) | _BV(ADPS1);
 }
+
 uint16_t adc_read(int n)//[1]
 {
 	ADMUX = n;// represents PA2
@@ -24,8 +28,6 @@ uint16_t adc_read(int n)//[1]
 	ADC = (ADCH << 8) | ADCL;// [1]
 	return ADC;
 }
-#define BAUD 9600                                   // define baud
-#define BAUDRATE ((F_CPU)/(BAUD*16UL)-1)            // set baud rate value for UBRR
 
 void init_uart1()// initialize UART
 {
@@ -44,6 +46,7 @@ void init_uart1()// initialize UART
 	UCSR0B = _BV(TXEN0) | _BV(RXEN0);
 
 }
+
 // transmit data function
 void uart_transmit( char data)
 {
@@ -56,26 +59,28 @@ void send_string(char *str)
 {
 	int i;
 	for( i = 0; str[i]; i++) uart_transmit(str[i]);
-}//***************
+}
 
 void Send_data(uint8_t type, uint16_t data)
 {
-	// Combine packet type and data into a single 16-bit int
-	uint16_t totalpacket;
-	totalpacket = type;
-	totalpacket = (totalpacket << DATA_BIT_SIZE) + data;
+	#if ENABLE_UPLINK
+		// Combine packet type and data into a single 16-bit int
+		uint16_t totalpacket;
+		totalpacket = type;
+		totalpacket = (totalpacket << DATA_BIT_SIZE) + data;
 
-	// Encrypt data
-	#if ENABLE_ENCRYPTION
-		totalpacket = Encrypt_data(totalpacket);
+		// Encrypt data
+		#if ENABLE_ENCRYPTION
+			totalpacket = Encrypt_data(totalpacket);
+		#endif
+
+		// Split 16-bit packet into two 8-bit ints - packet type and data
+		uint8_t datapacket;
+		Encode_data(&type, &datapacket, totalpacket);
+
+		// Send packet to the buffer for transmission
+		rfm12_tx(sizeof(datapacket), type, &datapacket);
 	#endif
-
-	// Split 16-bit packet into two 8-bit ints - packet type and data
-	uint8_t datapacket;
-	Encode_data(&type, &datapacket, totalpacket);
-
-	// Send packet to the buffer for transmission
-	rfm12_tx(sizeof(datapacket), type, &datapacket);
 }
 
 void Encode_data(uint8_t* type, uint8_t* data, uint16_t totalpacket)

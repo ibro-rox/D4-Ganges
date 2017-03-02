@@ -1,6 +1,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
+#include <math.h>
 
 #include "rfm12.h"
 #include "drone_comms.h"
@@ -9,20 +10,19 @@ void Retrieve_data(uint8_t* type, uint16_t* data)
 {
 	// Combine packet type and data into a single 16-bit int
 	uint16_t totalpacket;
-	totalpacket = type;
-	totalpacket = (totalpacket << DATA_BIT_SIZE) + data;
+	totalpacket = *type;
+	totalpacket = (totalpacket << DATA_BIT_SIZE) + *data;
 
 	#if ENABLE_ENCRYPTION
 		// Decrypt the received packet
 		totalpacket = Decrypt_data(totalpacket);
 	#endif
 
-
 	// Split the decrypted packet into the data and the packet type
 	Decode_data(type, data, totalpacket);
 }
 
-uint16_t Decode_data(uint8_t* type, uint16_t* data, uint16_t totalpacket)
+void Decode_data(uint8_t* type, uint16_t* data, uint16_t totalpacket)
 {
 	// Get 10-bit data from the 16 bit packet
 	*data = totalpacket & (uint16_t)1023;
@@ -45,11 +45,12 @@ uint16_t Decrypt_data(uint16_t packet)
 	// original packet left-shifted by the required number of bits.
 	// It is & with a sequence of 1s to remove the encryption key from the overall packet
 	uint16_t decrypted_packet;
-	decrypted_packet = (((packet << encryption_key) & (pow(2, DATA_BIT_SIZE + COMMAND_BIT_SIZE) - 1)) + rotated_out_bits;
+	decrypted_packet = ((packet << encryption_key) & ((uint16_t)pow(2, DATA_BIT_SIZE + COMMAND_BIT_SIZE) - 1)) + rotated_out_bits;
 
 	return decrypted_packet;
 }
 #endif
+
 #define BAUD 9600                                   // define baud
 #define BAUDRATE ((F_CPU)/(BAUD*16UL)-1)            // set baud rate value for UBRR
 

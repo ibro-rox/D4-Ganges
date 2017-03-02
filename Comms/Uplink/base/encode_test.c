@@ -1,3 +1,9 @@
+/*
+	encode_test.c
+	Tests the encoding and encryption of 
+	Author: Joel Trickey and Mohammed Ibrahim	
+*/
+
 #include <avr/io.h>
 #include <stdio.h>
 #include <string.h>
@@ -36,8 +42,10 @@ void send_string(char *str)
 {
 	int i;
 	for (i = 0; str[i]; i++) uart_transmit(str[i]);
-}//***************void test_encode_decode()
+}
+//
 
+// Joel's encoding and encryption test
 void test_encode()
 {
 	// Encode
@@ -140,6 +148,7 @@ int main(void)
 {
 	init_uart1();
 
+	// Test all possibilities of data for the chosen encryption key and break if an encryption fails
 	uint16_t testpacket, result;
 	for (testpacket = 0; testpacket < 8192; testpacket++)
 	{

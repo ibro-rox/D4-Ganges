@@ -1,3 +1,8 @@
+/*
+	basestation_comms.h
+	Header file for basestation_comms.c
+	Author: Joel Trickey
+*/
 #include "../comms.h"
 
 void Send_data(uint8_t type, uint16_t data);
