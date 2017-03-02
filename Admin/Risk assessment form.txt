@@ -7,6 +7,7 @@ Control: Implement interrupts-conditional statemets methodology to prevent UI fr
 Controlled sensitivity: 2
 Controlled Likelihood: 1
 Risk: 2
+
 2.) Mishandling of the ESC.
 Sensitivity : 4
 Linkeihood : 3
@@ -15,6 +16,7 @@ Control: Ensure we comply with ESC's handling guidelines. Confirm correct wiring
 Controlled sensitivity: 3
 Controlled Likelihood: 2
 Risk: 6
+
 3.) Lack of protection from propellers
 Sensitvity: 3
 Likelihood :5
@@ -23,6 +25,7 @@ Control: make sure that the motors are not running when a team member is close t
 Controlled Sensitvity : 2
 Controlled Likelihood : 2
 Controlled Risk: 4
+
 4.) Improper use of the battery
 Sensitivity: 4
 Likelihood : 3
@@ -32,6 +35,7 @@ Also use any relevant measurement tools (eg. multimeters) for checking the volta
 Controlled Sensitivity: 2
 Controlled Likelihood: 2
 Controlled Risk: 4
+
 5.) Losing wireless communications from the Human operator.
 Sensitivity: 4
 Likelihood: 4
@@ -41,6 +45,7 @@ In terms of other drones receiving our transmitted data we are considering the i
 Controlled Sensitivity : 2
 Controlled Likelihood : 2
 Controlled Risk : 4
+
 6.) Non availability of members during certain weekends
 Sensitivity: 3
 Likelihood: 4
@@ -49,6 +54,7 @@ Control : We have 2 sub teams, one for control of motors and sensors and the oth
 Controlled Sensitivity: 1
 Controlled Likelihood: 2
 Controlled Risk: 2
+
 7.) The chassis we use could break or deform.
 Sensitivity : 4
 Likelihood: 2
