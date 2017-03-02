@@ -1,5 +1,5 @@
 HAZARD
-1.) Ground control User interface may interfer with transmission of joystick control 
+1.) Ground control User interface may interfer with transmission of joystick controls 
 Sensitivity: 4 
 Likelihood : 4
 Risk : 16
@@ -27,7 +27,7 @@ Controlled Risk: 4
 Sensitivity: 4
 Likelihood : 3
 Risk : 12
-Control : Read the online resources and spec sheets to properly utilise this suppply to deliver the adequate power needed to run all four motors.
+Control : Read the online resources and spec sheets to properly utilise this suppply to deliver the adequate power needed to run all four motors. Ensure the supply is charged for an adaquate amount of time.
 Also use any relevant measurement tools (eg. multimeters) for checking the voltages and currents between the supply to the ESCs to the Motors.
 Controlled Sesnitivity: 2
 Controlled Likelihood: 2
@@ -48,4 +48,12 @@ Risk: 12
 Control : We have 2 sub teams, one for control of motors and sensors and the other for communication between the base station and drone. these teams consist of 2 team members who should be aware of there sub team members work in order to establish complete understanding of the sub system and also for the sake of integration.
 Controlled Sensitivity: 1
 Controlled Likelihood: 2
+Controlled Risk: 2
+7.) The chassis we use could break or deform.
+Sensitivity : 4
+Likelihood: 2
+Risk: 8
+Control : We will laser cut an extra set of chassis parts in case one of the parts gets deformed or is completely broken. Thus allows us to replace parts quickly and easily.
+Controlled Sensitivity: 2
+Contolled Likelihood: 1
 Controlled Risk: 2
