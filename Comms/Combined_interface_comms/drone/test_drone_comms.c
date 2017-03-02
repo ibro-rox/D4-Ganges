@@ -34,7 +34,7 @@ int main(void)
 			#if UPLINK_TEST
 				send_string("\n\rReceived transmission:");
 				// Send received packet type to UART
-				sprintf(ch,"\n\r Packet type: %d",receiveddata);
+				sprintf(ch,"\n\r Packet type: %d",receivedpackettype);
 				send_string(ch);
 				// Send received data to UART
 				sprintf(ch, "\n\r Data = %d", receiveddata);
