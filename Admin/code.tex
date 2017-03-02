@@ -1,0 +1,57 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{listings}
+\usepackage{color}
+\usepackage[margin=1in]{geometry}
+\usepackage{pdfpages}
+\definecolor{mygray}{rgb}{0.4,0.4,0.4}
+
+\lstset{
+basicstyle=\footnotesize\sffamily\color{black},
+commentstyle=\color{mygray},
+frame=single,
+breaklines=true,% helps wrap huge lines in the code to fit onto the page
+numbers=left,
+numbersep=5pt,
+numberstyle=\tiny\color{mygray},
+keywordstyle=\color{blue},
+showspaces=false,
+showstringspaces=false,
+stringstyle=\color{cyan},
+tabsize=1
+}
+
+\begin{document}
+\section{Control}
+\subsection{Main File}
+ \lstinputlisting[language=C++]{../Il-MattoExampleCode/leonardoPID2/leonardoPID2.ino}
+\subsection{PWM output Funtions}
+ \lstinputlisting[language=C++]{../Il-MattoExampleCode/leonardoPID2/PWM.cpp}
+ \subsection{PID Class (Found online)}
+ \lstinputlisting[language=C++]{../Il-MattoExampleCode/leonardoPID2/PID.cpp}
+ \subsection{Other utilities for PID code}
+ \lstinputlisting[language=C++]{../Il-MattoExampleCode/leonardoPID2/utils.cpp}
+\section{Sensing}
+ \subsection{Gyroscope (example code we will use for getting angles from gyro)}
+ \lstinputlisting[language=C++]{../Joe/Arduino/Uno/AccelGyro/AccelGyro.ino}
+ \subsection{IR sensor}
+ \lstinputlisting[language=C++]{../IR/IR.c}
+\section{Communication}
+\subsection{Communications Code from Base station}
+\lstinputlisting[language=C]{../Comms/Uplink/base/Basestation_comms.c}
+\subsection{Communications code from the drone}
+\lstinputlisting[language=C]{../Comms/Uplink/drone/drone_comms.c}
+\subsection{Packet encryption and encoding}
+\lstinputlisting[language=C]{../Comms/Uplink/base/encode_test.c}
+\section{Ground Control}
+\subsection{Testing adc reads for using Joystick potentiometers}
+\lstinputlisting[language=C]{../Comms/ControllerInterface/base_station_controller.c}
+\subsection{Testing User Interface code in the base station controler}
+\lstinputlisting[language=C]{../Comms/ControllerInterface/PID_values_test_2.c}
+\section{Chassis Design}
+	\subsection{Servo code for hook}
+	 \lstinputlisting[language=C++]{../Servo/servo.c}
+	\subsection{Laser printing design}
+	\includepdf[pages={1}]{../ChassisDesign/print1_2802.pdf}
+	\includepdf[pages={1}]{../ChassisDesign/print2_2802.pdf}
+\end{document}
