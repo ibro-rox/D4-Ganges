@@ -3,6 +3,7 @@
 \usepackage{listings}
 \usepackage{color}
 \usepackage[margin=1in]{geometry}
+\usepackage{pdfpages}
 \definecolor{mygray}{rgb}{0.4,0.4,0.4}
 
 \lstset{
@@ -31,6 +32,8 @@ tabsize=1
  \subsection{Other utilities for PID code}
  \lstinputlisting[language=C++]{../Il-MattoExampleCode/leonardoPID2/utils.cpp}
 \section{Sensing}
+ \subsection{Gyroscope (example code we will use for getting angles from gyro)}
+ \lstinputlisting[language=C++]{../Joe/Arduino/Uno/AccelGyro/AccelGyro.ino}
  \subsection{IR sensor}
  \lstinputlisting[language=C++]{../IR/IR.c}
 \section{Communication}
@@ -48,4 +51,7 @@ tabsize=1
 \section{Chassis Design}
 	\subsection{Servo code for hook}
 	 \lstinputlisting[language=C++]{../Servo/servo.c}
+	\subsection{Laser printing design}
+	\includepdf[pages={1}]{../ChassisDesign/print1_2802.pdf}
+	\includepdf[pages={1}]{../ChassisDesign/print2_2802.pdf}
 \end{document}
