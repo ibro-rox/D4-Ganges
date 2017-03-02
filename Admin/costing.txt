@@ -42,3 +42,6 @@ Making money!
  we need to make 965 units (assuming 100% yeild)
  at 90% yeild (worst case) we need 1073 units before breaking even
 
+EDIT:
+	justification of the 2 hour building time:
+	A skilled worker will first laser cut the frame and glue it together which should take 30 minutes. They then must program all of the microcontrollers and calibrate the ecs's, this should take another 30 minutes. The circuits should take 20 minutes to connect together and mount. Finally the last 40 minutes will be spent on testing and verifying that everything is in a working order.  
