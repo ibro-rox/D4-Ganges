@@ -9,6 +9,7 @@ void Encode_data(uint8_t* type, uint8_t* data, uint16_t totalpacket);
 uint16_t Encrypt_data(uint16_t packet);
 
 uint16_t adc_read(int n);
+void adc_init();
 
 void send_string(char *str);
 void init_uart1();

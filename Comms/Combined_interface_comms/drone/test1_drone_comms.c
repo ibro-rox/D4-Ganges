@@ -39,7 +39,24 @@ int main(void)
 				// Send received data to UART
 				sprintf(ch, "\n\r Data = %d", receiveddata);
 				send_string(ch);
+			#elif ENABLE_CONTROLS
+				switch(receivedpackettype)
+				{
+					case OP_THRUST : sprintf(ch, "\n\r Thrust = %u", receiveddata);
+										send_string(ch);
+									break;
+					case OP_ROLL : sprintf(ch, "\n\r Roll = %u", receiveddata);
+										send_string(ch);
+									break;
+					case OP_YAW : sprintf(ch, "\n\r Yaw = %u", receiveddata);
+										send_string(ch);
+									break;
+					case OP_PITCH : sprintf(ch, "\n\r Pitch = %u", receiveddata);
+										send_string(ch);
+									break;
+				}
 			#endif
+
 			// print off the adc data
 
 		}

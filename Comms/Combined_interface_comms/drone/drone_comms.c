@@ -5,32 +5,6 @@
 #include "rfm12.h"
 #include "drone_comms.h"
 
-int main(void)
-{	
-	// Initialise rfm12 and interrupts
-	rfm12_init();
-	sei();
-
-	uint8_t receivedpackettype;
-	uint16_t receiveddata;
-
-	while (1)
-	{
-		rfm12_tick();
-		
-		// Wait for data to be fully received
-		if (rfm12_rx_status() == STATUS_COMPLETE)
-		{
-			// Get the received packet type and data
-			receivedpackettype = rfm12_rx_type();
-			receiveddata = rfm12_rx_buffer();
-			
-			// Decrypt (if enabled) and extract 10-bit data and packet type from the received packet 
-			Retrieve_data(&receivedpackettype, &receiveddata);
-		}
-	}
-}
-
 void Retrieve_data(uint8_t* type, uint16_t* data)
 {
 	// Combine packet type and data into a single 16-bit int
@@ -38,10 +12,10 @@ void Retrieve_data(uint8_t* type, uint16_t* data)
 	totalpacket = type;
 	totalpacket = (totalpacket << DATA_BIT_SIZE) + data;
 
-	#if ENCRYPTION_ENABLED
+	#if ENABLE_ENCRYPTION
 		// Decrypt the received packet
 		totalpacket = Decrypt_data(totalpacket);
-	#endif // ENCRYPTION_ENABLED
+	#endif
 
 
 	// Split the decrypted packet into the data and the packet type
@@ -56,7 +30,7 @@ uint16_t Decode_data(uint8_t* type, uint16_t* data, uint16_t totalpacket)
 	// Get packet type
 	*type = (totalpacket >> DATA_BIT_SIZE);
 }
-
+#if ENABLE_ENCRYPTION
 uint16_t Decrypt_data(uint16_t packet)
 {
 	// Retrieve the encryption key
@@ -75,3 +49,37 @@ uint16_t Decrypt_data(uint16_t packet)
 
 	return decrypted_packet;
 }
+#endif
+#define BAUD 9600                                   // define baud
+#define BAUDRATE ((F_CPU)/(BAUD*16UL)-1)            // set baud rate value for UBRR
+
+void init_uart1()// initialize UART
+{
+	 //1. set the baud rate, lets configure to 9600;
+	// set the baud rate registers Ref: [1],[2]
+	UBRR0H = BAUDRATE >> 8;// UBRRnH is 8 bits left
+	UBRR0L = BAUDRATE;
+
+	 //2. setting up data packet: 8 bits ,no parity 1 stop bit
+		// setting 8 bits got to UCSCR register Ref:[3], pg 185 of data sheet
+
+	UCSR0C = _BV(UCSZ00) | _BV(UCSZ01); // 8 bits, USBS1 = 0 for 1 stop bit
+
+		// note: havnt set up the stop bit in Ref [2] slides
+	// 3. from Ref[2] we now enable Transmission and receive n UCSRnB register
+	UCSR0B = _BV(TXEN0) | _BV(RXEN0);
+
+}
+// transmit data function
+void uart_transmit( char data)
+{
+	while(!( UCSR0A &  _BV(UDRE0) ) ); //  data register enable bit is 1 if tx buffer is empy
+	// if its 1 we load data onto UDR- Uart Data Register(buffer)
+	UDR0 = data;
+}
+
+void send_string(char *str)
+{
+	int i;
+	for( i = 0; str[i]; i++) uart_transmit(str[i]);
+}//***************
