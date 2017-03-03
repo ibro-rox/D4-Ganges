@@ -1,21 +1,47 @@
-Wireless modules interfaced with embedded devices							Using SPI
-Motor drive interfaced with embedded device			
-Power management of complete UAV									_____ mA , at _____ V = ______ mW. Batteries should last for _____ hrs.
-Transmitting data from one Il Matto using one wireless module			
-Receive transmission on another Il Matto interfaced with another wireless module			Receiving at >200 packets/s
-Achieve two-way communications between both Il Mattos through the radio channel.			Receive at 200 packets/s with transmission back at 1 packet/s
-Interface one Il Matto with 2 transceiver modules, one for transmission and another for receiving. 	SPI
-Achieve two-way communications between both Il Mattos using two transceivers on each end.			
-Potentiometer readings from the controller to the Il Matto.			
-Multiplexing between 4 potentiometers inputs and buttons in the Il Matto.				ADC for the potentiometers
-UI from PC sends K values to the ground comms Il Matto.							UART
-PID k values transferred from the PC to the drone via the RF communications link			PC -> (UART) -> Base Il Matto -> (SPI) -> Radio link -> (SPI) -> Drone Il Matto			
+406g
+
+Overall
+
+UAV takes off for a short time with stable flight							10 seconds of stable flight @ 20cm
+UAV sustains stable flight and lands in a small target area						Within a 40 x 40cm area
 Complete system is integrated and can lift a cargo of ____ g						Mass without cargo ______ g, Dimensions without cargo_____ cm
+Power management of complete UAV									_____ mA , at _____ V = ______ mW. Batteries should last for _____ hrs.
+
+
+Control
+
 Read angles from gyro over I2C										100 samples/s
 Correct PWM outputs from Arduino over four channels (for ESCs) 						10% max duty cycle, 50Hz
 PID testing with servo and gyro input 									Stable for -70 -> 70 deg
 ESCs correctly control motor speeds with PWM input over range of 1-2ms PWM pulse
 Intra-System UART works both ways, controlled by interrupts 						@ 115200 baud
 Transmit instruction packets from Il Matto to Arduino 							@ 115200 baud
+Take input from Il Matto with PID responding accordingly						Platform stable for -70 -> 70 deg
+Send Control Data from Il Matto to Arduino on the request of Arduino  					100 updates/s
+Calibrate the ESCs so they power up consistently							Verify using scope
+Motor drive interfaced with embedded device						
+
+Communications
+
+Wireless modules interfaced with embedded devices							Using SPI
+Transmitting data from one Il Matto using one wireless module			
+Receive transmission on another Il Matto interfaced with another wireless module			Receiving at >200 packets/s
+Achieve two-way communications between both Il Mattos through the radio channel.			Receive at 200 packets/s with transmission back at 1 packet/s
+Interface one Il Matto with 2 transceiver modules, one for transmission and another for receiving. 	SPI
+Achieve two-way communications between both Il Mattos using two transceivers on each end.			
+10-Bit ADC Potentiometer readings from the controller to the Il Matto.			
+Correct operation of 4 potentiometers inputs and buttons in the ground control Il Matto.		ADC for the potentiometers
+UI from PC sends K values to the ground comms Il Matto.							UART
+PID k values transferred from the PC to the drone via the RF communications link			PC -> (UART) -> Base Il Matto -> (SPI) -> Radio link -> (SPI) -> Drone Il Matto
+Send and Receive encrypted data	without errors
+
+Misc
+
 Receive Log Data from arduino on Il Matto 								1 log/s 
-Take input from Il Matto with PID responding accordingly, tested using Servo				Servo platform stable for -70 -> 70 deg
+Write data from Il Matto to SD Card
+Read Data from SD card in computer 
+Collect gyro data and Battery level and write to SD card via Il Matto
+Read battery voltage into Il Matto  									11.1V -> 3.3V using Potential Divider, into 10-bit ADC channel
+Actuate Servo using PWM signal 										50Hz with 1-2ms pulse
+Servo controlled by ground control switches								Toggle between two positions
+Verify operation of Power Distribution Board								11.1V to each ESC, required power to all on-board microcontrollers
