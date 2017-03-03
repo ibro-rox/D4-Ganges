@@ -7,7 +7,8 @@
 #define OP_KP 5
 #define OP_KI 6
 #define OP_KD 7
-
+// K value size
+#define CHAR_MAX 6
 // Define data code for the button command
 #define BTN_CARGO_HOOK 0
 #define	BTN_PID_MODE 1 // Allow setting of K values and disable telemetry

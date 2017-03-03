@@ -65,8 +65,11 @@ int main(void)
 
 	// Send test data
 	uint16_t testdata;
+	//
+	uint16_t ten_bit;
 	testdata = 0;
-	uint16_t thrust;// start with one channel transmisssion sinc eat this time we have one pot
+	uint16_t thrust, yaw, pitch, roll;// start with one channel transmisssion sinc eat this time we have one pot
+	float f_temp, f;
 	char ch[30];
 	while (1)
 	{
@@ -98,7 +101,7 @@ int main(void)
 			{
 				send_string("\n\r Enter k value (press x to re-enter): ");
 				// BEFORE NULLING IT transmit it!!!!!!!!!!!!!!!
-				pid = NULL;
+				//pid = NULL;
 			}
 
 		else if (counter == CHAR_MAX)// char bufer is ready to transmit
@@ -118,7 +121,11 @@ int main(void)
 			// transmit its 
 				switch (pid)
 				{
-					case 'p' : Send_data(OP_KP, );
+					case 'p' : Send_data(OP_KP, ten_bit);
+								break;
+					case 'i' : Send_data(OP_KI, ten_bit);
+								break;
+					case 'd' : Send_data(OP_KD,ten_bit);
 								break;
 				}
 			//***********

@@ -1,7 +1,7 @@
 // This code involves taking a copy from drone_comms.c and simply printing off the received data off putty
 // Arthur: Joel And Mohammed
 // Date : 3/1/17
-// this code is also for test 1 im mentioned in my pink book
+// this code is also for test 2 im mentioned in my pink book (receiving the PID values)
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
@@ -18,6 +18,7 @@ int main(void)
 	uint8_t receivedpackettype;
 	uint16_t receiveddata;
 	char ch[30];
+	float k_value;
 	while (1)
 	{
 		rfm12_tick();
@@ -31,16 +32,52 @@ int main(void)
 			
 			// Decrypt (if enabled) and extract 10-bit data and packet type from the received packet 
 			Retrieve_data(&receivedpackettype, &receiveddata);
-			#if UPLINK_TEST
-				send_string("\n\rReceived transmission:");
-				// Send received packet type to UART
-				sprintf(ch,"\n\r Packet type: %d",receivedpackettype);
-				send_string(ch);
-				// Send received data to UART
-				sprintf(ch, "\n\r Data = %d", receiveddata);
-				send_string(ch);
-			#endif
+			// #if UPLINK_TEST
+			// 	send_string("\n\rReceived transmission:");
+			// 	// Send received packet type to UART
+			// 	sprintf(ch,"\n\r Packet type: %d",receivedpackettype);
+			// 	send_string(ch);
+			// 	// Send received data to UART
+			// 	sprintf(ch, "\n\r Data = %d", receiveddata);
+			// 	send_string(ch);
+			// #endif
 			// print off the adc data
+
+			switch (receivedpackettype)
+			{
+				case OP_KP : // 1st conver the k values to floating numbers
+							k_value = receiveddata/100;
+							sprintf(ch, "Kp value = %f", k_value);
+							send_string(ch);
+							break;
+				case OP_KI : // 1st conver the k values to floating numbers
+							k_value = receiveddata/100;
+							sprintf(ch,"ki value = %f", k_value);
+							send_string(ch);
+							break;
+				case OP_KD : // 1st conver the k values to floating numbers
+							k_value = receiveddata/100;
+							sprintf(ch, "ki value = %f", k_value);
+							send_string(ch);
+							break;
+				case OP_THRUST : 
+							sprintf(ch, "\n\r Thrust = %u", receiveddata);
+							send_string(ch);
+							break;
+				case OP_ROLL : 
+							sprintf(ch, "\n\r Roll = %u", receiveddata);
+							send_string(ch);
+							break;
+				case OP_YAW :
+							sprintf(ch, "\n\r Yaw = %u", receiveddata);
+							send_string(ch);
+							break;
+				case OP_PITCH : 
+							sprintf(ch, "\n\r Pitch = %u", receiveddata);
+							send_string(ch);
+							break;
+				default : send_string("Didnt receive K values");
+			}
 
 		}
 	}
