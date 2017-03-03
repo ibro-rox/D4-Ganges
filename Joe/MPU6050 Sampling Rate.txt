@@ -2,3 +2,6 @@ MPU6050 Statisitics
 
 about 100 samples/second after DMP processing
 ^ 'New Data' Interrupt fires roughly 100 times/second
+
+
+Examining the interrupt pin with an oscilloscope confirmed this, displaying a 100Hz signal with a low time of about 50us.

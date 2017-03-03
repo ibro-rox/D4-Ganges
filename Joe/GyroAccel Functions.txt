@@ -1,0 +1,55 @@
+Gyro Calibration
+xa	1732
+ya	2571
+za 	1519
+xg	34
+yg 	21
+zg	-5
+
+
+
+Lines that bode well for adjusting sample rate:
+834 (Under DMP motionapps 2.0)
+
+
+also look at power management features (3.9mA vs 5uA)
+
+
+
+currently using 14,870 bytes (46%) of flash
+578 bytes (28%) of SRAM for globals
+
+without serial outputs uses 12,378 bytes (38%) of flash
+383 bytes (18%)of SRAM for globals
+
+
+functions used in AccelGyro (DO NOT REMOVE FROM MPU6050.cpp/.h, MPU6050_6Axis_MotionApps20.h or helper_3dmath.h)
+
+
+dmpDataReady()
+mpu.initialise()  // anything mpu.foo() will be in mpu6050.cpp
+mpu.dmpInitialise()
+mpu.setXGyroOffset()
+mpu.setYGyroOffset();
+mpu.setZGyroOffset();
+mpu.setZAccelOffset();
+mpu.setDMPEnabled();
+attachInterrupt() // this is a standard arduino method
+mpu.dmpGetFIFOPacketSize();
+mpu.getIntStatus();
+mpu.getFIFOCount();
+mpu.resetFIFO();
+mpu.getFIFOBytes
+mpu.dmpGetQuaternion(&q, fifoBuffer);
+mpu.dmpGetGravity(
+mpu.dmpGetYawPitchRoll
+
+
+// Possibly used later
+mpu.dmpGetAccel(&aa, fifoBuffer);
+mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
+mpu.dmpGetLinearAccelInWorld(&aaWorld, &aaReal, &q);
+
+
+
+
