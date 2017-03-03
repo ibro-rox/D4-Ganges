@@ -20,9 +20,6 @@ int main(void)
 	init_uart1();
 	sei();
 
-	#if ENABLE_ENCRYPTION
-		encryption_key = 5;
-	#endif
 
 	#if UPLINK_TEST
 		uint16_t testdata;
