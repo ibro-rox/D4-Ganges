@@ -1,0 +1,21 @@
+Wireless modules interfaced with embedded devices							Using SPI
+Motor drive interfaced with embedded device			
+Power management of complete UAV									_____ mA , at _____ V = ______ mW. Batteries should last for _____ hrs.
+Transmitting data from one Il Matto using one wireless module			
+Receive transmission on another Il Matto interfaced with another wireless module			Receiving at >200 packets/s
+Achieve two-way communications between both Il Mattos through the radio channel.			Receive at 200 packets/s with transmission back at 1 packet/s
+Interface one Il Matto with 2 transceiver modules, one for transmission and another for receiving. 	SPI
+Achieve two-way communications between both Il Mattos using two transceivers on each end.			
+Potentiometer readings from the controller to the Il Matto.			
+Multiplexing between 4 potentiometers inputs and buttons in the Il Matto.				ADC for the potentiometers
+UI from PC sends K values to the ground comms Il Matto.							UART
+PID k values transferred from the PC to the drone via the RF communications link			PC -> (UART) -> Base Il Matto -> (SPI) -> Radio link -> (SPI) -> Drone Il Matto			
+Complete system is integrated and can lift a cargo of ____ g						Mass without cargo ______ g, Dimensions without cargo_____ cm
+Read angles from gyro over I2C										100 samples/s
+Correct PWM outputs from Arduino over four channels (for ESCs) 						10% max duty cycle, 50Hz
+PID testing with servo and gyro input 									Stable for -70 -> 70 deg
+ESCs correctly control motor speeds with PWM input over range of 1-2ms PWM pulse
+Intra-System UART works both ways, controlled by interrupts 						@ 115200 baud
+Transmit instruction packets from Il Matto to Arduino 							@ 115200 baud
+Receive Log Data from arduino on Il Matto 								1 log/s 
+Take input from Il Matto with PID responding accordingly, tested using Servo				Servo platform stable for -70 -> 70 deg
