@@ -1,0 +1,12 @@
+Write data from Il Matto to SD Card
+Read Data from SD card in computer 
+Collect gyro data and Battery level and write to SD card via Il Matto - 
+
+Send Control Data from Il Matto to Arduino on the request of Arduino - 100 updates/s
+
+Read in battery voltage using ADC - 11.1V -> 3.3V using Potential Divider
+Actuate Servo using PWM signal - 50Hz with 1-2ms pulse
+Servo controlled by ground control switches - Toggle between two positions
+
+Verify operation of Power Distribution Board - 11.1V to each ESC
+Calibrate the ESCs so they power up consistently - Test using scope
