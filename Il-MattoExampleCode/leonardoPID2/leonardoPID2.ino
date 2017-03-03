@@ -1,13 +1,13 @@
 #include "PWM.h"
 #include "PID.h"
 #include "utils.h"
-
+#include "Definitions.h"
 PID yawPID(1,0,0);
 PID pitchPID(1,0,0);
 PID rollPID(1,0,0);
 
 //controller values
-float throttle;
+float throttle=1000;
 float targetYaw;
 float targetPitch;
 float targetRoll;
@@ -36,7 +36,8 @@ void loop() {
     gyroRoll = 0;
     
     //get throttle data
-    throttle = 0;
+        if(throttle<MAX_MOTOR_SPEED) throttle++;
+     else throttle=MIN_MOTOR_SPEED;
     targetYaw = 0;
     targetPitch = 0;
     targetRoll = 0;
@@ -47,6 +48,7 @@ void loop() {
     pidRoll = rollPID.updatePID(targetRoll, gyroRoll, DELTA_TIME);
     //update motors
     setMotors (throttle, pidYaw, pidPitch, pidRoll);
+    _delay_ms(5);
   //}
 
 
