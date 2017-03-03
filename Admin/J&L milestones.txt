@@ -1,0 +1,15 @@
+Milestones
+
+ - PID controlling motors
+	- read angles from gyro over I2C
+	- Correct PWM outputs from arduino (for ESCs)
+	- PID testing with servo and gyro input
+	- ESCs correctly motor speeds with PWM input
+ - Intra-System UART
+	- Transmit instruction packets from Il Matto to Arduino
+	- Receive Log Data from arduino on Il Matto
+
+ - Take input from Il Matto with PID responding accordingly
+ 
+ - 
+	
