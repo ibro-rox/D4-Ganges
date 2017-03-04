@@ -6,17 +6,19 @@
 #include "debug.h"
 
 #define BAUD 9600
+
+#ifdef BAUD
 #include <util/setbaud.h>
+#endif
 
 volatile uint8_t serial_interrupt_flag = 0;
 
 ISR(INT0_vect)
 {
-	//printf("Hello from ISR");
-	serial_interrupt_flag = 1;
-}
+	serial_interrupt_flag = 1; 			// Interrupt sets flag could be replaced
+}										// with longer ISR if immediately needed
 
-struct euler_angles {
+struct euler_angles {					//Structure containing 
 	uint16_t throttle;
 	uint16_t yaw;
 	uint16_t pitch;
@@ -24,7 +26,7 @@ struct euler_angles {
 };
 
 
-
+uint8_t is_valid_packet(struct euler_angles *input);
 void send_packet(struct euler_angles *input);
 
 
@@ -41,38 +43,38 @@ int main()
 	desired_values.pitch = 3;
 	desired_values.roll = 4;
 	
-	DDRD |= _BV(PD2);
+	DDRD |= _BV(PD2);					// Set PD2 to output
 	PORTD &= ~_BV(PD2);
-	/* Set to trigger on rising edge */
-	EICRA |= _BV(ISC01) | _BV(ISC00);
-	/* Enable interrupt */
-	EIMSK |= _BV(INT0);
-	sei();	
+	EICRA |= _BV(ISC01) | _BV(ISC00); 	// Set to trigger on rising edge
+	EIMSK |= _BV(INT0); 				// Enable interrupt 
+	sei();								// Enable global interrupt 
+	
+	/*
+	INSERT REST OF INIT HERE
+	*/
 	
 	while(1)
 	{
 		if(serial_interrupt_flag)
 			send_packet(&desired_values);
-		
-		
-		
-		
-		/* for(i=0;i<10;i++)
-		{
-			printf("%d = 0x%x\n",i,segments[i]);
-			_delay_ms(1000);
-			
-		}	
-		 fprintf(stderr,"Count overflow\n\r"); */
+		/*
+		INSERT REST OF LOOP HERE
+		*/		
 	}
 }
 
 void send_packet(struct euler_angles *input)
 {
-	if((input->throttle <= 1023) && (input->yaw <= 1023) && (input->pitch <= 1023) && (input->roll <= 1023))
+	if(is_valid_packet(input))
 		printf("T%d Y%d P%d R%d\n", input->throttle, input->yaw, input->pitch, input->roll);
 	else 
-		printf("Error\n");
+		printf("T%d Y%d P%d R%d \n", 0, 0, 0, 0);
 	
 		serial_interrupt_flag = 0;
+}
+
+uint8_t is_valid_packet(struct euler_angles *input)
+{
+	return ((input->throttle <= 1023) && (input->yaw <= 1023) && 
+			(input->pitch <= 1023) && (input->roll <= 1023));
 }
