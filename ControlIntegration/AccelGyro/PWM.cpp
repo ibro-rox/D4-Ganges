@@ -33,6 +33,7 @@ void pwm_duty(uint8_t motor,uint16_t duty)
 {   //duty is currently in ms, we need to convert it to a value in the correct range. 
     //range ms: 1000-2000 , range registers: 2000-4000 therefore multiply by 2
     duty = duty*SPEED_TO_PWM_GAIN - (SPEED_TO_PWM_GAIN*MIN_MOTOR_SPEED-PWM_DUTY_MIN);
+    Serial.println(duty);
     if(duty>PWM_DUTY_MAX) duty = PWM_DUTY_MAX;
     else if(duty<PWM_DUTY_MIN) duty = PWM_DUTY_MIN;
 
@@ -40,12 +41,16 @@ void pwm_duty(uint8_t motor,uint16_t duty)
     {
       case LEFT_FRONT_MOTOR:
         OCR1A = duty;
+        break;
       case RIGHT_FRONT_MOTOR:
         OCR1B = duty;
+        break;
       case LEFT_REAR_MOTOR:
         OCR1C = duty;
+        break;
       case RIGHT_REAR_MOTOR:
         OCR3A = duty;
+        break;
     }
 }
 

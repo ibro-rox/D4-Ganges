@@ -13,7 +13,7 @@
 //#define PWM_DUTY_MAX 4000
 //PWM for mohameds servo
 #define PWM_DUTY_MIN 500
-#define PWM_DUTY_MAX 5000
+#define PWM_DUTY_MAX 5400
 
 #define SPEED_TO_PWM_GAIN ((PWM_DUTY_MAX-PWM_DUTY_MIN)/(MAX_MOTOR_SPEED-MIN_MOTOR_SPEED))
 
