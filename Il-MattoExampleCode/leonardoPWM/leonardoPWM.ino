@@ -1,4 +1,5 @@
 #define TIMER_TOP 40000
+//PWM DUTY for ESCs
 #define PWM_DUTY_MIN 2000
 #define PWM_DUTY_MAX 4000
 void init_pwm(void);
@@ -7,6 +8,14 @@ int x =PWM_DUTY_MIN;
 void setup() 
 {
   init_pwm();
+  for(x = PWM_DUTY_MIN; x <= PWM_DUTY_MIN+700; x++)
+  {
+         pwm_duty(x,x,x,x);
+  }
+    for(x = PWM_DUTY_MIN+700; x >= PWM_DUTY_MIN; x--)
+  {
+         pwm_duty(x,x,x,x);
+  }
 } 
 
 void loop() {
