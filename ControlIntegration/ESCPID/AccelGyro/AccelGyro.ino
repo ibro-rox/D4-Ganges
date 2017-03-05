@@ -67,7 +67,7 @@ THE SOFTWARE.
 MPU6050 mpu;
 PID yawPID(1,0,0);
 PID pitchPID(1,0,0);
-PID rollPID(6,4,1);
+PID rollPID(1,0,0);
 //PID rollPID(6,4.8,0.7);
 //MPU6050 mpu(0x69); // <-- use for AD0 high
 
@@ -289,12 +289,18 @@ void loop() {
        targetRoll = 0;
       
        //apply PID
-       //pidYaw = yawPID.updatePID(targetYaw, gyroYaw, DELTA_TIME);
-       //pidPitch = pitchPID.updatePID(targetPitch, gyroPitch, DELTA_TIME);
+       pidYaw = yawPID.updatePID(targetYaw, constrain(gyroYaw,-50,50), DELTA_TIME);
+       pidPitch = pitchPID.updatePID(targetPitch, constrain(gyroPitch,-50,50), DELTA_TIME);
        pidRoll = rollPID.updatePID(targetRoll, constrain(gyroRoll,-50,50), DELTA_TIME);
        //update motors
-       //setMotors (throttle, 0, 0, 0);
-      pwm_duty(LEFT_FRONT_MOTOR, 1500-pidRoll);
+       if(throttle=0 || gyroRoll>80 || gyroRoll < -80 || gyroPitch > 80 || gyroPitch < -80)
+       {
+          setMotors(0,0,0,0);
+       }
+       else
+       {
+          setMotors(throttle,pidYaw, pidPitch, pidRoll);
+       }
     }
 
     // reset interrupt flag and get INT_STATUS byte
