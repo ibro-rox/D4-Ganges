@@ -68,7 +68,9 @@ void Send_data(uint8_t type, uint16_t data)
 		uint16_t totalpacket;
 		totalpacket = type;
 		totalpacket = (totalpacket << DATA_BIT_SIZE) + data;
-
+		char ch[30];
+		sprintf(ch,"\n\rTotalpacket = %u", totalpacket);
+		send_string(ch);
 		// Encrypt data
 		#if ENABLE_ENCRYPTION
 			totalpacket = Encrypt_data(totalpacket);
@@ -78,7 +80,7 @@ void Send_data(uint8_t type, uint16_t data)
 		uint8_t datapacket;
 		Encode_data(&type, &datapacket, totalpacket);
 
-		char ch[100];
+		//char ch[100];
 		sprintf(ch, "\n\rSending: %u %u", type, datapacket);
 		send_string(ch);
 		// Send packet to the buffer for transmission
@@ -92,7 +94,7 @@ void Encode_data(uint8_t* type, uint8_t* data, uint16_t totalpacket)
 	*data = totalpacket;
 
 	// Type, encryption key and 2 bits of data are held in the 8 MSBs
-	*type = (totalpacket >> DATA_BIT_SIZE);
+	*type = (totalpacket >> 8);
 }
 
 #if ENABLE_ENCRYPTION
