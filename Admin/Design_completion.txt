@@ -13,11 +13,11 @@ Control
 Read angles from gyro over I2C										100 samples/s
 Correct PWM outputs from Arduino over four channels (for ESCs) 						10% max duty cycle, 50Hz
 PID testing with servo and gyro input 									Stable for -70 -> 70 deg
-ESCs correctly control motor speeds with PWM input over range of 1-2ms PWM pulse
+//ESCs correctly control motor speeds with PWM input over range of 1-2ms PWM pulse
 Intra-System UART works both ways, controlled by interrupts 						@ 115200 baud
 Transmit instruction packets from Il Matto to Arduino 							@ 115200 baud
-Take input from Il Matto with PID responding accordingly						Platform stable for -70 -> 70 deg
-Send Control Data from Il Matto to Arduino on the request of Arduino  					100 updates/s
+//Take input from Il Matto with PID responding accordingly						Platform stable for -70 -> 70 deg
+//Send Control Data from Il Matto to Arduino on the request of Arduino  					100 updates/s
 Calibrate the ESCs so they power up consistently							Verify using scope
 Motor drive interfaced with embedded device						
 
