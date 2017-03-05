@@ -78,6 +78,9 @@ void Send_data(uint8_t type, uint16_t data)
 		uint8_t datapacket;
 		Encode_data(&type, &datapacket, totalpacket);
 
+		char ch[100];
+		sprintf(ch, "\n\rSending: %u %u", type, datapacket);
+		send_string(ch);
 		// Send packet to the buffer for transmission
 		rfm12_tx(sizeof(datapacket), type, &datapacket);
 	#endif

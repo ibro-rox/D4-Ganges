@@ -36,7 +36,7 @@ int main(void)
 		#if UPLINK_TEST
 			Send_data(OP_ROLL, testdata);
 			sprintf(ch, "\n\rTestdata = %d", testdata);
-			send_string(ch);
+			//send_string(ch);
 			testdata++;
 			if (testdata == 1024) break;
 			_delay_ms(500);

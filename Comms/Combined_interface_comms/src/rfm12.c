@@ -125,7 +125,7 @@ ISR(RFM12_INT_VECT, ISR_NOBLOCK)
 {
 	RFM12_INT_OFF();
 	uint8_t status;
-	
+	//send_string("Entered ISR");
 	//if receive mode is not disabled (default)
 	#if !(RFM12_TRANSMIT_ONLY)
 		static uint8_t checksum; //static local variables produce smaller code size than globals

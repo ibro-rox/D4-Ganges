@@ -36,7 +36,7 @@
 #define ENABLE_UI 0
 
 // Enable controls
-#define ENABLE_CONTROLS 1
+#define ENABLE_CONTROLS 0
 
 // Enable double transceivers
 #define DOUBLE_TRANSCEIVERS 0
