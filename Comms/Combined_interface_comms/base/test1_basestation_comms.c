@@ -32,14 +32,15 @@ int main(void)
 	char ch[30];
 	while (1)
 	{
-		rfm12_tick();
 		#if UPLINK_TEST
 			Send_data(OP_ROLL, testdata);
+
 			sprintf(ch, "\n\rTestdata = %d", testdata);
-			//send_string(ch);
+			send_string(ch);
+			//_delay_ms(15);
 			testdata++;
 			if (testdata == 1024) break;
-			_delay_ms(500);
+			//_delay_ms(10);
 		#endif
 		#if ENABLE_CONTROLS
 			thrust = adc_read(PIN_THRUST);
@@ -66,6 +67,7 @@ int main(void)
 			_delay_ms(500);
 			Send_data(OP_ROLL, roll);
 		#endif
+		rfm12_tick();
 	}
 
 	// Allows program to stop

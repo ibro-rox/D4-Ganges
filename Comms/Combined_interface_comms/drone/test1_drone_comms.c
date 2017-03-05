@@ -9,6 +9,7 @@
 #include <math.h>
 
 #include "rfm12.h"
+#include "rfm12_config.h"
 #include "drone_comms.h"
 
 int main(void)
@@ -17,26 +18,38 @@ int main(void)
 	init_uart1();
 	rfm12_init();
 	sei();
-	send_string("Initialised");
+	send_string("\n\rInitialised");
 
-	uint8_t receivedpackettype;
+	uint8_t receivedpackettype, i;
 	uint16_t receiveddata;
+	i = 0;
 	char ch[30];
+	sprintf(ch, "Data rate %ul", ((uint8_t)((10000000.0 / 29.0 / 115200) - 0.5)));
+	//send_string(ch);
 	while (1)
 	{
-		rfm12_tick();
-		rfm12_poll();
+		//rfm12_tick();
+		//rfm12_poll();
 		// Wait for data to be fully received
 		if (rfm12_rx_status() == STATUS_COMPLETE)
 		{
+			if (i == 0)
+			{
+				i = 1;
+				send_string("Rx started");
+			}
 			// Get the received packet type and data
 			receivedpackettype = rfm12_rx_type();
 			receiveddata = *rfm12_rx_buffer();
-			sprintf(ch, "\n\rReceived: %u %u", receivedpackettype, receiveddata);
-			send_string(ch);
+			rfm12_rx_clear();
+			//sprintf(ch, "\n\rRaw received data: %u %u", receivedpackettype, receiveddata);
+			//send_string(ch);
 
 			// Decrypt (if enabled) and extract 10-bit data and packet type from the received packet 
 			Retrieve_data(&receivedpackettype, &receiveddata);
+			sprintf(ch, "\n\rDecoded data: %u %u", receivedpackettype, receiveddata);
+			send_string(ch);
+			if (receiveddata == 1022) break;
 			#if UPLINK_TEST
 				//send_string("\n\rReceived transmission:");
 				// Send received packet type to UART
@@ -46,7 +59,6 @@ int main(void)
 				//sprintf(ch, "\n\r Data = %u", receiveddata);
 				//send_string(ch);
 
-				rfm12_rx_clear();
 			#endif
 			#if ENABLE_CONTROLS
 				switch(receivedpackettype)
@@ -74,4 +86,7 @@ int main(void)
 
 		}
 	}
+	send_string("Rx finished");
+	while(1)
+	{ }
 }

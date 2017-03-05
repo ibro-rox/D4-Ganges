@@ -11,8 +11,10 @@ void Retrieve_data(uint8_t* type, uint16_t* data)
 	// Combine packet type and data into a single 16-bit int
 	uint16_t totalpacket;
 	totalpacket = *type;
-	totalpacket = (totalpacket << DATA_BIT_SIZE) + *data;
-
+	totalpacket = (totalpacket << 8) + *data;
+	//char ch[100];
+	//sprintf(ch, "\n\rTotal packet: %u", totalpacket);
+	//send_string(ch);
 	#if ENABLE_ENCRYPTION
 		// Decrypt the received packet
 		totalpacket = Decrypt_data(totalpacket);
@@ -50,9 +52,6 @@ uint16_t Decrypt_data(uint16_t packet)
 	return decrypted_packet;
 }
 #endif
-
-#define BAUD 9600                                   // define baud
-#define BAUDRATE ((F_CPU)/(BAUD*16UL)-1)            // set baud rate value for UBRR
 
 void init_uart1()// initialize UART
 {

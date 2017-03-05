@@ -30,7 +30,7 @@
 #define ENABLE_DOWNLINK 1
 
 // Enable encryption
-#define ENABLE_ENCRYPTION 1
+#define ENABLE_ENCRYPTION 0
 
 // Enable UI via UART to Putty
 #define ENABLE_UI 0
