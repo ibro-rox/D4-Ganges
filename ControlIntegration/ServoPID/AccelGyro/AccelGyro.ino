@@ -67,7 +67,8 @@ THE SOFTWARE.
 MPU6050 mpu;
 PID yawPID(1,0,0);
 PID pitchPID(1,0,0);
-PID rollPID(1,0,0);
+PID rollPID(6,4,1);
+//PID rollPID(6,4.8,0.7);
 //MPU6050 mpu(0x69); // <-- use for AD0 high
 
 /* =========================================================================
@@ -207,10 +208,10 @@ void setup() {
     Serial.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
 
     // wait for ready
-    Serial.println(F("\nSend any character to begin DMP programming and demo: "));
+    //Serial.println(F("\nSend any character to begin DMP programming and demo: "));
     while (Serial.available() && Serial.read()); // empty buffer
-    while (!Serial.available());                 // wait for data
-    while (Serial.available() && Serial.read()); // empty buffer again
+    /*while (!Serial.available());                 // wait for data
+    while (Serial.available() && Serial.read()); // empty buffer again*/
 
     // load and configure the DMP
     Serial.println(F("Initializing DMP..."));
@@ -281,17 +282,19 @@ void loop() {
         gyroRoll = ypr[2] * 180/M_PI;
     
         //get throttle data
-        throttle = 0;
+        if(throttle<MAX_MOTOR_SPEED) throttle++;
+          else throttle=MIN_MOTOR_SPEED;
        targetYaw = 0;
        targetPitch = 0;
        targetRoll = 0;
-    
+      
        //apply PID
-       pidYaw = yawPID.updatePID(targetYaw, gyroYaw, DELTA_TIME);
-       pidPitch = pitchPID.updatePID(targetPitch, gyroPitch, DELTA_TIME);
-       pidRoll = rollPID.updatePID(targetRoll, gyroRoll, DELTA_TIME);
+       //pidYaw = yawPID.updatePID(targetYaw, gyroYaw, DELTA_TIME);
+       //pidPitch = pitchPID.updatePID(targetPitch, gyroPitch, DELTA_TIME);
+       pidRoll = rollPID.updatePID(targetRoll, constrain(gyroRoll,-50,50), DELTA_TIME);
        //update motors
-       setMotors (throttle, pidYaw, pidPitch, pidRoll);
+       //setMotors (throttle, 0, 0, 0);
+      pwm_duty(LEFT_FRONT_MOTOR, 1500-pidRoll);
     }
 
     // reset interrupt flag and get INT_STATUS byte
