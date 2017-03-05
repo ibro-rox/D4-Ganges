@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE eagle SYSTEM "eagle.dtd">
+<eagle version="7.3.0">
+<drawing>
+<settings>
+<setting alwaysvectorfont="no"/>
+<setting verticaltext="up"/>
+</settings>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<layers>
+<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="2" name="Route2" color="1" fill="3" visible="no" active="yes"/>
+<layer number="3" name="Route3" color="4" fill="3" visible="no" active="yes"/>
+<layer number="14" name="Route14" color="1" fill="6" visible="no" active="yes"/>
+<layer number="15" name="Route15" color="4" fill="6" visible="no" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
+<layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="27" name="tValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="28" name="bValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="29" name="tStop" color="7" fill="3" visible="no" active="yes"/>
+<layer number="30" name="bStop" color="7" fill="6" visible="no" active="yes"/>
+<layer number="31" name="tCream" color="7" fill="4" visible="no" active="yes"/>
+<layer number="32" name="bCream" color="7" fill="5" visible="no" active="yes"/>
+<layer number="33" name="tFinish" color="6" fill="3" visible="no" active="yes"/>
+<layer number="34" name="bFinish" color="6" fill="6" visible="no" active="yes"/>
+<layer number="35" name="tGlue" color="7" fill="4" visible="no" active="yes"/>
+<layer number="36" name="bGlue" color="7" fill="5" visible="no" active="yes"/>
+<layer number="37" name="tTest" color="7" fill="1" visible="no" active="yes"/>
+<layer number="38" name="bTest" color="7" fill="1" visible="no" active="yes"/>
+<layer number="39" name="tKeepout" color="4" fill="11" visible="yes" active="yes"/>
+<layer number="40" name="bKeepout" color="1" fill="11" visible="yes" active="yes"/>
+<layer number="41" name="tRestrict" color="4" fill="10" visible="yes" active="yes"/>
+<layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
+<layer number="43" name="vRestrict" color="2" fill="10" visible="yes" active="yes"/>
+<layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
+<layer number="45" name="Holes" color="7" fill="1" visible="no" active="yes"/>
+<layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
+<layer number="47" name="Measures" color="7" fill="1" visible="no" active="yes"/>
+<layer number="48" name="Document" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="49" name="Reference" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="51" name="tDocu" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="90" name="Modules" color="5" fill="1" visible="yes" active="yes"/>
+<layer number="91" name="Nets" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="92" name="Busses" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="93" name="Pins" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="94" name="Symbols" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="95" name="Names" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="96" name="Values" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="97" name="Info" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="98" name="Guide" color="6" fill="1" visible="yes" active="yes"/>
+</layers>
+<library>
+<packages>
+<package name="IL-MATTO">
+<wire x1="0" y1="0" x2="88.9" y2="0" width="0.127" layer="21"/>
+<wire x1="88.9" y1="0" x2="88.9" y2="63.5" width="0.127" layer="21"/>
+<wire x1="88.9" y1="63.5" x2="0" y2="63.5" width="0.127" layer="21"/>
+<wire x1="0" y1="63.5" x2="0" y2="0" width="0.127" layer="21"/>
+<pad name="GND_B" x="16.51" y="60.96" drill="0.8" diameter="1.27"/>
+<pad name="V_B" x="16.51" y="58.42" drill="0.8" diameter="1.27"/>
+<pad name="PB7" x="19.05" y="58.42" drill="0.8" diameter="1.27"/>
+<pad name="PB6" x="19.05" y="60.96" drill="0.8" diameter="1.27"/>
+<pad name="PB4" x="21.59" y="60.96" drill="0.8" diameter="1.27"/>
+<pad name="PB5" x="21.59" y="58.42" drill="0.8" diameter="1.27"/>
+<pad name="PB3" x="24.13" y="58.42" drill="0.8" diameter="1.27"/>
+<pad name="PB2" x="24.13" y="60.96" drill="0.8" diameter="1.27"/>
+<pad name="PB0" x="26.67" y="60.96" drill="0.8" diameter="1.27"/>
+<pad name="PB1" x="26.67" y="58.42" drill="0.8" diameter="1.27"/>
+<pad name="PD0" x="16.51" y="2.54" drill="0.8" diameter="1.27"/>
+<pad name="PD1" x="16.51" y="5.08" drill="0.8" diameter="1.27"/>
+<pad name="PD3" x="19.05" y="5.08" drill="0.8" diameter="1.27"/>
+<pad name="PD5" x="21.59" y="5.08" drill="0.8" diameter="1.27"/>
+<pad name="PD7" x="24.13" y="5.08" drill="0.8" diameter="1.27"/>
+<pad name="V_D" x="26.67" y="5.08" drill="0.8" diameter="1.27"/>
+<pad name="GND_D" x="26.67" y="2.54" drill="0.8" diameter="1.27"/>
+<pad name="PD6" x="24.13" y="2.54" drill="0.8" diameter="1.27"/>
+<pad name="PD4" x="21.59" y="2.54" drill="0.8" diameter="1.27"/>
+<pad name="PD2" x="19.05" y="2.54" drill="0.8" diameter="1.27"/>
+<pad name="GND_C" x="72.39" y="2.54" drill="0.8" diameter="1.27"/>
+<pad name="PC6" x="69.85" y="2.54" drill="0.8" diameter="1.27"/>
+<pad name="PC4" x="67.31" y="2.54" drill="0.8" diameter="1.27"/>
+<pad name="PC2" x="64.77" y="2.54" drill="0.8" diameter="1.27"/>
+<pad name="PC0" x="62.23" y="2.54" drill="0.8" diameter="1.27"/>
+<pad name="PC1" x="62.23" y="5.08" drill="0.8" diameter="1.27"/>
+<pad name="PC3" x="64.77" y="5.08" drill="0.8" diameter="1.27"/>
+<pad name="PC5" x="67.31" y="5.08" drill="0.8" diameter="1.27"/>
+<pad name="PC7" x="69.85" y="5.08" drill="0.8" diameter="1.27"/>
+<pad name="V_C" x="72.39" y="5.08" drill="0.8" diameter="1.27"/>
+<pad name="PA0" x="72.39" y="60.96" drill="0.8" diameter="1.27"/>
+<pad name="PA1" x="72.39" y="58.42" drill="0.8" diameter="1.27"/>
+<pad name="PA3" x="69.85" y="58.42" drill="0.8" diameter="1.27"/>
+<pad name="PA2" x="69.85" y="60.96" drill="0.8" diameter="1.27"/>
+<pad name="PA4" x="67.31" y="60.96" drill="0.8" diameter="1.27"/>
+<pad name="PA5" x="67.31" y="58.42" drill="0.8" diameter="1.27"/>
+<pad name="PA7" x="64.77" y="58.42" drill="0.8" diameter="1.27"/>
+<pad name="PA6" x="64.77" y="60.96" drill="0.8" diameter="1.27"/>
+<pad name="GND_A" x="62.23" y="60.96" drill="0.8" diameter="1.27"/>
+<pad name="V_A" x="62.23" y="58.42" drill="0.8" diameter="1.27"/>
+<pad name="GND_ISP" x="2.54" y="50.8" drill="0.8" diameter="1.27"/>
+<pad name="RST_ISP" x="5.08" y="50.8" drill="0.8" diameter="1.27"/>
+<pad name="PB5/MOSI" x="2.54" y="48.26" drill="0.8" diameter="1.27"/>
+<pad name="PB7/SCK" x="5.08" y="48.26" drill="0.8" diameter="1.27"/>
+<pad name="V_ISP" x="2.54" y="45.72" drill="0.8" diameter="1.27"/>
+<pad name="PB6/MISO" x="5.08" y="45.72" drill="0.8" diameter="1.27"/>
+<pad name="GND_JTAG0" x="2.54" y="12.7" drill="0.8" diameter="1.27"/>
+<pad name="V_JTAG0" x="2.54" y="15.24" drill="0.8" diameter="1.27"/>
+<pad name="RST_JTAG" x="2.54" y="17.78" drill="0.8" diameter="1.27"/>
+<pad name="UNUSED" x="2.54" y="20.32" drill="0.8" diameter="1.27"/>
+<pad name="GND_JTAG1" x="2.54" y="22.86" drill="0.8" diameter="1.27"/>
+<pad name="PC5/TDI" x="5.08" y="22.86" drill="0.8" diameter="1.27"/>
+<pad name="V_JTAG1" x="5.08" y="20.32" drill="0.8" diameter="1.27"/>
+<pad name="PC3/TMS" x="5.08" y="17.78" drill="0.8" diameter="1.27"/>
+<pad name="PC4/TDO" x="5.08" y="15.24" drill="0.8" diameter="1.27"/>
+<pad name="PC2/TCK" x="5.08" y="12.7" drill="0.8" diameter="1.27"/>
+<pad name="V_USB" x="2.54" y="38.1" drill="0.8" diameter="1.27"/>
+<pad name="D+" x="2.54" y="35.56" drill="0.8" diameter="1.27"/>
+<pad name="D-" x="2.54" y="33.02" drill="0.8" diameter="1.27"/>
+<pad name="GND_USB" x="2.54" y="30.48" drill="0.8" diameter="1.27"/>
+<text x="40.64" y="31.75" size="2.54" layer="21">Il Matto</text>
+</package>
+<package name="ESC">
+<description>ESC - Package</description>
+<wire x1="0" y1="0" x2="40.64" y2="0" width="0.127" layer="21"/>
+<wire x1="40.64" y1="0" x2="40.64" y2="25.4" width="0.127" layer="21"/>
+<wire x1="40.64" y1="25.4" x2="0" y2="25.4" width="0.127" layer="21"/>
+<wire x1="0" y1="25.4" x2="0" y2="0" width="0.127" layer="21"/>
+<pad name="GND_IN" x="1.27" y="5.08" drill="0.8" diameter="1.27"/>
+<pad name="GND_CONTROL" x="1.27" y="10.16" drill="0.8" diameter="1.27"/>
+<pad name="CONTROL_IN" x="1.27" y="15.24" drill="0.8" diameter="1.27"/>
+<pad name="V_IN" x="1.27" y="20.32" drill="0.8" diameter="1.27"/>
+<pad name="OUT_C" x="39.37" y="5.08" drill="0.8" diameter="1.27"/>
+<pad name="OUT_B" x="39.37" y="12.7" drill="0.8" diameter="1.27"/>
+<pad name="OUT_A" x="39.37" y="20.32" drill="0.8" diameter="1.27"/>
+<text x="16.51" y="11.43" size="2.54" layer="21">ESC</text>
+</package>
+<package name="MPU6050">
+<wire x1="0" y1="0" x2="0" y2="20.32" width="0.127" layer="21"/>
+<wire x1="0" y1="20.32" x2="15.24" y2="20.32" width="0.127" layer="21"/>
+<wire x1="15.24" y1="20.32" x2="15.24" y2="0" width="0.127" layer="21"/>
+<wire x1="15.24" y1="0" x2="0" y2="0" width="0.127" layer="21"/>
+<pad name="INT" x="1.27" y="1.27" drill="0.8" diameter="1.27"/>
+<pad name="ADO" x="1.27" y="3.81" drill="0.8" diameter="1.27"/>
+<pad name="XCL" x="1.27" y="6.35" drill="0.8" diameter="1.27"/>
+<pad name="XDA" x="1.27" y="8.89" drill="0.8" diameter="1.27"/>
+<pad name="SDA" x="1.27" y="11.43" drill="0.8" diameter="1.27"/>
+<pad name="SCL" x="1.27" y="13.97" drill="0.8" diameter="1.27"/>
+<pad name="GND" x="1.27" y="16.51" drill="0.8" diameter="1.27"/>
+<pad name="VCC" x="1.27" y="19.05" drill="0.8" diameter="1.27"/>
+<text x="2.54" y="8.89" size="1.778" layer="21">MPU6050</text>
+</package>
+</packages>
+<symbols>
+<symbol name="IL-MATTO">
+<description>Il Matto Microcontroller board - Just Symbol</description>
+<wire x1="0" y1="0" x2="88.9" y2="0" width="0.254" layer="94"/>
+<wire x1="88.9" y1="0" x2="88.9" y2="63.5" width="0.254" layer="94"/>
+<wire x1="88.9" y1="63.5" x2="0" y2="63.5" width="0.254" layer="94"/>
+<wire x1="0" y1="63.5" x2="0" y2="0" width="0.254" layer="94"/>
+<pin name="PD0" x="15.24" y="-5.08" length="middle" rot="R90"/>
+<pin name="PD1" x="17.78" y="-5.08" length="middle" rot="R90"/>
+<pin name="PD2" x="20.32" y="-5.08" length="middle" rot="R90"/>
+<pin name="PD3" x="22.86" y="-5.08" length="middle" rot="R90"/>
+<pin name="PD4" x="27.94" y="-5.08" length="middle" rot="R90"/>
+<pin name="PD5" x="30.48" y="-5.08" length="middle" rot="R90"/>
+<pin name="PD6" x="33.02" y="-5.08" length="middle" rot="R90"/>
+<pin name="PD7" x="35.56" y="-5.08" length="middle" rot="R90"/>
+<pin name="V_D" x="40.64" y="-5.08" length="middle" rot="R90"/>
+<pin name="GND_D" x="43.18" y="-5.08" length="middle" rot="R90"/>
+<pin name="GND_C" x="83.82" y="-5.08" length="middle" rot="R90"/>
+<pin name="V_C" x="81.28" y="-5.08" length="middle" rot="R90"/>
+<pin name="PC7" x="76.2" y="-5.08" length="middle" rot="R90"/>
+<pin name="PC6" x="73.66" y="-5.08" length="middle" rot="R90"/>
+<pin name="PC5" x="71.12" y="-5.08" length="middle" rot="R90"/>
+<pin name="PC4" x="68.58" y="-5.08" length="middle" rot="R90"/>
+<pin name="PC3" x="63.5" y="-5.08" length="middle" rot="R90"/>
+<pin name="PC2" x="60.96" y="-5.08" length="middle" rot="R90"/>
+<pin name="PC1" x="58.42" y="-5.08" length="middle" rot="R90"/>
+<pin name="PC0" x="55.88" y="-5.08" length="middle" rot="R90"/>
+<pin name="GND_B" x="15.24" y="68.58" length="middle" rot="R270"/>
+<pin name="V_B" x="17.78" y="68.58" length="middle" rot="R270"/>
+<pin name="PB7" x="22.86" y="68.58" length="middle" rot="R270"/>
+<pin name="PB6" x="25.4" y="68.58" length="middle" rot="R270"/>
+<pin name="PB5" x="27.94" y="68.58" length="middle" rot="R270"/>
+<pin name="PB4" x="30.48" y="68.58" length="middle" rot="R270"/>
+<pin name="PB3" x="35.56" y="68.58" length="middle" rot="R270"/>
+<pin name="PB2" x="38.1" y="68.58" length="middle" rot="R270"/>
+<pin name="PB1" x="40.64" y="68.58" length="middle" rot="R270"/>
+<pin name="PB0" x="43.18" y="68.58" length="middle" rot="R270"/>
+<pin name="PA0" x="83.82" y="68.58" length="middle" rot="R270"/>
+<pin name="PA1" x="81.28" y="68.58" length="middle" rot="R270"/>
+<pin name="PA2" x="78.74" y="68.58" length="middle" rot="R270"/>
+<pin name="PA3" x="76.2" y="68.58" length="middle" rot="R270"/>
+<pin name="PA4" x="71.12" y="68.58" length="middle" rot="R270"/>
+<pin name="PA5" x="68.58" y="68.58" length="middle" rot="R270"/>
+<pin name="PA6" x="66.04" y="68.58" length="middle" rot="R270"/>
+<pin name="PA7" x="63.5" y="68.58" length="middle" rot="R270"/>
+<pin name="V_A" x="58.42" y="68.58" length="middle" rot="R270"/>
+<pin name="GND_A" x="55.88" y="68.58" length="middle" rot="R270"/>
+<pin name="PB6/MISO" x="-5.08" y="58.42" length="middle"/>
+<pin name="V_ISP" x="-5.08" y="55.88" length="middle"/>
+<pin name="PB7/SCK" x="-5.08" y="53.34" length="middle"/>
+<pin name="PB5/MOSI" x="-5.08" y="50.8" length="middle"/>
+<pin name="RST_ISP" x="-5.08" y="48.26" length="middle"/>
+<pin name="GND_ISP" x="-5.08" y="45.72" length="middle"/>
+<pin name="V_USB" x="-5.08" y="40.64" length="middle"/>
+<pin name="D+" x="-5.08" y="38.1" length="middle"/>
+<pin name="D-" x="-5.08" y="35.56" length="middle"/>
+<pin name="GND_USB" x="-5.08" y="33.02" length="middle"/>
+<pin name="PC2/TCK" x="-5.08" y="27.94" length="middle"/>
+<pin name="GND_JTAG0" x="-5.08" y="25.4" length="middle"/>
+<pin name="PC4/TDO" x="-5.08" y="22.86" length="middle"/>
+<pin name="V_JTAG0" x="-5.08" y="20.32" length="middle"/>
+<pin name="PC3/TMS" x="-5.08" y="17.78" length="middle"/>
+<pin name="RST_JTAG" x="-5.08" y="15.24" length="middle"/>
+<pin name="V_JTAG1" x="-5.08" y="12.7" length="middle"/>
+<pin name="UNUSED" x="-5.08" y="10.16" length="middle"/>
+<pin name="PC5/TDI" x="-5.08" y="7.62" length="middle"/>
+<pin name="GND_JTAG1" x="-5.08" y="5.08" length="middle"/>
+<text x="35.56" y="30.48" size="5.08" layer="94">Il Matto</text>
+</symbol>
+<symbol name="ESC">
+<description>ESC - Symbol</description>
+<wire x1="0" y1="0" x2="0" y2="25.4" width="0.254" layer="94"/>
+<wire x1="0" y1="25.4" x2="40.64" y2="25.4" width="0.254" layer="94"/>
+<wire x1="40.64" y1="25.4" x2="40.64" y2="0" width="0.254" layer="94"/>
+<wire x1="40.64" y1="0" x2="0" y2="0" width="0.254" layer="94"/>
+<pin name="V_IN" x="-5.08" y="20.32" length="middle"/>
+<pin name="CONTROL_IN" x="-5.08" y="15.24" length="middle"/>
+<pin name="GND_CONTROL" x="-5.08" y="10.16" length="middle"/>
+<pin name="GND_IN" x="-5.08" y="5.08" length="middle"/>
+<pin name="OUT_C" x="45.72" y="5.08" length="middle" rot="R180"/>
+<pin name="OUT_B" x="45.72" y="12.7" length="middle" rot="R180"/>
+<pin name="OUT_A" x="45.72" y="20.32" length="middle" rot="R180"/>
+<text x="20.32" y="12.7" size="2.54" layer="94">ESC</text>
+</symbol>
+<symbol name="MPU6050">
+<wire x1="0" y1="0" x2="0" y2="22.86" width="0.254" layer="94"/>
+<wire x1="0" y1="22.86" x2="15.24" y2="22.86" width="0.254" layer="94"/>
+<wire x1="15.24" y1="22.86" x2="15.24" y2="0" width="0.254" layer="94"/>
+<wire x1="15.24" y1="0" x2="0" y2="0" width="0.254" layer="94"/>
+<pin name="INT" x="-5.08" y="2.54" length="middle"/>
+<pin name="ADO" x="-5.08" y="5.08" length="middle"/>
+<pin name="XCL" x="-5.08" y="7.62" length="middle"/>
+<pin name="XDA" x="-5.08" y="10.16" length="middle"/>
+<pin name="SDA" x="-5.08" y="12.7" length="middle"/>
+<pin name="SCL" x="-5.08" y="15.24" length="middle"/>
+<pin name="GND" x="-5.08" y="17.78" length="middle"/>
+<pin name="VCC" x="-5.08" y="20.32" length="middle"/>
+<text x="7.62" y="10.16" size="1.778" layer="94">MPU
+6050</text>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="IL-MATTO">
+<description>Il Matto Board - Device</description>
+<gates>
+<gate name="G$1" symbol="IL-MATTO" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="IL-MATTO">
+<connects>
+<connect gate="G$1" pin="D+" pad="D+"/>
+<connect gate="G$1" pin="D-" pad="D-"/>
+<connect gate="G$1" pin="GND_A" pad="GND_A"/>
+<connect gate="G$1" pin="GND_B" pad="GND_B"/>
+<connect gate="G$1" pin="GND_C" pad="GND_C"/>
+<connect gate="G$1" pin="GND_D" pad="GND_D"/>
+<connect gate="G$1" pin="GND_ISP" pad="GND_ISP"/>
+<connect gate="G$1" pin="GND_JTAG0" pad="GND_JTAG0"/>
+<connect gate="G$1" pin="GND_JTAG1" pad="GND_JTAG1"/>
+<connect gate="G$1" pin="GND_USB" pad="GND_USB"/>
+<connect gate="G$1" pin="PA0" pad="PA0"/>
+<connect gate="G$1" pin="PA1" pad="PA1"/>
+<connect gate="G$1" pin="PA2" pad="PA2"/>
+<connect gate="G$1" pin="PA3" pad="PA3"/>
+<connect gate="G$1" pin="PA4" pad="PA4"/>
+<connect gate="G$1" pin="PA5" pad="PA5"/>
+<connect gate="G$1" pin="PA6" pad="PA6"/>
+<connect gate="G$1" pin="PA7" pad="PA7"/>
+<connect gate="G$1" pin="PB0" pad="PB0"/>
+<connect gate="G$1" pin="PB1" pad="PB1"/>
+<connect gate="G$1" pin="PB2" pad="PB2"/>
+<connect gate="G$1" pin="PB3" pad="PB3"/>
+<connect gate="G$1" pin="PB4" pad="PB4"/>
+<connect gate="G$1" pin="PB5" pad="PB5"/>
+<connect gate="G$1" pin="PB5/MOSI" pad="PB5/MOSI"/>
+<connect gate="G$1" pin="PB6" pad="PB6"/>
+<connect gate="G$1" pin="PB6/MISO" pad="PB6/MISO"/>
+<connect gate="G$1" pin="PB7" pad="PB7"/>
+<connect gate="G$1" pin="PB7/SCK" pad="PB7/SCK"/>
+<connect gate="G$1" pin="PC0" pad="PC0"/>
+<connect gate="G$1" pin="PC1" pad="PC1"/>
+<connect gate="G$1" pin="PC2" pad="PC2"/>
+<connect gate="G$1" pin="PC2/TCK" pad="PC2/TCK"/>
+<connect gate="G$1" pin="PC3" pad="PC3"/>
+<connect gate="G$1" pin="PC3/TMS" pad="PC3/TMS"/>
+<connect gate="G$1" pin="PC4" pad="PC4"/>
+<connect gate="G$1" pin="PC4/TDO" pad="PC4/TDO"/>
+<connect gate="G$1" pin="PC5" pad="PC5"/>
+<connect gate="G$1" pin="PC5/TDI" pad="PC5/TDI"/>
+<connect gate="G$1" pin="PC6" pad="PC6"/>
+<connect gate="G$1" pin="PC7" pad="PC7"/>
+<connect gate="G$1" pin="PD0" pad="PD0"/>
+<connect gate="G$1" pin="PD1" pad="PD1"/>
+<connect gate="G$1" pin="PD2" pad="PD2"/>
+<connect gate="G$1" pin="PD3" pad="PD3"/>
+<connect gate="G$1" pin="PD4" pad="PD4"/>
+<connect gate="G$1" pin="PD5" pad="PD5"/>
+<connect gate="G$1" pin="PD6" pad="PD6"/>
+<connect gate="G$1" pin="PD7" pad="PD7"/>
+<connect gate="G$1" pin="RST_ISP" pad="RST_ISP"/>
+<connect gate="G$1" pin="RST_JTAG" pad="RST_JTAG"/>
+<connect gate="G$1" pin="UNUSED" pad="UNUSED"/>
+<connect gate="G$1" pin="V_A" pad="V_A"/>
+<connect gate="G$1" pin="V_B" pad="V_B"/>
+<connect gate="G$1" pin="V_C" pad="V_C"/>
+<connect gate="G$1" pin="V_D" pad="V_D"/>
+<connect gate="G$1" pin="V_ISP" pad="V_ISP"/>
+<connect gate="G$1" pin="V_JTAG0" pad="V_JTAG0"/>
+<connect gate="G$1" pin="V_JTAG1" pad="V_JTAG1"/>
+<connect gate="G$1" pin="V_USB" pad="V_USB"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="ESC">
+<description>ESC for Schematic</description>
+<gates>
+<gate name="G$1" symbol="ESC" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="ESC">
+<connects>
+<connect gate="G$1" pin="CONTROL_IN" pad="CONTROL_IN"/>
+<connect gate="G$1" pin="GND_CONTROL" pad="GND_CONTROL"/>
+<connect gate="G$1" pin="GND_IN" pad="GND_IN"/>
+<connect gate="G$1" pin="OUT_A" pad="OUT_A"/>
+<connect gate="G$1" pin="OUT_B" pad="OUT_B"/>
+<connect gate="G$1" pin="OUT_C" pad="OUT_C"/>
+<connect gate="G$1" pin="V_IN" pad="V_IN"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="MPU6050">
+<gates>
+<gate name="G$1" symbol="MPU6050" x="0" y="0"/>
+</gates>
+<devices>
+<device name="">
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
+</drawing>
+<compatibility>
+<note version="6.3" minversion="6.2.2" severity="warning">
+Since Version 6.2.2 text objects can contain more than one line,
+which will not be processed correctly with this version.
+</note>
+</compatibility>
+</eagle>
