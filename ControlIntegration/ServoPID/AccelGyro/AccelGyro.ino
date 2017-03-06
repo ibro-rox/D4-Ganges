@@ -67,8 +67,8 @@ THE SOFTWARE.
 MPU6050 mpu;
 PID yawPID(1,0,0);
 PID pitchPID(1,0,0);
-PID rollPID(6,4,1);
-//PID rollPID(6,4.8,0.7);
+//PID rollPID(8,6,2);  //200hz
+PID rollPID(6,4,1);    //100hz
 //MPU6050 mpu(0x69); // <-- use for AD0 high
 
 /* =========================================================================

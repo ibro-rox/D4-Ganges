@@ -1,4 +1,4 @@
-costing:
+﻿costing:
 Development:
 	Unmanned Tech: £79.03
 	other components:
@@ -39,8 +39,8 @@ Project hours per person:
 
 Making money!
  to make money if they are being sold at £300 (profit margin of 53%)
- we need to make 965 units (assuming 100% yeild)
- at 90% yeild (worst case) we need 1073 units before breaking even
+ we need to make 965 units (assuming 100% yield)
+ at 90% yield (worst case) we need 1073 units before breaking even
 
 EDIT:
 	justification of the 2 hour building time:
