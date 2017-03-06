@@ -47,7 +47,7 @@
 
 
 /************************
- * PIN DEFINITIONS
+ * RFM12 PIN DEFINITIONS
  */
 
 //Pin that the RFM12's slave select is connected to
@@ -75,27 +75,48 @@
 //baseband of the module (either RFM12_BAND_433, RFM12_BAND_868 or RFM12_BAND_912)
 #define RFM12_BASEBAND RFM12_BAND_433
 
-//center frequency to use (+-125kHz FSK frequency shift)
-#define FREQ 433175000UL
+//center frequency to use (+- FSK frequency shift)
+#define RFM12_FREQUENCY       (433170000UL + FSK_SHIFT * 4)
+//#define RFM12_FREQUENCY       (433170000UL)
+
+//Transmit FSK frequency shift in kHz
+#define FSK_SHIFT             125000UL
+
+//Receive RSSI Threshold
+#define RFM12_RSSI_THRESHOLD  RFM12_RXCTRL_RSSI_79
+
+//Receive Filter Bandwidth
+#define RFM12_FILTER_BW       RFM12_RXCTRL_BW_400
+
+//Output power relative to maximum (0dB is maximum)
+#define RFM12_POWER           RFM12_TXCONF_POWER_0
+
+//Receive LNA gain
+#define RFM12_LNA_GAIN        RFM12_RXCTRL_LNA_0
+
+//crystal load capacitance - the frequency can be verified by measuring the
+//clock output of RFM12 and comparing to 1MHz.
+//11.5pF seems to be o.k. for RFM12, and 10.5pF for RFM12BP, but this may vary.
+#define RFM12_XTAL_LOAD       RFM12_XTAL_11_5PF
 
 //use this for datarates >= 2700 Baud
-#define DATARATE_VALUE RFM12_DATARATE_CALC_HIGH(9600.0)
+#define DATARATE_VALUE        RFM12_DATARATE_CALC_HIGH(115200.0)
 
 //use this for 340 Baud < datarate < 2700 Baud
-//#define DATARATE_VALUE RFM12_DATARATE_CALC_LOW(1200.0)
+//#define DATARATE_VALUE      RFM12_DATARATE_CALC_LOW(1200.0)
 
 //TX BUFFER SIZE
-#define RFM12_TX_BUFFER_SIZE 30
+#define RFM12_TX_BUFFER_SIZE  256
 
 //RX BUFFER SIZE (there are going to be 2 Buffers of this size for double_buffering)
-#define RFM12_RX_BUFFER_SIZE 30
+#define RFM12_RX_BUFFER_SIZE  256
 
 
 /************************
- * INTERRUPT VECTOR
+ * RFM12 INTERRUPT VECTOR
  * set the name for the interrupt vector here
  */
- 
+
 //the interrupt vector
 #define RFM12_INT_VECT (INT1_vect)
 
@@ -112,7 +133,7 @@
 #define RFM12_FLAG_BIT (INTF1)
 
 //setup the interrupt to trigger on negative edge
-#define RFM12_INT_SETUP()   EICRA |= (1<<ISC11)
+#define RFM12_INT_SETUP()   EICRA |= (1 << ISC11)
 
 
 /************************
@@ -120,6 +141,9 @@
  */
 
 #define RFM12_LIVECTRL 0
+#define RFM12_LIVECTRL_CLIENT 0
+#define RFM12_LIVECTRL_HOST 0
+#define RFM12_LIVECTRL_LOAD_SAVE_SETTINGS 0
 #define RFM12_NORETURNS 0
 #define RFM12_NOCOLLISIONDETECTION 1
 #define RFM12_TRANSMIT_ONLY 0
@@ -128,12 +152,47 @@
 #define RFM12_RECEIVE_ASK 0
 #define RFM12_TRANSMIT_ASK 0
 #define RFM12_USE_WAKEUP_TIMER 0
+#define RFM12_USE_POWER_CONTROL 0
 #define RFM12_LOW_POWER 0
+#define RFM12_USE_CLOCK_OUTPUT 0
+#define RFM12_LOW_BATT_DETECTOR 0
 
+
+#define RFM12_LBD_VOLTAGE             RFM12_LBD_VOLTAGE_3V0
+
+
+#define RFM12_CLOCK_OUT_FREQUENCY     RFM12_CLOCK_OUT_FREQUENCY_1_00_MHz
+
+/* use a callback function that is called directly from the
+ * interrupt routine whenever there is a data packet available. When
+ * this value is set to 1, you must use the function
+ * "rfm12_set_callback(your_function)" to point to your
+ * callback function in order to receive packets.
+ */
+#define RFM12_USE_RX_CALLBACK 0
+
+
+/************************
+ * RFM12BP support (high power version of RFM12)
+ */
+
+//To use RFM12BP, which needs control signals for RX enable and TX enable,
+//use these defines (set to your pinout of course).
+//The TX-Part can also be used to control a TX-LED with the nomral RFM12
+
+/*
+	#define RX_INIT_HOOK  DDRD |= _BV(PD5)
+	#define RX_LEAVE_HOOK PORTD &= ~_BV(PD5)
+	#define RX_ENTER_HOOK PORTD |= _BV(PD5)
+
+	#define TX_INIT_HOOK  DDRD |= _BV(PD4)
+	#define TX_LEAVE_HOOK PORTD &= ~_BV(PD4)
+	#define TX_ENTER_HOOK PORTD |= _BV(PD4)
+*/
 
 /************************
  * UART DEBUGGING
  * en- or disable debugging via uart.
  */
- 
+
 #define RFM12_UART_DEBUG 0
