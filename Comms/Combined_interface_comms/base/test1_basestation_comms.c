@@ -36,7 +36,7 @@ int main(void)
 
 	adc_init();
 
-	//init_uart1();
+	init_uart1();
 
 	sei();
 
@@ -56,7 +56,7 @@ int main(void)
 
 	// ADC channels 
 
-	//uint16_t thrust, yaw, pitch, roll;
+	uint16_t thrust, yaw, pitch, roll;
 
 
 
@@ -79,60 +79,77 @@ int main(void)
 
 			if (testdata == 1023) break;
 
-			_delay_ms(4);
+			_delay_ms(2);
 			Send_data(OP_ROLL, testdata);
-			_delay_ms(4);
+			_delay_ms(2);
 
 		#endif
 
 		#if ENABLE_CONTROLS
-
+			// int i;
+			// for ( i = 1; i < 3; i++)
+			// {
+			// 	Send_data(i, i+11);
+			// 	_delay_ms(2);
+			// 	Send_data(i, i+11);
+			// 	_delay_ms(2);
+			// 	rfm12_tick();// make sure you 'TICK' EVERY TIME YOU SEND_DATA! (IN OUR CASE SEND TWICE)!!!!!!!!!!!!!!!!!!!!!!!!!!
+			// }
 			thrust = adc_read(PIN_THRUST);
 
-			sprintf(ch,"\n\r thrust = %d",thrust);// To see what we are transmitting
+			//sprintf(ch,"\n\r thrust = %d",thrust);// To see what we are transmitting
 
-			send_string(ch);
+			//send_string(ch);
 
-			_delay_ms(500);
-
+			//_delay_ms(500);
 			Send_data(OP_THRUST, thrust);
-
-
+			_delay_ms(2);
+			Send_data(OP_THRUST, thrust);
+			_delay_ms(2);
+			rfm12_tick();
 
 			yaw = adc_read(PIN_YAW);
 
-			sprintf(ch,"\n\r Yaw = %d",yaw);// To see what we are transmitting
+			//sprintf(ch,"\n\r Yaw = %d",yaw);// To see what we are transmitting
 
-			send_string(ch);
+			//send_string(ch);
 
-			_delay_ms(500);
+			//_delay_ms(500);
 
 			Send_data(OP_YAW, yaw);
-
+			_delay_ms(2);
+			Send_data(OP_YAW, yaw);
+			_delay_ms(2);
+			rfm12_tick();
 
 
 			pitch = adc_read(PIN_PITCH);
 
-			sprintf(ch,"\n\r Pitch = %d",pitch);// To see what we are transmitting
+			//sprintf(ch,"\n\r Pitch = %d",pitch);// To see what we are transmitting
 
-			send_string(ch);
+			//send_string(ch);
 
-			_delay_ms(500);
+			//_delay_ms(500);
 
 			Send_data(OP_PITCH, pitch);
-
-
+			_delay_ms(2);
+			Send_data(OP_PITCH, pitch);
+			_delay_ms(2);
+			rfm12_tick();
 
 			roll = adc_read(PIN_ROLL);
 
-			sprintf(ch,"\n\r Roll = %d",roll);// To see what we are transmitting
+			//sprintf(ch,"\n\r Roll = %d",roll);// To see what we are transmitting
 
-			send_string(ch);
+			//send_string(ch);
 
-			_delay_ms(500);
+			//_delay_ms(500);
 
 			Send_data(OP_ROLL, roll);
-
+			_delay_ms(2);
+			Send_data(OP_ROLL, roll);
+			_delay_ms(2);
+			rfm12_tick();
 		#endif
 
 	}
