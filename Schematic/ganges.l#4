@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.3.0">
+<eagle version="7.6.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -128,6 +128,8 @@
 <pad name="D-" x="2.54" y="33.02" drill="0.8" diameter="1.27"/>
 <pad name="GND_USB" x="2.54" y="30.48" drill="0.8" diameter="1.27"/>
 <text x="40.64" y="31.75" size="2.54" layer="21">Il Matto</text>
+<pad name="V_EXT" x="10.16" y="53.34" drill="0.8"/>
+<pad name="GND_EXT" x="12.7" y="53.34" drill="0.8"/>
 </package>
 <package name="ESC">
 <description>ESC - Package</description>
@@ -209,7 +211,10 @@ Brushless DC Motor</text>
 <circle x="0" y="0" radius="15.24" width="0.127" layer="21"/>
 </package>
 <package name="GND">
-<pad name="P$1" x="0" y="0" drill="0.8"/>
+<pad name="GND" x="0" y="0" drill="0.8"/>
+</package>
+<package name="VCC">
+<pad name="VCC" x="0" y="0" drill="0.8"/>
 </package>
 </packages>
 <symbols>
@@ -280,6 +285,8 @@ Brushless DC Motor</text>
 <pin name="PC5/TDI" x="-5.08" y="7.62" length="middle"/>
 <pin name="GND_JTAG1" x="-5.08" y="5.08" length="middle"/>
 <text x="35.56" y="30.48" size="5.08" layer="94">Il Matto</text>
+<pin name="V_EXT" x="93.98" y="55.88" length="middle" rot="R180"/>
+<pin name="GND_EXT" x="93.98" y="53.34" length="middle" rot="R180"/>
 </symbol>
 <symbol name="ESC">
 <description>ESC - Symbol</description>
@@ -364,16 +371,22 @@ Brushless DC Motor</text>
 <wire x1="-14.478" y1="-5.08" x2="-15.24" y2="-5.08" width="0.254" layer="94"/>
 </symbol>
 <symbol name="GND">
-<wire x1="-7.62" y1="-7.62" x2="0" y2="-7.62" width="0.254" layer="94"/>
-<wire x1="0" y1="-7.62" x2="7.62" y2="-7.62" width="0.254" layer="94"/>
-<wire x1="-2.54" y1="-12.7" x2="2.54" y2="-12.7" width="0.254" layer="94"/>
-<wire x1="-5.08" y1="-10.16" x2="5.08" y2="-10.16" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="-7.62" x2="0" y2="-7.62" width="0.254" layer="94"/>
+<wire x1="0" y1="-7.62" x2="5.08" y2="-7.62" width="0.254" layer="94"/>
+<wire x1="-1.778" y1="-12.7" x2="1.778" y2="-12.7" width="0.254" layer="94"/>
+<wire x1="-3.302" y1="-10.16" x2="3.302" y2="-10.16" width="0.254" layer="94"/>
 <wire x1="0" y1="-7.62" x2="0" y2="-5.08" width="0.254" layer="94"/>
 <pin name="GND" x="0" y="0" length="middle" rot="R270"/>
 </symbol>
+<symbol name="VCC">
+<wire x1="0" y1="5.08" x2="0" y2="7.62" width="0.254" layer="94"/>
+<wire x1="0" y1="7.62" x2="-2.54" y2="5.08" width="0.254" layer="94"/>
+<wire x1="0" y1="7.62" x2="2.54" y2="5.08" width="0.254" layer="94"/>
+<pin name="VCC" x="0" y="0" length="middle" rot="R90"/>
+</symbol>
 </symbols>
 <devicesets>
-<deviceset name="IL-MATTO">
+<deviceset name="IL-MATTO" prefix="PCB">
 <description>Il Matto Board - Device</description>
 <gates>
 <gate name="G$1" symbol="IL-MATTO" x="0" y="0"/>
@@ -387,6 +400,7 @@ Brushless DC Motor</text>
 <connect gate="G$1" pin="GND_B" pad="GND_B"/>
 <connect gate="G$1" pin="GND_C" pad="GND_C"/>
 <connect gate="G$1" pin="GND_D" pad="GND_D"/>
+<connect gate="G$1" pin="GND_EXT" pad="GND_EXT"/>
 <connect gate="G$1" pin="GND_ISP" pad="GND_ISP"/>
 <connect gate="G$1" pin="GND_JTAG0" pad="GND_JTAG0"/>
 <connect gate="G$1" pin="GND_JTAG1" pad="GND_JTAG1"/>
@@ -437,6 +451,7 @@ Brushless DC Motor</text>
 <connect gate="G$1" pin="V_B" pad="V_B"/>
 <connect gate="G$1" pin="V_C" pad="V_C"/>
 <connect gate="G$1" pin="V_D" pad="V_D"/>
+<connect gate="G$1" pin="V_EXT" pad="V_EXT"/>
 <connect gate="G$1" pin="V_ISP" pad="V_ISP"/>
 <connect gate="G$1" pin="V_JTAG0" pad="V_JTAG0"/>
 <connect gate="G$1" pin="V_JTAG1" pad="V_JTAG1"/>
@@ -563,6 +578,21 @@ Brushless DC Motor</text>
 <connect gate="G$1" pin="IN_A" pad="IN_A"/>
 <connect gate="G$1" pin="IN_B" pad="IN_B"/>
 <connect gate="G$1" pin="IN_C" pad="IN_C"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="GND">
+<gates>
+<gate name="G$1" symbol="GND" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="GND">
+<connects>
+<connect gate="G$1" pin="GND" pad="GND"/>
 </connects>
 <technologies>
 <technology name=""/>

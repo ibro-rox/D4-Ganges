@@ -1,22 +1,30 @@
-RFM12           | AVR
+RFM12           | Il Matto
 ----------------+------------
 SDO             | PB6
 nIRQ            | PD3
-GND             | GND
-VDD             | VCC
+GND             | GND_B_2
+VDD             | V_B_2
 SDI             | PB5
 SCK             | PB7
 nSEL            | PB4
 
-GYRO		| Arduino
-----------------+------------
-SDA             | Pin 2
-SCC		| Pin 3
-INT		| Pin 7
+GYRO   | Arduino
+-------+------------
+SDA    | SDA
+SCL    | SCL
+INT    | INT
 
-ESC				    | Arduino
+ESC		    | Arduino
 --------------------+--------------
-(LEFT_FRONT_MOTOR)	| ~9  
+(LEFT_FRONT_MOTOR)  | ~9  
 (RIGHT_FRONT_MOTOR) | ~10 
 (LEFT_REAR_MOTOR)   | ~11 
-(RIGHT_REAR_MOTOR)  | ~5  
+(RIGHT_REAR_MOTOR)  | ~5 
+
+Arduino  | Il Matto
+---------+----------
+0        | PD1  
+1	 | PD0 
+5V   	 | V_EXT 
+GND	 | GND_EXT 
+ 
