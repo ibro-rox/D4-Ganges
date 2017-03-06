@@ -209,7 +209,7 @@ Brushless DC Motor</text>
 <circle x="0" y="0" radius="15.24" width="0.127" layer="21"/>
 </package>
 <package name="GND">
-<pad name="P$1" x="0" y="0" drill="0.8"/>
+<pad name="GND" x="0" y="0" drill="0.8"/>
 </package>
 </packages>
 <symbols>

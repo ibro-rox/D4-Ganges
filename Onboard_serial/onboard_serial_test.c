@@ -16,9 +16,9 @@ volatile uint8_t serial_interrupt_flag = 0;
 ISR(INT0_vect)
 {
 	serial_interrupt_flag = 1; 			// Interrupt sets flag could be replaced
-}										// with longer ISR if immediately needed
+}							// with longer ISR if immediately needed
 
-struct euler_angles {					//Structure containing 
+struct euler_angles {					//Structure containing TYPR
 	uint16_t throttle;
 	uint16_t yaw;
 	uint16_t pitch;
@@ -38,16 +38,16 @@ int main()
 	
 	struct euler_angles desired_values;
 	
-	desired_values.throttle = 1;
-	desired_values.yaw = 2;
-	desired_values.pitch = 3;
-	desired_values.roll = 4;
+	desired_values.throttle = 2;
+	desired_values.yaw = 3;
+	desired_values.pitch = 5;
+	desired_values.roll = 7;
 	
-	DDRD |= _BV(PD2);					// Set PD2 to output
+	DDRD |= _BV(PD2);			// Set PD2 to output
 	PORTD &= ~_BV(PD2);
 	EICRA |= _BV(ISC01) | _BV(ISC00); 	// Set to trigger on rising edge
-	EIMSK |= _BV(INT0); 				// Enable interrupt 
-	sei();								// Enable global interrupt 
+	EIMSK |= _BV(INT0); 			// Enable interrupt 
+	sei();					// Enable global interrupt 
 	
 	/*
 	INSERT REST OF INIT HERE
@@ -66,9 +66,9 @@ int main()
 void send_packet(struct euler_angles *input)
 {
 	if(is_valid_packet(input))
-		printf("T%d Y%d P%d R%d\n", input->throttle, input->yaw, input->pitch, input->roll);
+		printf("%d %d %d %d\n", input->throttle, input->yaw, input->pitch, input->roll);
 	else 
-		printf("T%d Y%d P%d R%d \n", 0, 0, 0, 0);
+		printf("%d %d %d %d \n", 0, 0, 0, 0);
 	
 		serial_interrupt_flag = 0;
 }
