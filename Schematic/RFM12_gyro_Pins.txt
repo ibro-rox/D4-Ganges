@@ -13,3 +13,10 @@ GYRO		| Arduino
 SDA             | Pin 2
 SCC		| Pin 3
 INT		| Pin 7
+
+ESC				    | Arduino
+--------------------+--------------
+(LEFT_FRONT_MOTOR)	| ~9  
+(RIGHT_FRONT_MOTOR) | ~10 
+(LEFT_REAR_MOTOR)   | ~11 
+(RIGHT_REAR_MOTOR)  | ~5  
