@@ -6,6 +6,10 @@
 #include "rfm12.h"
 #include "drone_comms.h"
 
+#if ENABLE_ENCRYPTION
+	volatile uint8_t encryption_key;
+#endif
+
 void Retrieve_data(uint8_t* type, uint16_t* data)
 {
 	// Combine packet type and data into a single 16-bit int
@@ -36,6 +40,9 @@ uint16_t Decrypt_data(uint16_t packet)
 	uint8_t encryption_key;
 	encryption_key = (packet >> (DATA_BIT_SIZE + COMMAND_BIT_SIZE));
 
+	// Remove encryption key from the packet
+	packet = (packet & ((uint16_t)pow(2, DATA_BIT_SIZE + COMMAND_BIT_SIZE) - 1));
+
 	// Retrieve bits that are shifted out when the left shift is done
 	uint8_t rotated_out_bits;
 	rotated_out_bits = (packet >> (DATA_BIT_SIZE + COMMAND_BIT_SIZE - encryption_key));
@@ -48,6 +55,69 @@ uint16_t Decrypt_data(uint16_t packet)
 
 	return decrypted_packet;
 }
+#endif
+
+void Send_data(uint8_t type, uint16_t data)
+{
+#if ENABLE_UPLINK
+	// Combine packet type and data into a single 16-bit int
+	uint16_t totalpacket;
+	totalpacket = type;
+	totalpacket = (totalpacket << DATA_BIT_SIZE) + data;
+
+	// Encrypt data
+#if ENABLE_ENCRYPTION
+	totalpacket = Encrypt_data(totalpacket);
+#endif
+	// Split 16-bit packet into two 8-bit ints - packet type and data
+	uint8_t datapacket;
+	Encode_data(&type, &datapacket, totalpacket);
+
+	//char ch[100];
+	//sprintf(ch, "\n\rSending: %u %u", type, datapacket);
+	//send_string(ch);
+	// Send packet to the buffer for transmission
+	rfm12_tx(sizeof(datapacket), type, &datapacket);
+#endif
+
+}
+
+
+
+void Encode_data(uint8_t* type, uint8_t* data, uint16_t totalpacket)
+{
+	// Data is equal to the 8 LSBs
+	*data = totalpacket;
+
+	// Type, encryption key and 2 bits of data are held in the 8 MSBs
+	*type = (totalpacket >> 8);
+}
+
+
+
+#if ENABLE_ENCRYPTION
+uint16_t Encrypt_data(uint16_t packet)
+{
+	// Retrieve bits that are shifted out when the right shift is done
+	uint8_t rotated_out_bits;
+	rotated_out_bits = (packet & ((uint8_t)pow(2, encryption_key) - 1));
+
+	// Get completely rotated bits by adding the shifted out bits to the
+	// original packet right-shifted by the required number of bits.
+	uint16_t encrypted_packet;
+	encrypted_packet = (packet >> encryption_key) + (rotated_out_bits << (COMMAND_BIT_SIZE + DATA_BIT_SIZE - encryption_key));
+
+	// Add on the encryption key to the MSBs of the packet
+	encrypted_packet = encrypted_packet + (encryption_key << (COMMAND_BIT_SIZE + DATA_BIT_SIZE));
+
+	// Adjust encryption key for next transmission
+	encryption_key = (encryption_key < 3) ? encryption_key + 5 : encryption_key - 3;
+	if (encryption_key == 0) encryption_key = 5;
+
+	return encrypted_packet;
+
+}
+
 #endif
 
 void init_uart1()// initialize UART

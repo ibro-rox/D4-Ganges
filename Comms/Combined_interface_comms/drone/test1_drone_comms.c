@@ -39,10 +39,11 @@ int main(void)
 			receivedpackettype = rfm12_rx_type();
 			receiveddata = *rfm12_rx_buffer();
 
+			rfm12_rx_clear();
 			// Decrypt (if enabled) and extract 10-bit data and packet type from the received packet 
 			Retrieve_data(&receivedpackettype, &receiveddata);
-			sprintf(ch, "\n\rReceived: %u %u", receivedpackettype, receiveddata);
-			send_string(ch);
+			//sprintf(ch, "\n\rReceived: %u %u", receivedpackettype, receiveddata);
+			//send_string(ch);
 			//if (receiveddata > 1000) break;
 
 #if UPLINK_TEST
@@ -53,8 +54,6 @@ int main(void)
 			// Send received data to UART
 			//sprintf(ch, "\n\r Data = %u", receiveddata);
 			//send_string(ch);
-
-			rfm12_rx_clear();
 #endif
 #if ENABLE_CONTROLS
 			switch (receivedpackettype)
@@ -64,15 +63,15 @@ int main(void)
 				send_string(ch);
 				break;
 			case OP_ROLL:
-				sprintf(ch, "\n\r Roll = %u", receiveddata);
+				sprintf(ch, " Roll = %u", receiveddata);
 				send_string(ch);
 				break;
 			case OP_YAW:
-				sprintf(ch, "\n\r Yaw = %u", receiveddata);
+				sprintf(ch, " Yaw = %u", receiveddata);
 				send_string(ch);
 				break;
 			case OP_PITCH:
-				sprintf(ch, "\n\r Pitch = %u", receiveddata);
+				sprintf(ch, " Pitch = %u", receiveddata);
 				send_string(ch);
 				break;
 			}
