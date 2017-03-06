@@ -601,6 +601,7 @@ Brushless DC Motor</text>
 </devices>
 </deviceset>
 <deviceset name="VCC">
+<description>Vcc</description>
 <gates>
 <gate name="G$1" symbol="VCC" x="0" y="0"/>
 </gates>

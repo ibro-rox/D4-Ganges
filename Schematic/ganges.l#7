@@ -213,6 +213,9 @@ Brushless DC Motor</text>
 <package name="GND">
 <pad name="GND" x="0" y="0" drill="0.8"/>
 </package>
+<package name="VCC">
+<pad name="P$1" x="0" y="0" drill="0.8"/>
+</package>
 </packages>
 <symbols>
 <symbol name="IL-MATTO">
@@ -376,9 +379,10 @@ Brushless DC Motor</text>
 <pin name="GND" x="0" y="0" length="middle" rot="R270"/>
 </symbol>
 <symbol name="VCC">
-<wire x1="0" y1="0" x2="0" y2="7.62" width="0.254" layer="94"/>
+<wire x1="0" y1="5.08" x2="0" y2="7.62" width="0.254" layer="94"/>
 <wire x1="0" y1="7.62" x2="-2.54" y2="5.08" width="0.254" layer="94"/>
 <wire x1="0" y1="7.62" x2="2.54" y2="5.08" width="0.254" layer="94"/>
+<pin name="P$1" x="0" y="0" length="middle" rot="R90"/>
 </symbol>
 </symbols>
 <devicesets>
