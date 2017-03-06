@@ -12,9 +12,6 @@ void Retrieve_data(uint8_t* type, uint16_t* data)
 	uint16_t totalpacket;
 	totalpacket = *type;
 	totalpacket = (totalpacket << 8) + *data;
-	//char ch[100];
-	//sprintf(ch, "\n\rTotal packet: %u", totalpacket);
-	//send_string(ch);
 	#if ENABLE_ENCRYPTION
 		// Decrypt the received packet
 		totalpacket = Decrypt_data(totalpacket);

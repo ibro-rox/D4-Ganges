@@ -1,0 +1,15 @@
+RFM12           | AVR
+----------------+------------
+SDO             | PB6
+nIRQ            | PD3
+GND             | GND
+VDD             | VCC
+SDI             | PB5
+SCK             | PB7
+nSEL            | PB4
+
+GYRO		| Arduino
+----------------+------------
+SDA             | Pin 2
+SCC		| Pin 3
+INT		| Pin 7
