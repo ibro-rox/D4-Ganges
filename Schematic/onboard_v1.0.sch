@@ -502,7 +502,7 @@ Brushless DC Motor</text>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="IL-MATTO">
+<deviceset name="IL-MATTO" prefix="PCB">
 <description>Il Matto Board - Device</description>
 <gates>
 <gate name="G$1" symbol="IL-MATTO" x="0" y="0"/>
@@ -4363,10 +4363,6 @@ distributor RS Components</description>
 <part name="U$5" library="ganges" deviceset="RFM12B-S2" device=""/>
 <part name="R1" library="rcl" deviceset="R-EU_" device="0204/7"/>
 <part name="R2" library="rcl" deviceset="R-EU_" device="0204/7"/>
-<part name="R3" library="rcl" deviceset="POTENTIOMETER_" device="PT-10"/>
-<part name="R4" library="rcl" deviceset="POTENTIOMETER_" device="PT-10"/>
-<part name="R5" library="rcl" deviceset="POTENTIOMETER_" device="PT-10"/>
-<part name="R6" library="rcl" deviceset="POTENTIOMETER_" device="PT-10"/>
 <part name="S1" library="switch" deviceset="320-916" device=""/>
 <part name="S2" library="switch" deviceset="320-916" device=""/>
 <part name="S3" library="switch" deviceset="320-916" device=""/>
@@ -4381,29 +4377,30 @@ distributor RS Components</description>
 <part name="U$13" library="ganges" deviceset="MOTOR" device=""/>
 <part name="U$14" library="ganges" deviceset="RFM12B-S2" device=""/>
 <part name="U$15" library="ganges" deviceset="GND" device=""/>
+<part name="U$16" library="ganges" deviceset="IL-MATTO" device=""/>
+<part name="R7" library="rcl" deviceset="POTENTIOMETER_" device="PT-10"/>
+<part name="R8" library="rcl" deviceset="POTENTIOMETER_" device="PT-10"/>
+<part name="R9" library="rcl" deviceset="POTENTIOMETER_" device="PT-10"/>
+<part name="R10" library="rcl" deviceset="POTENTIOMETER_" device="PT-10"/>
 </parts>
 <sheets>
 <sheet>
 <plain>
 </plain>
 <instances>
-<instance part="PCB1" gate="G$1" x="83.82" y="60.96"/>
-<instance part="U$1" gate="G$1" x="-104.14" y="78.74"/>
+<instance part="PCB1" gate="G$1" x="88.9" y="-7.62"/>
+<instance part="U$1" gate="G$1" x="-66.04" y="5.08"/>
 <instance part="U$2" gate="G$1" x="160.02" y="55.88"/>
-<instance part="U$3" gate="G$1" x="7.62" y="35.56"/>
-<instance part="U$4" gate="G$1" x="7.62" y="2.54"/>
-<instance part="U$5" gate="G$1" x="7.62" y="101.6"/>
-<instance part="R1" gate="G$1" x="-127" y="68.58"/>
-<instance part="R2" gate="G$1" x="-127" y="76.2"/>
-<instance part="R3" gate="1" x="-127" y="33.02"/>
-<instance part="R4" gate="1" x="-127" y="45.72"/>
-<instance part="R5" gate="1" x="-127" y="58.42"/>
-<instance part="R6" gate="1" x="-127" y="88.9"/>
-<instance part="S1" gate="1" x="-99.06" y="40.64"/>
-<instance part="S2" gate="1" x="-99.06" y="22.86"/>
-<instance part="S3" gate="1" x="-99.06" y="5.08"/>
-<instance part="S4" gate="1" x="-99.06" y="55.88"/>
-<instance part="U$6" gate="G$1" x="7.62" y="60.96"/>
+<instance part="U$3" gate="G$1" x="101.6" y="53.34"/>
+<instance part="U$4" gate="G$1" x="93.98" y="137.16"/>
+<instance part="U$5" gate="G$1" x="58.42" y="-71.12"/>
+<instance part="R1" gate="G$1" x="152.4" y="144.78"/>
+<instance part="R2" gate="G$1" x="152.4" y="152.4"/>
+<instance part="S1" gate="1" x="40.64" y="213.36"/>
+<instance part="S2" gate="1" x="43.18" y="193.04"/>
+<instance part="S3" gate="1" x="40.64" y="177.8"/>
+<instance part="S4" gate="1" x="38.1" y="226.06"/>
+<instance part="U$6" gate="G$1" x="-53.34" y="-60.96"/>
 <instance part="U$7" gate="G$1" x="236.22" y="68.58"/>
 <instance part="U$8" gate="G$1" x="160.02" y="25.4"/>
 <instance part="U$9" gate="G$1" x="160.02" y="-5.08"/>
@@ -4411,8 +4408,13 @@ distributor RS Components</description>
 <instance part="U$11" gate="G$1" x="236.22" y="38.1"/>
 <instance part="U$12" gate="G$1" x="236.22" y="7.62"/>
 <instance part="U$13" gate="G$1" x="236.22" y="-22.86"/>
-<instance part="U$14" gate="G$1" x="7.62" y="78.74"/>
+<instance part="U$14" gate="G$1" x="17.78" y="137.16"/>
 <instance part="U$15" gate="G$1" x="142.24" y="-43.18"/>
+<instance part="U$16" gate="G$1" x="-91.44" y="88.9"/>
+<instance part="R7" gate="1" x="17.78" y="208.28"/>
+<instance part="R8" gate="1" x="0" y="205.74"/>
+<instance part="R9" gate="1" x="0" y="215.9"/>
+<instance part="R10" gate="1" x="17.78" y="218.44"/>
 </instances>
 <busses>
 </busses>
@@ -4534,6 +4536,135 @@ distributor RS Components</description>
 <pinref part="U$10" gate="G$1" pin="GND_IN"/>
 <wire x1="154.94" y1="-30.48" x2="142.24" y2="-30.48" width="0.1524" layer="91"/>
 <junction x="142.24" y="-30.48"/>
+</segment>
+</net>
+<net name="POT1_X" class="0">
+<segment>
+<pinref part="R7" gate="1" pin="3"/>
+<wire x1="17.78" y1="203.2" x2="17.78" y2="193.04" width="0.1524" layer="91"/>
+<wire x1="17.78" y1="193.04" x2="-15.24" y2="193.04" width="0.1524" layer="91"/>
+<label x="-15.24" y="193.04" size="1.27" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<pinref part="U$16" gate="G$1" pin="PA0"/>
+<wire x1="-7.62" y1="157.48" x2="-7.62" y2="162.56" width="0.1524" layer="91"/>
+<label x="-7.62" y="162.56" size="1.27" layer="95" rot="R90" xref="yes"/>
+</segment>
+</net>
+<net name="POT1_Y" class="0">
+<segment>
+<wire x1="10.16" y1="195.58" x2="-15.24" y2="195.58" width="0.1524" layer="91"/>
+<pinref part="R10" gate="1" pin="3"/>
+<wire x1="17.78" y1="213.36" x2="10.16" y2="213.36" width="0.1524" layer="91"/>
+<wire x1="10.16" y1="213.36" x2="10.16" y2="195.58" width="0.1524" layer="91"/>
+<label x="-15.24" y="195.58" size="1.27" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<pinref part="U$16" gate="G$1" pin="PA1"/>
+<wire x1="-10.16" y1="157.48" x2="-10.16" y2="162.56" width="0.1524" layer="91"/>
+<label x="-10.16" y="162.56" size="1.27" layer="95" rot="R90" xref="yes"/>
+</segment>
+</net>
+<net name="POT2_X" class="0">
+<segment>
+<pinref part="R8" gate="1" pin="3"/>
+<wire x1="0" y1="200.66" x2="0" y2="198.12" width="0.1524" layer="91"/>
+<wire x1="0" y1="198.12" x2="-15.24" y2="198.12" width="0.1524" layer="91"/>
+<label x="-15.24" y="198.12" size="1.27" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<pinref part="U$16" gate="G$1" pin="PA2"/>
+<wire x1="-12.7" y1="157.48" x2="-12.7" y2="162.56" width="0.1524" layer="91"/>
+<label x="-12.7" y="162.56" size="1.27" layer="95" rot="R90" xref="yes"/>
+</segment>
+</net>
+<net name="POT2_Y" class="0">
+<segment>
+<pinref part="R9" gate="1" pin="3"/>
+<wire x1="0" y1="210.82" x2="-7.62" y2="210.82" width="0.1524" layer="91"/>
+<wire x1="-7.62" y1="210.82" x2="-7.62" y2="200.66" width="0.1524" layer="91"/>
+<wire x1="-7.62" y1="200.66" x2="-15.24" y2="200.66" width="0.1524" layer="91"/>
+<label x="-15.24" y="200.66" size="1.27" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<pinref part="U$16" gate="G$1" pin="PA3"/>
+<wire x1="-15.24" y1="157.48" x2="-15.24" y2="162.56" width="0.1524" layer="91"/>
+<label x="-15.24" y="162.56" size="1.27" layer="95" rot="R90" xref="yes"/>
+</segment>
+</net>
+<net name="GND_A_1" class="0">
+<segment>
+<wire x1="-15.24" y1="220.98" x2="5.08" y2="220.98" width="0.1524" layer="91"/>
+<pinref part="R9" gate="1" pin="2"/>
+<wire x1="5.08" y1="220.98" x2="5.08" y2="215.9" width="0.1524" layer="91"/>
+<wire x1="5.08" y1="220.98" x2="22.86" y2="220.98" width="0.1524" layer="91"/>
+<junction x="5.08" y="220.98"/>
+<pinref part="R10" gate="1" pin="2"/>
+<wire x1="22.86" y1="220.98" x2="22.86" y2="218.44" width="0.1524" layer="91"/>
+<pinref part="R7" gate="1" pin="2"/>
+<wire x1="22.86" y1="218.44" x2="22.86" y2="208.28" width="0.1524" layer="91"/>
+<junction x="22.86" y="218.44"/>
+<pinref part="R8" gate="1" pin="2"/>
+<wire x1="5.08" y1="215.9" x2="5.08" y2="205.74" width="0.1524" layer="91"/>
+<junction x="5.08" y="215.9"/>
+<label x="-15.24" y="220.98" size="1.27" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="GND_A1" class="0">
+<segment>
+<pinref part="U$16" gate="G$1" pin="GND_A"/>
+<wire x1="-35.56" y1="157.48" x2="-35.56" y2="162.56" width="0.1524" layer="91"/>
+<label x="-35.56" y="162.56" size="1.27" layer="95" rot="R90" xref="yes"/>
+</segment>
+</net>
+<net name="V_A_1" class="0">
+<segment>
+<pinref part="U$16" gate="G$1" pin="V_A"/>
+<wire x1="-33.02" y1="157.48" x2="-33.02" y2="162.56" width="0.1524" layer="91"/>
+<label x="-33.02" y="162.56" size="1.27" layer="95" rot="R90" xref="yes"/>
+</segment>
+<segment>
+<pinref part="R9" gate="1" pin="1"/>
+<pinref part="R8" gate="1" pin="1"/>
+<wire x1="-10.16" y1="215.9" x2="-5.08" y2="215.9" width="0.1524" layer="91"/>
+<wire x1="-10.16" y1="215.9" x2="-10.16" y2="205.74" width="0.1524" layer="91"/>
+<wire x1="-10.16" y1="205.74" x2="-5.08" y2="205.74" width="0.1524" layer="91"/>
+<wire x1="-10.16" y1="215.9" x2="-10.16" y2="218.44" width="0.1524" layer="91"/>
+<wire x1="-10.16" y1="218.44" x2="-15.24" y2="218.44" width="0.1524" layer="91"/>
+<junction x="-10.16" y="215.9"/>
+<pinref part="R10" gate="1" pin="1"/>
+<wire x1="-10.16" y1="218.44" x2="7.62" y2="218.44" width="0.1524" layer="91"/>
+<junction x="-10.16" y="218.44"/>
+<pinref part="R7" gate="1" pin="1"/>
+<wire x1="7.62" y1="218.44" x2="12.7" y2="218.44" width="0.1524" layer="91"/>
+<wire x1="12.7" y1="208.28" x2="7.62" y2="208.28" width="0.1524" layer="91"/>
+<wire x1="7.62" y1="208.28" x2="7.62" y2="218.44" width="0.1524" layer="91"/>
+<junction x="7.62" y="218.44"/>
+<label x="-15.24" y="218.44" size="1.27" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="LEO_TO_ILM" class="0">
+<segment>
+<pinref part="U$1" gate="G$1" pin="PD0"/>
+<wire x1="-50.8" y1="0" x2="-50.8" y2="-5.08" width="0.1524" layer="91"/>
+<label x="-50.8" y="-5.08" size="1.27" layer="95" rot="R270" xref="yes"/>
+</segment>
+<segment>
+<pinref part="PCB1" gate="G$1" pin="1(TX)"/>
+<wire x1="111.76" y1="15.24" x2="111.76" y2="20.32" width="0.1524" layer="91"/>
+<label x="111.76" y="20.32" size="1.27" layer="95" rot="R90" xref="yes"/>
+</segment>
+</net>
+<net name="ILM_TO_LEO" class="0">
+<segment>
+<pinref part="U$1" gate="G$1" pin="PD1"/>
+<wire x1="-48.26" y1="0" x2="-48.26" y2="-5.08" width="0.1524" layer="91"/>
+<label x="-48.26" y="-5.08" size="1.27" layer="95" rot="R270" xref="yes"/>
+</segment>
+<segment>
+<pinref part="PCB1" gate="G$1" pin="0(RX)"/>
+<wire x1="114.3" y1="15.24" x2="114.3" y2="20.32" width="0.1524" layer="91"/>
+<label x="114.3" y="20.32" size="1.27" layer="95" rot="R90" xref="yes"/>
 </segment>
 </net>
 </nets>
