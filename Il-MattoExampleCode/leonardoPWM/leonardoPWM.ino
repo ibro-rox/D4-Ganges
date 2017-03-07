@@ -1,6 +1,6 @@
 #define TIMER_TOP 40000
 //PWM DUTY for ESCs
-#define PWM_DUTY_MIN 2000
+#define PWM_DUTY_MIN 2020
 #define PWM_DUTY_MAX 4000
 void init_pwm(void);
 void pwm_duty(uint16_t A,uint16_t B,uint16_t C,uint16_t D);
@@ -8,20 +8,15 @@ int x =PWM_DUTY_MIN;
 void setup() 
 {
   init_pwm();
-  for(x = PWM_DUTY_MIN; x <= PWM_DUTY_MIN+700; x++)
-  {
-         pwm_duty(x,x,x,x);
-  }
-    for(x = PWM_DUTY_MIN+700; x >= PWM_DUTY_MIN; x--)
-  {
-         pwm_duty(x,x,x,x);
-  }
+  pwm_duty(PWM_DUTY_MIN,PWM_DUTY_MIN,PWM_DUTY_MIN,PWM_DUTY_MIN);
+  delay(10000);
 } 
 
 void loop() {
     //TXLED1;
      pwm_duty(x,x,x,x) ;
-     _delay_ms(1);
+     delay(10);
+     x=PWM_DUTY_MIN;
      if(x<PWM_DUTY_MAX) x++;
      else x=PWM_DUTY_MIN;
 }
@@ -64,3 +59,4 @@ void pwm_duty(uint16_t A,uint16_t B,uint16_t C,uint16_t D)
     OCR1C = C;
     OCR3A = D;
 }
+
