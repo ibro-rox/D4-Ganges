@@ -282,8 +282,8 @@ void loop() {
         gyroRoll = ypr[2] * 180/M_PI;
     
         //get throttle data
-        if(throttle<MAX_MOTOR_SPEED) throttle++;
-          else throttle=MIN_MOTOR_SPEED;
+        if(throttle<MAX_THROTTLE_IN) throttle++;
+          else throttle=MIN_THROTTLE_IN;
        targetYaw = 0;
        targetPitch = 0;
        targetRoll = 0;

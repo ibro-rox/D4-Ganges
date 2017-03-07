@@ -10,9 +10,8 @@ float rawToAngle(int controlIn)
 float rawToThrottle(int controlIn)
 {
 	float output = controlIn - 512;
-	if(output > 0)
+	if(output > 4)
 	{	
-		output = (output/N_THROTTLE)+1000;
 		return output;
 	}
 	return 0;
