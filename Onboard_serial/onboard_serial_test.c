@@ -5,7 +5,7 @@
 
 #include "debug.h"
 
-#define BAUD 9600
+#define BAUD 57600
 
 #ifdef BAUD
 #include <util/setbaud.h>
@@ -16,20 +16,17 @@ volatile uint8_t serial_interrupt_flag = 0;
 ISR(INT0_vect)
 {
 	serial_interrupt_flag = 1; 			// Interrupt sets flag could be replaced
-}							// with longer ISR if immediately needed
+}													// with longer ISR if immediately needed
 
-struct euler_angles {					//Structure containing TYPR
+struct euler_angles {						//Structure containing TYPR
 	uint16_t throttle;
 	uint16_t yaw;
 	uint16_t pitch;
 	uint16_t roll;
 };
 
-
 uint8_t is_valid_packet(struct euler_angles *input);
 void send_packet(struct euler_angles *input);
-
-
 
 int main()
 {
@@ -66,9 +63,9 @@ int main()
 void send_packet(struct euler_angles *input)
 {
 	if(is_valid_packet(input))
-		printf("%d %d %d %d\n", input->throttle, input->yaw, input->pitch, input->roll);
+		printf("t%dy%dp%dr%d\n", input->throttle, input->yaw, input->pitch, input->roll);
 	else 
-		printf("%d %d %d %d \n", 0, 0, 0, 0);
+		printf("t%dy%dp%dr%d\n", 0, 0, 0, 0);
 	
 		serial_interrupt_flag = 0;
 }
