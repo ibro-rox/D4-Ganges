@@ -6,10 +6,6 @@
 #include "rfm12.h"
 #include "drone_comms.h"
 
-#if ENABLE_ENCRYPTION
-	volatile uint8_t encryption_key;
-#endif
-
 void Retrieve_data(uint8_t* type, uint16_t* data)
 {
 	// Combine packet type and data into a single 16-bit int
@@ -33,29 +29,6 @@ void Decode_data(uint8_t* type, uint16_t* data, uint16_t totalpacket)
 	// Get packet type
 	*type = (totalpacket >> DATA_BIT_SIZE);
 }
-#if ENABLE_ENCRYPTION
-uint16_t Decrypt_data(uint16_t packet)
-{
-	// Retrieve the encryption key
-	uint8_t encryption_key;
-	encryption_key = (packet >> (DATA_BIT_SIZE + COMMAND_BIT_SIZE));
-
-	// Remove encryption key from the packet
-	packet = (packet & ((uint16_t)pow(2, DATA_BIT_SIZE + COMMAND_BIT_SIZE) - 1));
-
-	// Retrieve bits that are shifted out when the left shift is done
-	uint8_t rotated_out_bits;
-	rotated_out_bits = (packet >> (DATA_BIT_SIZE + COMMAND_BIT_SIZE - encryption_key));
-
-	// Get completely rotated bits by adding the shifted out bits to the
-	// original packet left-shifted by the required number of bits.
-	// It is & with a sequence of 1s to remove the encryption key from the overall packet
-	uint16_t decrypted_packet;
-	decrypted_packet = ((packet << encryption_key) & ((uint16_t)pow(2, DATA_BIT_SIZE + COMMAND_BIT_SIZE) - 1)) + rotated_out_bits;
-
-	return decrypted_packet;
-}
-#endif
 
 void Send_data(uint8_t type, uint16_t data)
 {
@@ -82,8 +55,6 @@ void Send_data(uint8_t type, uint16_t data)
 
 }
 
-
-
 void Encode_data(uint8_t* type, uint8_t* data, uint16_t totalpacket)
 {
 	// Data is equal to the 8 LSBs
@@ -93,31 +64,64 @@ void Encode_data(uint8_t* type, uint8_t* data, uint16_t totalpacket)
 	*type = (totalpacket >> 8);
 }
 
-
-
 #if ENABLE_ENCRYPTION
 uint16_t Encrypt_data(uint16_t packet)
 {
+	// Get the encryption key from the first 3 bits of the packet
+	uint8_t encryption_key;
+	encryption_key = (packet & 7);
+
 	// Retrieve bits that are shifted out when the right shift is done
 	uint8_t rotated_out_bits;
-	rotated_out_bits = (packet & ((uint8_t)pow(2, encryption_key) - 1));
+	rotated_out_bits = (packet >> 3) & get_1s(encryption_key);
 
-	// Get completely rotated bits by adding the shifted out bits to the
-	// original packet right-shifted by the required number of bits.
+	// Right shift packet and add on rotated-out bits in their new position
 	uint16_t encrypted_packet;
-	encrypted_packet = (packet >> encryption_key) + (rotated_out_bits << (COMMAND_BIT_SIZE + DATA_BIT_SIZE - encryption_key));
+	encrypted_packet = (packet >> encryption_key) + (rotated_out_bits << (13 + 3 - encryption_key));
 
-	// Add on the encryption key to the MSBs of the packet
-	encrypted_packet = encrypted_packet + (encryption_key << (COMMAND_BIT_SIZE + DATA_BIT_SIZE));
-
-	// Adjust encryption key for next transmission
-	encryption_key = (encryption_key < 3) ? encryption_key + 5 : encryption_key - 3;
-	if (encryption_key == 0) encryption_key = 5;
+	// Remove any values from the first 3 bits and add on the encryption key
+	encrypted_packet = (encrypted_packet & 65528) + encryption_key;
 
 	return encrypted_packet;
-
 }
 
+uint16_t Decrypt_data(uint16_t packet)
+{
+	// Get the encryption key from the first 3 bits of the packet
+	uint8_t encryption_key;
+	encryption_key = (packet & 7);
+
+	// Remove the encryption key from the packet
+	packet = (packet & 65528);
+
+	// Retrieve bits that are shifted out when the left shift is done
+	uint8_t rotated_out_bits;
+	rotated_out_bits = (packet >> (16 - encryption_key)) & get_1s(encryption_key);
+
+	// Left shift packet and add on rotated-out bits in their previous position
+	uint16_t decrypted_packet;
+	decrypted_packet = (packet << encryption_key) + (rotated_out_bits << 3);
+
+	// Remove any values from the first 3 bits and add on the encryption key
+	decrypted_packet = (decrypted_packet & 65528) + encryption_key;
+
+	return decrypted_packet;
+}
+
+uint16_t get_1s(uint8_t num)
+{
+	uint16_t out;
+	out = 1;
+
+	uint8_t i;
+	for (i = 1; i < num; i++)
+	{
+		out = (out << 1);
+		out++;
+	}
+
+	return out;
+}
 #endif
 
 void init_uart1()// initialize UART
@@ -149,4 +153,4 @@ void send_string(char *str)
 {
 	int i;
 	for( i = 0; str[i]; i++) uart_transmit(str[i]);
-}//***************
+}

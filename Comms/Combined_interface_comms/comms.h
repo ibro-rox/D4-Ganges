@@ -4,18 +4,16 @@
 #define OP_YAW 2
 #define OP_PITCH 3
 #define OP_BUTTON 4
-#define OP_KP_THRUST 5
-#define OP_KI_THRUST 6
-#define OP_KD_THRUST 7
-#define OP_KP_ROLL 8
-#define OP_KI_ROLL 9
-#define OP_KD_ROLL 10
-#define OP_KP_YAW 11
-#define OP_KI_YAW 12
-#define OP_KD_YAW 13
-#define OP_KP_PITCH 14
-#define OP_KI_PITCH 15
-#define OP_KD_PITCH 16
+
+#define OP_KP_ROLL 5
+#define OP_KI_ROLL 6
+#define OP_KD_ROLL 7
+#define OP_KP_YAW 8
+#define OP_KI_YAW 9
+#define OP_KD_YAW 10
+#define OP_KP_PITCH 11
+#define OP_KI_PITCH 12
+#define OP_KD_PITCH 13
 
 // K value size
 #define CHAR_MAX 6
@@ -42,7 +40,7 @@
 #define ENABLE_DOWNLINK 1
 
 // Enable encryption
-#define ENABLE_ENCRYPTION 0
+#define ENABLE_ENCRYPTION 1
 
 // Enable/configure UI and setting K values
 #define ENABLE_UI 1
@@ -50,7 +48,7 @@
 #define K_RANGE_MAX 10.23
 
 // Enable controls
-#define ENABLE_CONTROLS 0
+#define ENABLE_CONTROLS 1
 
 // Enable double transceivers
 #define DOUBLE_TRANSCEIVERS 0
