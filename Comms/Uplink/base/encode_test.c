@@ -11,7 +11,7 @@
 #include "../comms.h"
 
 // Mohammed's UART code
-#define BAUD 9600                                   // define baud
+#define BAUD 57600                                   // define baud
 #define BAUDRATE ((F_CPU)/(BAUD*16UL)-1)            // set baud rate value for UBRR
 
 void init_uart1()// initialize UART
@@ -144,19 +144,85 @@ uint16_t test_encrypt(uint16_t packet)
 	return encrypted_packet;
 }
 
+uint16_t get_1s(uint8_t num)
+{
+	// Generate a variable that is num 1's
+	uint16_t out;
+	out = 1;
+
+	uint8_t i;
+	for (i = 1; i < num; i++)
+	{
+		out = (out << 1);
+		out++;
+	}
+
+	return out;
+}
+
+uint16_t Encrypt_data(uint16_t packet)
+{
+	// Get the encryption key from the first 3 bits of the packet
+	uint8_t encryption_key;
+	encryption_key = (packet & 7);
+
+	// Retrieve bits that are shifted out when the right shift is done
+	uint8_t rotated_out_bits;
+	rotated_out_bits = (packet >> 3) & get_1s(encryption_key);
+
+	// Right shift packet and add on rotated-out bits in their new position
+	uint16_t encrypted_packet;
+	encrypted_packet = (packet >> encryption_key) + (rotated_out_bits << (13 + 3 - encryption_key));
+
+	// Remove any values from the first 3 bits and add on the encryption key
+	encrypted_packet = (encrypted_packet & 65528) + encryption_key;
+
+	return encrypted_packet;
+}
+
+uint16_t Decrypt_data(uint16_t packet)
+{
+	// Get the encryption key from the first 3 bits of the packet
+	uint8_t encryption_key;
+	encryption_key = (packet & 7);
+
+	// Remove the encryption key from the packet
+	packet = (packet & 65528);
+
+	// Retrieve bits that are shifted out when the left shift is done
+	uint8_t rotated_out_bits;
+	rotated_out_bits = (packet >> (16 - encryption_key)) & get_1s(encryption_key);
+
+	// Left shift packet and add on rotated-out bits in their previous position
+	uint16_t decrypted_packet;
+	decrypted_packet = (packet << encryption_key) + (rotated_out_bits << 3);
+
+	// Remove any values from the first 3 bits and add on the encryption key
+	decrypted_packet = (decrypted_packet & 65528) + encryption_key;
+
+	return decrypted_packet;
+}
+
 int main(void)
 {
 	init_uart1();
 
+	char ch[100];
 	// Test all possibilities of data for the chosen encryption key and break if an encryption fails
 	uint16_t testpacket, result;
-	for (testpacket = 0; testpacket < 8192; testpacket++)
+	for (testpacket = 0; testpacket < 65536; testpacket++)
 	{
-		result = test_encrypt(testpacket);
-		if (test_decrypt(result) != testpacket)
+		result = Encrypt_data(testpacket);
+		if (Decrypt_data(result) != testpacket)
 		{
-			send_string("Error!");
+			sprintf(ch, "\n\rError! - Encrypted %u as %u but decrypted as %u", testpacket, result, Decrypt_data(result));
+			send_string(ch);
 			break;
+		}
+		else
+		{
+			sprintf(ch, "\n\rSuccessfully encrypted and decrypted %u", testpacket);
+			send_string(ch);
 		}
 	}
 

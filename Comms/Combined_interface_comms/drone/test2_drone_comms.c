@@ -13,10 +13,13 @@ int main(void)
 {	
 	// Initialise rfm12 and interrupts
 	rfm12_init();
+	init_uart1();
 	sei();
+	send_string("\n\rInitialised\n\r");
 
-	uint8_t receivedpackettype;
+	uint8_t receivedpackettype, PIDmode;
 	uint16_t receiveddata;
+	PIDmode = 1;
 	char ch[30];
 	float k_value;
 	while (1)
@@ -29,37 +32,27 @@ int main(void)
 			// Get the received packet type and data
 			receivedpackettype = rfm12_rx_type();
 			receiveddata = rfm12_rx_buffer();
-			
+			rfm12_rx_clear();
+
+			sprintf(ch, "\n\r Raw data: %u %u", receivedpackettype, receiveddata);
+			send_string(ch);
 			// Decrypt (if enabled) and extract 10-bit data and packet type from the received packet 
 			Retrieve_data(&receivedpackettype, &receiveddata);
-			// #if UPLINK_TEST
-			// 	send_string("\n\rReceived transmission:");
-			// 	// Send received packet type to UART
-			// 	sprintf(ch,"\n\r Packet type: %d",receivedpackettype);
-			// 	send_string(ch);
-			// 	// Send received data to UART
-			// 	sprintf(ch, "\n\r Data = %d", receiveddata);
-			// 	send_string(ch);
-			// #endif
-			// print off the adc data
+			sprintf(ch, "\n\r Received: %u %u", receivedpackettype, receiveddata);
+			send_string(ch);
+			 #if UPLINK_TEST
+			 	send_string("\n\rReceived transmission:");
+			 	// Send received packet type to UART
+			 	sprintf(ch,"\n\r Packet type: %d",receivedpackettype);
+			 	send_string(ch);
+			 	// Send received data to UART
+			 	sprintf(ch, "\n\r Data = %d", receiveddata);
+			 	send_string(ch);
+			 #endif
 
+#if ENABLE_CONTROLS
 			switch (receivedpackettype)
 			{
-				case OP_KP : // 1st conver the k values to floating numbers
-							k_value = receiveddata/100;
-							sprintf(ch, "Kp value = %f", k_value);
-							send_string(ch);
-							break;
-				case OP_KI : // 1st conver the k values to floating numbers
-							k_value = receiveddata/100;
-							sprintf(ch,"ki value = %f", k_value);
-							send_string(ch);
-							break;
-				case OP_KD : // 1st conver the k values to floating numbers
-							k_value = receiveddata/100;
-							sprintf(ch, "ki value = %f", k_value);
-							send_string(ch);
-							break;
 				case OP_THRUST : 
 							sprintf(ch, "\n\r Thrust = %u", receiveddata);
 							send_string(ch);
@@ -78,96 +71,61 @@ int main(void)
 							break;
 				default : send_string("Didnt receive K values");
 			}
-
+#endif
+#if ENABLE_UI
+			// If in PID mode also check for K values
+			if (PIDmode)
+			{
+				switch (receiveddata)
+				{
+					case OP_KP_ROLL:
+						k_value = receiveddata / 100;
+						sprintf(ch, "Roll Kp value = %f", k_value);
+						send_string(ch);
+						break;
+					case OP_KI_ROLL:
+						k_value = receiveddata / 100;
+						sprintf(ch, "Roll Ki value = %f", k_value);
+						send_string(ch);
+						break;
+					case OP_KD_ROLL:
+						k_value = receiveddata / 100;
+						sprintf(ch, "Roll Kd value = %f", k_value);
+						send_string(ch);
+						break;
+					case OP_KP_YAW:
+						k_value = receiveddata / 100;
+						sprintf(ch, "Yaw Kp value = %f", k_value);
+						send_string(ch);
+						break;
+					case OP_KI_YAW:
+						k_value = receiveddata / 100;
+						sprintf(ch, "Yaw Ki value = %f", k_value);
+						send_string(ch);
+						break;
+					case OP_KD_YAW:
+						k_value = receiveddata / 100;
+						sprintf(ch, "Yaw Kd value = %f", k_value);
+						send_string(ch);
+						break;
+					case OP_KP_PITCH:
+						k_value = receiveddata / 100;
+						sprintf(ch, "Pitch Kp value = %f", k_value);
+						send_string(ch);
+						break;
+					case OP_KI_PITCH:
+						k_value = receiveddata / 100;
+						sprintf(ch, "Pitch Ki value = %f", k_value);
+						send_string(ch);
+						break;
+					case OP_KD_PITCH:
+						k_value = receiveddata / 100;
+						sprintf(ch, "Pitch Kd value = %f", k_value);
+						send_string(ch);
+						break;
+				}
+			}
+#endif // ENABLE_UI
 		}
 	}
 }
-
-/*	
-	Retrieves the 10-bit data and 3-bit packet type from the received packet.
-	If encryption is enabled the packet is first decrypted.
-*/
-void Retrieve_data(uint8_t* type, uint16_t* data)
-{
-	// Combine packet type and data into a single 16-bit int
-	uint16_t totalpacket;
-	totalpacket = type;
-	totalpacket = (totalpacket << DATA_BIT_SIZE) + data;
-
-	#if ENABLE_ENCRYPTION
-		// Decrypt the received packet
-		totalpacket = Decrypt_data(totalpacket);
-	#endif // ENCRYPTION_ENABLED
-
-
-	// Split the decrypted packet into the data and the packet type
-	Decode_data(type, data, totalpacket);
-}
-
-/*
-	Retrieves the 10-bit data and 3-bit packet type from the full 16-bit packet.
-*/
-uint16_t Decode_data(uint8_t* type, uint16_t* data, uint16_t totalpacket)
-{
-	// Get 10-bit data from the 16 bit packet
-	*data = totalpacket & (uint16_t)1023;
-	
-	// Get packet type
-	*type = (totalpacket >> DATA_BIT_SIZE);
-}
-
-/*
-	Decrypts the packet and removes the encryption key.
-*/
-#if ENABLE_ENCRYPTION
-uint16_t Decrypt_data(uint16_t packet)
-{
-	// Retrieve the encryption key
-	uint8_t encryption_key;
-	encryption_key = (packet >> (DATA_BIT_SIZE + COMMAND_BIT_SIZE));
-
-	// Retrieve bits that are shifted out when the left shift is done
-	uint8_t rotated_out_bits;
-	rotated_out_bits = (packet >> (DATA_BIT_SIZE + COMMAND_BIT_SIZE - encryption_key));
-
-	// Get completely rotated bits by adding the shifted out bits to the
-	// original packet left-shifted by the required number of bits.
-	// It is &'ed with a sequence of 1s to remove the encryption key from the overall packet
-	uint16_t decrypted_packet;
-	decrypted_packet = (((packet << encryption_key) & (pow(2, DATA_BIT_SIZE + COMMAND_BIT_SIZE) - 1)) + rotated_out_bits;
-
-	return decrypted_packet;
-}
-#endif 
-
-void init_uart1()// initialize UART
-{
-	//1. set the baud rate, lets configure to 9600;
-	// set the baud rate registers Ref: [1],[2]
-	UBRR0H = BAUDRATE >> 8;// UBRRnH is 8 bits left
-	UBRR0L = BAUDRATE;
-
-	//2. setting up data packet: 8 bits ,no parity 1 stop bit
-	// setting 8 bits got to UCSCR register Ref:[3], pg 185 of data sheet
-
-	UCSR0C = _BV(UCSZ00) | _BV(UCSZ01); // 8 bits, USBS1 = 0 for 1 stop bit
-
-										// note: havnt set up the stop bit in Ref [2] slides
-										// 3. from Ref[2] we now enable Transmission and receive n UCSRnB register
-	UCSR0B = _BV(TXEN0) | _BV(RXEN0);
-
-}
-
-// transmit data function
-void uart_transmit(char data)
-{
-	while (!(UCSR0A &  _BV(UDRE0))); //  data register enable bit is 1 if tx buffer is empy
-									 // if its 1 we load data onto UDR- Uart Data Register(buffer)
-	UDR0 = data;
-}
-
-void send_string(char *str)
-{
-	int i;
-	for (i = 0; str[i]; i++) uart_transmit(str[i]);
-}//********************
