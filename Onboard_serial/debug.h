@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <avr/io.h>
 
-#define DEBUG_BAUD  9600
+#define DEBUG_BAUD  57600
 
 int uputchar0(char c, FILE *stream)
 {

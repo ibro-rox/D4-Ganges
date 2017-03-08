@@ -5,11 +5,11 @@
 
 #include "debug.h"
 
-#define BAUD 57600
+/* #define BAUD 57600
 
 #ifdef BAUD
 #include <util/setbaud.h>
-#endif
+#endif */
 
 volatile uint8_t serial_interrupt_flag = 0;
 
@@ -35,10 +35,10 @@ int main()
 	
 	struct euler_angles desired_values;
 	
-	desired_values.throttle = 2;
-	desired_values.yaw = 3;
-	desired_values.pitch = 5;
-	desired_values.roll = 7;
+	desired_values.throttle = 256;
+	desired_values.yaw = 554;
+	desired_values.pitch = 747;
+	desired_values.roll = 517;
 	
 	DDRD |= _BV(PD2);			// Set PD2 to output
 	PORTD &= ~_BV(PD2);
