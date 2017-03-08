@@ -9,19 +9,71 @@ int yaw     = PWM_DUTY_MIN;
 int pitch   = PWM_DUTY_MIN;
 int roll    = PWM_DUTY_MIN;
 
+String throttleString = "";         // a string to hold incoming data
+String yawString      = ""; 
+String pitchString      = ""; 
+String rollString      = ""; 
+int throttleInput = 0;
+int yawInput = 0;
+int pitchInput = 0;
+int rollInput = 0;
+
+boolean stringComplete = false;  // whether the string is complete
+char packetFlag;
+
+void pulse(void);
+void serialEvent(void);
+void printInt(void);
+
 void setup() 
 {
   delay(1000);
   //wait for controller input that isnt zero data
+  
+
+  Serial1.begin(57600);
+  // reserve 4 bytes for the input strings:
+  throttleString.reserve(4);
+  yawString.reserve(4);
+  pitchString.reserve(4);
+  rollString.reserve(4);
+  pinMode(7,OUTPUT);
+  digitalWrite(7,LOW);
+  Serial1.println("Setup Complete");
+  Serial1.println("Waiting for non-zero throttle");
+  while(throttleInput == 0)
+  {
+    pulse();
+    serialEvent();
+    delay(100);
+  }
+  Serial1.println("Non-zero throttle acquired, entering loop");
+ 
+  
   init_pwm();
-  pwm_duty(thrust,yaw,pitch,roll);//change this to controller input 
+  //pwm_duty(thrust,yaw,pitch,roll);//change this to controller input 
 } 
 
-void loop() {
+void loop() 
+{
+    serialEvent();
+  // complete the string when a newline arrives:
+  if (stringComplete) {
+   printInt();
+    // clear the string:
+    stringComplete = false;
+    delay(10);
+    pulse();  
+  } 
+    
     //TXLED1;
       //get data from Ilmatto and output same to all motors
-     pwm_duty(x1,x1,x2,x2);
+     pwm_duty((uint16_t)rawToThrottle(throttleInput),
+              (uint16_t)rawToThrottle(yawInput),
+              (uint16_t)rawToThrottle(pitchInput),
+              (uint16_t)rawToThrottle(rollInput));
      //delay(5);
+     
 
 
 }
@@ -67,13 +119,92 @@ void pwm_duty(uint16_t A,uint16_t B,uint16_t C,uint16_t D)
     OCR3A = D;
 }
 
-int rawToThrottle(int controlIn)
+float rawToThrottle(int controlIn)
 {
-  int output = controlIn - 512;
+  float output = controlIn - 512;
   if(output > 4)
   { 
     output = output*7.8125+2000;
     return output;
   }
   return 0;
+}
+
+void printInt(void)
+{
+    Serial1.print("Packet Received:");
+    Serial1.print("t");
+    Serial1.print(throttleInput);
+    Serial1.print("y");
+    Serial1.print(yawInput);
+    Serial1.print("p");
+    Serial1.print(pitchInput);
+    Serial1.print("r");
+    Serial1.print(rollInput);
+    Serial1.print("\tt");
+    Serial1.print((int)rawToThrottle(throttleInput));
+    Serial1.print("y");
+    Serial1.print((int)rawToThrottle(yawInput));
+    Serial1.print("p");
+    Serial1.print((int)rawToThrottle(pitchInput));
+    Serial1.print("r");
+    Serial1.println((int)rawToThrottle(rollInput));
+    
+    
+    return;
+}
+
+
+void serialEvent(void) {
+  while (Serial1.available()) {
+    // get the new byte:
+    char inChar = (char)Serial1.read();
+    // add it to the input string selected by setValue:
+    // if the incoming character is a newline, set a flag
+    // so the main loop can do something about it:
+    if (inChar == '\n') 
+    {
+      stringComplete = true;  
+      throttleInput = throttleString.toInt();
+      yawInput = yawString.toInt();
+      pitchInput = pitchString.toInt();
+      rollInput = rollString.toInt();
+      throttleString = "";
+      yawString = "";
+      pitchString = "";
+      rollString = "";
+    }
+    else
+    {
+      if(inChar == 't' ||inChar == 'y'||inChar == 'p'||inChar == 'r')
+      {
+        packetFlag= inChar;
+      }
+      else{
+        switch (packetFlag) {
+          case 't'://throttle
+            throttleString += inChar;
+            break;
+          case 'y': //yaw
+            yawString += inChar;
+            break;
+          case 'p': //pitch 
+            pitchString += inChar;
+            break;
+          case 'r': //roll
+            rollString += inChar;
+            break;
+        }
+      }
+    }
+  }
+  return;
+}
+
+void pulse(void)
+{
+  digitalWrite(7,HIGH);
+  delayMicroseconds(1);
+  digitalWrite(7,LOW);
+  return;
 }

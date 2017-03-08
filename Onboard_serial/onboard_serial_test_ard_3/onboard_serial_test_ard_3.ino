@@ -8,15 +8,18 @@ int pitchInput;
 int rollInput;
 
 boolean stringComplete = false;  // whether the string is complete
-char setValue;
+char packetFlag;
 
 void pulse(void);
+void serialEvent(void);
+void printInt(void);
+
 
 void setup() {
   // initialize serial:
   //Serial.begin(57600);
   Serial1.begin(57600);
-  // reserve 200 bytes for the inputString:
+  // reserve 4 bytes for the input strings:
   throttleString.reserve(4);
   yawString.reserve(4);
   pitchString.reserve(4);
@@ -29,9 +32,19 @@ void setup() {
 
 void loop() {
   serialEvent();
-  // print the string when a newline arrives:
+  // complete the string when a newline arrives:
   if (stringComplete) {
-    Serial1.print("Packet Received:");
+   printInt();
+    // clear the string:
+    stringComplete = false;
+    delay(10);
+    pulse();  
+  }  
+}
+
+void printInt(void)
+{
+   Serial1.print("Packet Received:");
     Serial1.print("t");
     Serial1.print(throttleInput);
     Serial1.print("y");
@@ -40,11 +53,7 @@ void loop() {
     Serial1.print(pitchInput);
     Serial1.print("r");
     Serial1.println(rollInput);
-    // clear the string:
-    stringComplete = false;
-    delay(10);
-    pulse();  
-  }  
+    return;
 }
 
 
@@ -52,7 +61,7 @@ void serialEvent(void) {
   while (Serial1.available()) {
     // get the new byte:
     char inChar = (char)Serial1.read();
-    // add it to the inputString:
+    // add it to the input string selected by setValue:
     // if the incoming character is a newline, set a flag
     // so the main loop can do something about it:
     if (inChar == '\n') 
@@ -71,10 +80,10 @@ void serialEvent(void) {
     {
       if(inChar == 't' ||inChar == 'y'||inChar == 'p'||inChar == 'r')
       {
-        setValue = inChar;
+        packetFlag= inChar;
       }
       else{
-        switch (setValue) {
+        switch (packetFlag) {
           case 't'://throttle
             throttleString += inChar;
             break;
@@ -91,6 +100,7 @@ void serialEvent(void) {
       }
     }
   }
+  return;
 }
 
 void pulse(void)
@@ -98,5 +108,6 @@ void pulse(void)
   digitalWrite(7,HIGH);
   delayMicroseconds(1);
   digitalWrite(7,LOW);
+  return;
 }
 
