@@ -1,24 +1,28 @@
 #define TIMER_TOP 40000
 //PWM DUTY for ESCs
-#define PWM_DUTY_MIN 2020 //does this need to be 2020 when we have a big delay?
+#define PWM_DUTY_MIN 2000 //does this need to be 2020 when we have a big delay?
 #define PWM_DUTY_MAX 4000
 void init_pwm(void);
 void pwm_duty(uint16_t A,uint16_t B,uint16_t C,uint16_t D);
-int x =PWM_DUTY_MIN;
+int x1 =PWM_DUTY_MIN;
+int x2 =PWM_DUTY_MIN;
 void setup() 
 {
+  delay(1000);
   init_pwm();
   pwm_duty(PWM_DUTY_MIN,PWM_DUTY_MIN,PWM_DUTY_MIN,PWM_DUTY_MIN);
-  delay(10000);
+  delay(4000);
 } 
 
 void loop() {
     //TXLED1;
-     pwm_duty(x,x,x,x) ;
-     delay(10);
-     x=PWM_DUTY_MIN;
-     if(x<PWM_DUTY_MAX) x++;
-     else x=PWM_DUTY_MIN;
+     pwm_duty(x1,x1,x2,x2);
+     delay(5);
+     if(x1<PWM_DUTY_MAX) x1++;
+     else x1=PWM_DUTY_MIN;
+     if(x2<PWM_DUTY_MAX) x2=x2+2;
+     else x2=PWM_DUTY_MIN;
+
 }
 
 void init_pwm(void)
@@ -33,7 +37,7 @@ void init_pwm(void)
                _BV(COM1B1)| /* B output enabled*/
                _BV(COM1C1); /* C output enabled*/
     TCCR1B =  _BV(CS10)  | /*no prescalar*/
-            //_BV(CS11)  | /* /8 prescaling */ 
+              //_BV(CS11)  | /* /8 prescaling */ 
               _BV(WGM12) | /* fast PWM/MAX */ 
               _BV(WGM13) ; /* fast PWM/MAX */           
     /* TIMER 3 */
@@ -41,7 +45,7 @@ void init_pwm(void)
     TCCR3A =  _BV(WGM31) | /* fast PWM/MAX */
               _BV(COM3A1); /* A output enabled*/
     TCCR3B =  _BV(CS30)  | /*no prescalar*/
-            //_BV(CS31)  | /* /8 prescaling */ 
+              //_BV(CS31)  | /* /8 prescaling */ 
               _BV(WGM32) | /* fast PWM/MAX */ 
               _BV(WGM33) ;
     ICR3 = TIMER_TOP;
