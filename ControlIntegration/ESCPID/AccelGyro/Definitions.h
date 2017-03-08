@@ -9,7 +9,7 @@
 
 #define TIMER_TOP 40000
 //PWM VALUES FOR ESC
-#define PWM_DUTY_MIN 2020.0
+#define PWM_DUTY_MIN 2000.0
 #define PWM_DUTY_MAX 4000.0
 //PWM for mohameds servo
 //#define PWM_DUTY_MIN 500

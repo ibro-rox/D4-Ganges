@@ -172,6 +172,8 @@ void dmpDataReady() {
 // ================================================================
 
 void setup() {
+    //delay to allow ESCs to boot up
+
     // join I2C bus (I2Cdev library doesn't do this automatically)
     #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
         Wire.begin();
@@ -198,7 +200,12 @@ void setup() {
     #endif
     
     mpu.initialize();
+
+
+    /*-----------------------------------------*/
+    /* we need to add a wait to get conroller input before enabling pwm*/
     init_pwm();
+    //output pwm values from controller 
     
     pinMode(INTERRUPT_PIN, INPUT);
     

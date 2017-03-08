@@ -11,7 +11,7 @@ void init_pwm(void)
                _BV(COM1A1)| /* A output enabled*/  
                _BV(COM1B1)| /* B output enabled*/
                _BV(COM1C1); /* C output enabled*/
-    TCCR1B =  _BV(CS11)  | /* /8 prescaling */ 
+    TCCR1B =  _BV(CS10)  | /* no prescaling */ 
               _BV(WGM12) | /* fast PWM/MAX */ 
               _BV(WGM13) ; /* fast PWM/MAX */           
     ICR1 = TIMER_TOP;
@@ -19,7 +19,7 @@ void init_pwm(void)
     DDRC |= _BV(PC6); /* PWM 3A out (pin 5 on pro micro)*/
     TCCR3A =  _BV(WGM31) | /* fast PWM/MAX */
               _BV(COM3A1); /* A output enabled*/
-    TCCR3B =  _BV(CS31)   |
+    TCCR3B =  _BV(CS30)  | /* no prescaling*/
               _BV(WGM32) | /* fast PWM/MAX */ 
               _BV(WGM33) ;
     ICR3 = TIMER_TOP;

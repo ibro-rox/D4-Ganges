@@ -4,14 +4,17 @@
 #define PWM_DUTY_MAX 4000
 void init_pwm(void);
 void pwm_duty(uint16_t A,uint16_t B,uint16_t C,uint16_t D);
-int thrust =PWM_DUTY_MIN;
-int thrust =PWM_DUTY_MIN;
+int thrust  = PWM_DUTY_MIN;
+int yaw     = PWM_DUTY_MIN;
+int pitch   = PWM_DUTY_MIN;
+int roll    = PWM_DUTY_MIN;
+
 void setup() 
 {
   delay(1000);
   //wait for controller input that isnt zero data
   init_pwm();
-  pwm_duty(thrust,thrust,thrust,thrust);//change this to controller input 
+  pwm_duty(thrust,yaw,pitch,roll);//change this to controller input 
 } 
 
 void loop() {
@@ -64,3 +67,13 @@ void pwm_duty(uint16_t A,uint16_t B,uint16_t C,uint16_t D)
     OCR3A = D;
 }
 
+int rawToThrottle(int controlIn)
+{
+  int output = controlIn - 512;
+  if(output > 4)
+  { 
+    output = output*7.8125+2000;
+    return output;
+  }
+  return 0;
+}
