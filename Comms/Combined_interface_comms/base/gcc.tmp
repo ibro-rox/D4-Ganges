@@ -1,2 +1,0 @@
-basestation_comms.c: In function 'Encrypt_data':
-basestation_comms.c:87: warning: 'rotated_out_bits' is used uninitialized in this function
