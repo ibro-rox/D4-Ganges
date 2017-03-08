@@ -1,6 +1,6 @@
 #define TIMER_TOP 40000
 //PWM DUTY for ESCs
-#define PWM_DUTY_MIN 2020
+#define PWM_DUTY_MIN 2020 //does this need to be 2020 when we have a big delay?
 #define PWM_DUTY_MAX 4000
 void init_pwm(void);
 void pwm_duty(uint16_t A,uint16_t B,uint16_t C,uint16_t D);
@@ -32,14 +32,16 @@ void init_pwm(void)
                _BV(COM1A1)| /* A output enabled*/  
                _BV(COM1B1)| /* B output enabled*/
                _BV(COM1C1); /* C output enabled*/
-    TCCR1B =  _BV(CS11)  | /* /8 prescaling */ 
+    TCCR1B =  _BV(CS10)  | /*no prescalar*/
+            //_BV(CS11)  | /* /8 prescaling */ 
               _BV(WGM12) | /* fast PWM/MAX */ 
               _BV(WGM13) ; /* fast PWM/MAX */           
     /* TIMER 3 */
     DDRC |= _BV(PC6); /* PWM 3A out (pin 5 on pro micro)*/
     TCCR3A =  _BV(WGM31) | /* fast PWM/MAX */
               _BV(COM3A1); /* A output enabled*/
-    TCCR3B =  _BV(CS31)   |
+    TCCR3B =  _BV(CS30)  | /*no prescalar*/
+            //_BV(CS31)  | /* /8 prescaling */ 
               _BV(WGM32) | /* fast PWM/MAX */ 
               _BV(WGM33) ;
     ICR3 = TIMER_TOP;
