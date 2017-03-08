@@ -154,6 +154,26 @@ float pidYaw;
 float pidPitch;
 float pidRoll;
 
+// ================================================================
+// ===          VALUES FOR CERIAL COMMS WITH IL-MATTO           ===
+// ================================================================
+
+
+String throttleString = "";         // a string to hold incoming data
+String yawString      = ""; 
+String pitchString      = ""; 
+String rollString      = ""; 
+int throttleInput = 0;
+int yawInput = 0;
+int pitchInput = 0;
+int rollInput = 0;
+
+boolean stringComplete = false;  // whether the string is complete
+char packetFlag;
+
+void pulse(void);
+void serialEvent(void);
+void printInt(void);
 
 // ================================================================
 // ===               INTERRUPT DETECTION ROUTINE                ===
@@ -172,7 +192,7 @@ void dmpDataReady() {
 // ================================================================
 
 void setup() {
-    //delay to allow ESCs to boot up
+    delay(1000);  //delay to allow ESCs to boot up
 
     // join I2C bus (I2Cdev library doesn't do this automatically)
     #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
@@ -203,7 +223,22 @@ void setup() {
 
 
     /*-----------------------------------------*/
-    /* we need to add a wait to get conroller input before enabling pwm*/
+      // reserve 4 bytes for the input strings:
+    throttleString.reserve(4);
+    yawString.reserve(4);
+    pitchString.reserve(4);
+    rollString.reserve(4);
+    pinMode(7,OUTPUT);
+    digitalWrite(7,LOW);
+    Serial1.println("Setup Complete");
+    Serial1.println("Waiting for non-zero throttle");
+    while(throttleInput == 0)
+    {
+      pulse();
+      serialEvent();
+      delay(100);
+     }
+    Serial1.println("Non-zero throttle acquired, entering loop");
     init_pwm();
     //output pwm values from controller 
     
@@ -288,13 +323,20 @@ void loop() {
         gyroPitch = ypr[1] * 180/M_PI;
         gyroRoll = ypr[2] * 180/M_PI;
     
-        //get throttle data
-        if(throttle<MAX_THROTTLE_IN) throttle++;
-          else throttle=MIN_THROTTLE_IN;
-       targetYaw = 0;
-       targetPitch = 0;
-       targetRoll = 0;
+
+        serialEvent();
+        // complete the string when a newline arrives:
+        if (stringComplete) {
+          printInt(); 
+          stringComplete = false;
+          pulse();  
+        } 
       
+       throttle = rawToThrottle(throttleInput);
+       targetYaw = rawToAngle(yawInput);
+       targetPitch = rawToAngle(pitchInput);
+       targetRoll = rawToAngle(rollInput);
+
        //apply PID
        pidYaw = yawPID.updatePID(targetYaw, constrain(gyroYaw,-50,50), DELTA_TIME);
        pidPitch = pitchPID.updatePID(targetPitch, constrain(gyroPitch,-50,50), DELTA_TIME);
@@ -393,4 +435,83 @@ void loop() {
         blinkState = !blinkState;
         digitalWrite(LED_PIN, blinkState);
     }
+}
+
+void printInt(void)
+{
+    Serial1.print("Packet Received:");
+    Serial1.print("t");
+    Serial1.print(throttleInput);
+    Serial1.print("y");
+    Serial1.print(yawInput);
+    Serial1.print("p");
+    Serial1.print(pitchInput);
+    Serial1.print("r");
+    Serial1.print(rollInput);
+    Serial1.print("\tt");
+    Serial1.print((int)rawToThrottle(throttleInput));
+    Serial1.print("y");
+    Serial1.print((int)rawToThrottle(yawInput));
+    Serial1.print("p");
+    Serial1.print((int)rawToThrottle(pitchInput));
+    Serial1.print("r");
+    Serial1.println((int)rawToThrottle(rollInput));
+    
+    
+    return;
+}
+
+
+void serialEvent(void) {
+  while (Serial1.available()) {
+    // get the new byte:
+    char inChar = (char)Serial1.read();
+    // add it to the input string selected by setValue:
+    // if the incoming character is a newline, set a flag
+    // so the main loop can do something about it:
+    if (inChar == '\n') 
+    {
+      stringComplete = true;  
+      throttleInput = throttleString.toInt();
+      yawInput = yawString.toInt();
+      pitchInput = pitchString.toInt();
+      rollInput = rollString.toInt();
+      throttleString = "";
+      yawString = "";
+      pitchString = "";
+      rollString = "";
+    }
+    else
+    {
+      if(inChar == 't' ||inChar == 'y'||inChar == 'p'||inChar == 'r')
+      {
+        packetFlag= inChar;
+      }
+      else{
+        switch (packetFlag) {
+          case 't'://throttle
+            throttleString += inChar;
+            break;
+          case 'y': //yaw
+            yawString += inChar;
+            break;
+          case 'p': //pitch 
+            pitchString += inChar;
+            break;
+          case 'r': //roll
+            rollString += inChar;
+            break;
+        }
+      }
+    }
+  }
+  return;
+}
+
+void pulse(void)
+{
+  digitalWrite(7,HIGH);
+  delayMicroseconds(1);
+  digitalWrite(7,LOW);
+  return;
 }
