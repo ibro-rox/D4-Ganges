@@ -88,7 +88,7 @@ void init_uart1()// initialize UART
 
 	// 3. from Ref[2] we now enable Transmission and receive n UCSRnB register
 
-	UCSR0B = _BV(TXEN0) | _BV(RXEN0);
+	UCSR0B = _BV(TXEN0) | _BV(RXEN0) | _BV(RXCIE0);
 
 
 
@@ -155,9 +155,9 @@ void Send_data(uint8_t type, uint16_t data)
 		uint8_t datapacket;
 
 		Encode_data(&type, &datapacket, totalpacket);
-
-
-
+		char debug[30];
+		sprintf(debug,"\n\r Datatype: %u and packet: %u",type,datapacket);
+		send_string(debug);
 		//char ch[100];
 
 		//sprintf(ch, "\n\rSending: %u %u", type, datapacket);
@@ -202,8 +202,14 @@ uint16_t Encrypt_data(uint16_t packet)
 
 	uint8_t rotated_out_bits;
 
-	rotated_out_bits = (packet & ((uint8_t) pow(2, encryption_key) - 1));
-
+	rotated_out_bits = (packet & ((uint16_t) pow(2, encryption_key)));
+	char ch[100];
+	sprintf(ch, "\n\rBit mask = %u", (uint16_t) pow(2, encryption_key));
+	send_string(ch);
+	sprintf(ch, "\n\rEncryption key = %u", encryption_key);
+	send_string(ch);
+	sprintf(ch, "\n\rRotated out bits = %u", rotated_out_bits);
+	send_string(ch);
 
 
 	// Get completely rotated bits by adding the shifted out bits to the
@@ -213,13 +219,15 @@ uint16_t Encrypt_data(uint16_t packet)
 	uint16_t encrypted_packet;
 
 	encrypted_packet = (packet >> encryption_key) + (rotated_out_bits << (COMMAND_BIT_SIZE + DATA_BIT_SIZE - encryption_key));
-
+	sprintf(ch, "\n\rRotated packet = %u", encrypted_packet);
+	send_string(ch);
 
 
 	// Add on the encryption key to the MSBs of the packet
 
 	encrypted_packet = encrypted_packet + (encryption_key << (COMMAND_BIT_SIZE + DATA_BIT_SIZE));
-
+	sprintf(ch, "\n\rFully encrypted packet = %u\n\r", encrypted_packet);
+	send_string(ch);
 
 
 	// Adjust encryption key for next transmission

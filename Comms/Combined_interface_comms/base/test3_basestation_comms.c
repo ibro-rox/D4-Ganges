@@ -61,6 +61,14 @@ int main(void)
 	// telemetry values
 	uint8_t packettype;
 	uint16_t data;
+	// Button for cargo
+	DDRA &= ~_BV(PA6);// enable input
+	PORTA |= _BV(PA6);// enable pull ups
+	DDRD |= _BV(PD6);// SETto output
+	PORTD |= _BV(PD6);// SET TO HIGH
+	// button states
+	uint8_t button_present, button_previous;
+	button_previous = 0;
 
 	char ch[40];
 
@@ -68,7 +76,7 @@ int main(void)
 
 	{
 
-		rfm12_tick();
+		//rfm12_tick();
 
 		#if UPLINK_TEST
 
@@ -100,8 +108,8 @@ int main(void)
 				send_string(ch);
 				rfm12_rx_clear();
 			}
-			else
-				send_string("\n\r No telemetry :(");
+			//else
+				//send_string("\n\r No telemetry :(");
 
 			thrust = adc_read(PIN_THRUST);
 			
@@ -138,6 +146,30 @@ int main(void)
 			Send_data(OP_ROLL, roll);
 			_delay_ms(2);
 			rfm12_tick();// make sure you 'TICK' EVERY TIME YOU SEND_DATA! (IN OUR CASE SEND TWICE)!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+			button_present = (PINA & _BV(PA6)) ? 1:0;
+			//sprintf(ch,"\n\rbutton_present = %u", button_present);
+			//send_string(ch);
+			if ((button_present == 1) && (button_previous == 0))
+			{
+				send_string("\n\rCargo hook up!");
+				Send_data(OP_BUTTON, BTN_CARGO_HOOK_UP);
+				_delay_ms(2);
+				Send_data(OP_BUTTON, BTN_CARGO_HOOK_UP);
+				_delay_ms(2);
+				rfm12_tick();
+
+			}
+			else if ((button_present == 0) && (button_previous == 1))
+			{
+				send_string("\n\rCargo hook down!");
+				Send_data(OP_BUTTON, BTN_CARGO_HOOK_DOWN);
+				_delay_ms(2);
+				Send_data(OP_BUTTON, BTN_CARGO_HOOK_DOWN);
+				_delay_ms(2);
+				rfm12_tick();
+			}
+			button_previous = button_present;
 		#endif
 
 	}

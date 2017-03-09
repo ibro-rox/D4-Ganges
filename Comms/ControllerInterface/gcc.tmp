@@ -1,0 +1,3 @@
+PID_values_test_3.c: In function 'main':
+PID_values_test_3.c:189: warning: assignment makes integer from pointer without a cast
+PID_values_test_3.c:197: warning: assignment makes integer from pointer without a cast
