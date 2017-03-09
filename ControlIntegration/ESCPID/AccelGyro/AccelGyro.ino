@@ -145,7 +145,8 @@ float targetYaw;
 float targetPitch;
 float targetRoll;
 //gyro values
-float gyroYaw;
+float gyroYaw = 0;   //initalising to zero for rate of change
+float gyroYawPrev = 0;
 float gyroPitch;
 float gyroRoll;
 //PID output values
@@ -326,7 +327,9 @@ void loop() {
     // wait for MPU interrupt or extra packet(s) available
     while (!mpuInterrupt && fifoCount < packetSize) {
         //get gyro data
+        gyroYawPrev = gyroYaw;
         gyroYaw = ypr[0] * 180/M_PI;
+        gyroYaw = (gyroYaw - gyroYawPrev)/DELTA_TIME; 
         gyroPitch = ypr[1] * 180/M_PI;
         gyroRoll = ypr[2] * 180/M_PI;
     
