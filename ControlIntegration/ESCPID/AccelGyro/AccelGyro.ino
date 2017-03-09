@@ -95,7 +95,7 @@ PID rollPID(1,0,0);
 // ================================================================
 
 //uncomment this for debugging and to test data collection
-#define SERIAL_ENABLED
+//#define SERIAL_ENABLED
 
 
 // uncomment "OUTPUT_READABLE_YAWPITCHROLL" if you want to see the yaw/
@@ -103,7 +103,7 @@ PID rollPID(1,0,0);
 // from the FIFO. Note this also requires gravity vector calculations.
 // Also note that yaw/pitch/roll angles suffer from gimbal lock (for
 // more info, see: http://en.wikipedia.org/wiki/Gimbal_lock)
-#define OUTPUT_READABLE_YAWPITCHROLL
+//#define OUTPUT_READABLE_YAWPITCHROLL
 
 // uncomment "OUTPUT_READABLE_REALACCEL" if you want to see acceleration
 // components with gravity removed. This acceleration reference frame is
@@ -119,8 +119,7 @@ PID rollPID(1,0,0);
 //#define OUTPUT_READABLE_WORLDACCEL
 
 
-#define INTERRUPT_PIN 7  // use pin 2 on Arduino Uno & most boards. atmega32u4 boards should use pin 7 to avoid conflict with I2C and UART
-#define LED_PIN 13 // (Arduino is 13, Teensy is 11, Teensy++ is 6)
+
 bool blinkState = false;
 
 // MPU control/status vars
@@ -192,8 +191,12 @@ void dmpDataReady() {
 // ================================================================
 
 void setup() {
+    pinMode(LED_PIN, OUTPUT);    // configure LED for output
+    digitalWrite(LED_PIN, HIGH);
+  
     delay(1000);  //delay to allow ESCs to boot up
 
+    digitalWrite(LED_PIN, LOW);
     // join I2C bus (I2Cdev library doesn't do this automatically)
     #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
         Wire.begin();
@@ -228,21 +231,23 @@ void setup() {
     yawString.reserve(4);
     pitchString.reserve(4);
     rollString.reserve(4);
-    pinMode(6,OUTPUT);
-    digitalWrite(6,LOW);
-    Serial1.println("Setup Complete");
-    Serial1.println("Waiting for non-zero throttle");
+    
+    pinMode(SERIAL_INTERRUPT,OUTPUT);    //Interrupt for serial comms
+    digitalWrite(SERIAL_INTERRUPT,LOW);  
+    
+    Serial1.begin(57600);
+    Serial.println("Setup Complete");
+    Serial.println("Waiting for non-zero throttle");
     while(throttleInput == 0)
     {
       pulse();
       serialEvent();
       delay(100);
-     }
-    Serial1.println("Non-zero throttle acquired, entering loop");
-    init_pwm();
-    //output pwm values from controller 
+    }
+    Serial.println("Non-zero throttle acquired, entering loop");
+    init_pwm();     //initialise pwm to 400Hz 5 to 10% duty 
     
-    pinMode(INTERRUPT_PIN, INPUT);
+    pinMode(GYRO_INTERRUPT, INPUT);   //interrupt for gyro setup
     
     // verify connection
     #ifdef SERIAL_ENABLED
@@ -258,13 +263,14 @@ void setup() {
     // load and configure the DMP
     Serial.println(F("Initializing DMP..."));
     #endif
+    
     devStatus = mpu.dmpInitialize();
 
     // supply your own gyro offsets here, scaled for min sensitivity
-    mpu.setXGyroOffset(34);
-    mpu.setYGyroOffset(21);
-    mpu.setZGyroOffset(-5);
-    mpu.setZAccelOffset(1519); // 1688 factory default for my test chip
+    mpu.setXGyroOffset(39);
+    mpu.setYGyroOffset(22);
+    mpu.setZGyroOffset(-4);
+    mpu.setZAccelOffset(1547); // 1688 factory default for my test chip
 
     // make sure it worked (returns 0 if so)
     if (devStatus == 0) {
@@ -276,8 +282,8 @@ void setup() {
         //Serial.println(F("Enabling interrupt detection (Arduino external interrupt 0)..."));
 
 
-    // set up ISR        cause                ISR_name    mode
-        attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), dmpDataReady, RISING);
+        // set up ISR cause ISR_name mode
+        attachInterrupt(digitalPinToInterrupt(GYRO_INTERRUPT), dmpDataReady, RISING);
         mpuIntStatus = mpu.getIntStatus();
 
         // set our DMP Ready flag so the main loop() function knows it's okay to use it
@@ -299,8 +305,9 @@ void setup() {
         #endif
     }
 
-    // configure LED for output
-    pinMode(LED_PIN, OUTPUT);
+   
+    
+    digitalWrite(LED_PIN, HIGH);
 }
 
 
@@ -341,8 +348,13 @@ void loop() {
        pidYaw = yawPID.updatePID(targetYaw, constrain(gyroYaw,-50,50), DELTA_TIME);
        pidPitch = pitchPID.updatePID(targetPitch, constrain(gyroPitch,-50,50), DELTA_TIME);
        pidRoll = rollPID.updatePID(targetRoll, constrain(gyroRoll,-50,50), DELTA_TIME);
+
+      Serial.print(pidYaw);
+      Serial.print(pidPitch);
+      Serial.println(pidRoll);
+       
        //update motors
-       if(throttle=0 || gyroRoll>80 || gyroRoll < -80 || gyroPitch > 80 || gyroPitch < -80)
+       if(throttle==0 || gyroRoll>80 || gyroRoll < -80 || gyroPitch > 80 || gyroPitch < -80)
        {
           setMotors(0,0,0,0);
        }
@@ -351,6 +363,8 @@ void loop() {
           setMotors(throttle,pidYaw, pidPitch, pidRoll);
        }
     }
+
+    
 
     // reset interrupt flag and get INT_STATUS byte
     mpuInterrupt = false;
@@ -365,7 +379,7 @@ void loop() {
         // reset so we can continue cleanly
         mpu.resetFIFO();
         #ifdef SERIAL_ENABLED
-        Serial.println(F("FIFO overflow!"));
+        Serial.println("FIFO overflow!");
         #endif
 
     // otherwise, check for DMP data ready interrupt (this should happen frequently)
@@ -402,12 +416,12 @@ void loop() {
             mpu.dmpGetGravity(&gravity, &q);
             mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
             #ifdef SERIAL_ENABLED
-            Serial.print("areal\t");
-            Serial.print(aaReal.x);
-            Serial.print("\t");
-            Serial.print(aaReal.y);
-            Serial.print("\t");
-            Serial.println(aaReal.z);
+            Serial1.print("areal\t");
+            Serial1.print(aaReal.x);
+            Serial1.print("\t");
+            Serial1.print(aaReal.y);
+            Serial1.print("\t");
+            Serial1.println(aaReal.z);
             #endif
         #endif
 
@@ -420,12 +434,12 @@ void loop() {
             mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
             mpu.dmpGetLinearAccelInWorld(&aaWorld, &aaReal, &q);
             #ifdef SERIAL_ENABLED
-            Serial.print("aworld\t");
-            Serial.print(aaWorld.x);
-            Serial.print("\t");
-            Serial.print(aaWorld.y);
-            Serial.print("\t");
-            Serial.println(aaWorld.z);
+            Serial1.print("aworld\t");
+            Serial1.print(aaWorld.x);
+            Serial1.print("\t");
+            Serial1.print(aaWorld.y);
+            Serial1.print("\t");
+            Serial1.println(aaWorld.z);
             #endif
         #endif
     
@@ -510,8 +524,8 @@ void serialEvent(void) {
 
 void pulse(void)
 {
-  digitalWrite(6,HIGH);
+  digitalWrite(SERIAL_INTERRUPT,HIGH);
   delayMicroseconds(1);
-  digitalWrite(6,LOW);
+  digitalWrite(SERIAL_INTERRUPT,LOW);
   return;
 }

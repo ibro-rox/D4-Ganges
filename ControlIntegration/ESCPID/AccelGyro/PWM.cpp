@@ -34,8 +34,8 @@ void pwm_duty(uint8_t motor,uint16_t duty)
     //range ms: 1000-2000 , range registers: 2000-4000 therefore multiply by 2
     duty = duty*SPEED_TO_PWM_GAIN - (SPEED_TO_PWM_GAIN*MIN_THROTTLE_IN-PWM_DUTY_MIN);
     Serial.print("duty: ");
-    Serial.print(duty);
-    Serial.println("   //check this is within the correct limits");
+    Serial.println(duty);
+    //Serial.println("   //check this is within the correct limits");
     if(duty>PWM_DUTY_MAX) duty = PWM_DUTY_MAX;
     else if(duty<PWM_DUTY_MIN) duty = PWM_DUTY_MIN;
 

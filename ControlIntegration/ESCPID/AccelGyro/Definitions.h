@@ -20,3 +20,7 @@
 #define N_ANGLE 25.55 //scalar to convert to correct range for input angles
 //#define N_THROTTLE 0.511
 #define DELTA_TIME 0.01
+
+#define GYRO_INTERRUPT 7  // use pin 2 on Arduino Uno & most boards. atmega32u4 boards should use pin 7 to avoid conflict with I2C and UART
+#define LED_PIN 13 // (Arduino is 13, Teensy is 11, Teensy++ is 6)
+#define SERIAL_INTERRUPT 6
