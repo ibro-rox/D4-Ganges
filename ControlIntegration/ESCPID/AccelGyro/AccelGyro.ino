@@ -65,9 +65,9 @@ THE SOFTWARE.
 // AD0 low = 0x68 (default for SparkFun breakout and InvenSense evaluation board)
 // AD0 high = 0x69
 MPU6050 mpu;
-PID yawPID(1,0,0);
-PID pitchPID(1,0,0);
-PID rollPID(1,0,0);
+PID yawPID(4,1,0);
+PID pitchPID(4,1,0);
+PID rollPID(4,1,0);
 //PID rollPID(6,4.8,0.7);
 //MPU6050 mpu(0x69); // <-- use for AD0 high
 
