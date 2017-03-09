@@ -228,8 +228,8 @@ void setup() {
     yawString.reserve(4);
     pitchString.reserve(4);
     rollString.reserve(4);
-    pinMode(7,OUTPUT);
-    digitalWrite(7,LOW);
+    pinMode(6,OUTPUT);
+    digitalWrite(6,LOW);
     Serial1.println("Setup Complete");
     Serial1.println("Waiting for non-zero throttle");
     while(throttleInput == 0)
@@ -510,8 +510,8 @@ void serialEvent(void) {
 
 void pulse(void)
 {
-  digitalWrite(7,HIGH);
+  digitalWrite(6,HIGH);
   delayMicroseconds(1);
-  digitalWrite(7,LOW);
+  digitalWrite(6,LOW);
   return;
 }

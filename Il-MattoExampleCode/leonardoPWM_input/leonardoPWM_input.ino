@@ -37,8 +37,8 @@ void setup()
   yawString.reserve(4);
   pitchString.reserve(4);
   rollString.reserve(4);
-  pinMode(7,OUTPUT);
-  digitalWrite(7,LOW);
+  pinMode(6,OUTPUT);
+  digitalWrite(6,LOW);
   Serial1.println("Setup Complete");
   Serial1.println("Waiting for non-zero throttle");
   while(throttleInput == 0)
@@ -125,9 +125,10 @@ float rawToThrottle(int controlIn)
   if(output > 4)
   { 
     output = output*7.8125+2000;
+    Serial1.print(output);
     return output;
   }
-  return 0;
+  return 2000;
 }
 
 void printInt(void)
@@ -140,15 +141,15 @@ void printInt(void)
     Serial1.print("p");
     Serial1.print(pitchInput);
     Serial1.print("r");
-    Serial1.print(rollInput);
-    Serial1.print("\tt");
-    Serial1.print((int)rawToThrottle(throttleInput));
-    Serial1.print("y");
-    Serial1.print((int)rawToThrottle(yawInput));
-    Serial1.print("p");
-    Serial1.print((int)rawToThrottle(pitchInput));
-    Serial1.print("r");
-    Serial1.println((int)rawToThrottle(rollInput));
+    Serial1.println(rollInput);
+//    Serial1.print("\tt");
+//    Serial1.print((int)rawToThrottle(throttleInput));
+//    Serial1.print("y");
+//    Serial1.print((int)rawToThrottle(yawInput));
+//    Serial1.print("p");
+//    Serial1.print((int)rawToThrottle(pitchInput));
+//    Serial1.print("r");
+//    Serial1.println((int)rawToThrottle(rollInput));
     
     
     return;
@@ -203,8 +204,8 @@ void serialEvent(void) {
 
 void pulse(void)
 {
-  digitalWrite(7,HIGH);
+  digitalWrite(6,HIGH);
   delayMicroseconds(1);
-  digitalWrite(7,LOW);
+  digitalWrite(6,LOW);
   return;
 }
