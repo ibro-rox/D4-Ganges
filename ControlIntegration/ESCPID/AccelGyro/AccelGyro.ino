@@ -506,16 +506,16 @@ void serialEvent(void) {
       }
       else{
         switch (packetFlag) {
-          case 't'://throttle
+          case THROTTLE_ID://throttle
             throttleString += inChar;
             break;
-          case 'y': //yaw
+          case YAW_ID: //yaw
             yawString += inChar;
             break;
-          case 'p': //pitch 
+          case PITCH_ID: //pitch 
             pitchString += inChar;
             break;
-          case 'r': //roll
+          case ROLL_ID: //roll
             rollString += inChar;
             break;
         }

@@ -24,3 +24,21 @@
 #define GYRO_INTERRUPT 7  // use pin 2 on Arduino Uno & most boards. atmega32u4 boards should use pin 7 to avoid conflict with I2C and UART
 #define LED_PIN 13 // (Arduino is 13, Teensy is 11, Teensy++ is 6)
 #define SERIAL_INTERRUPT 6
+
+
+#define THROTTLE_ID 't'
+#define YAW_ID 'y'
+#define PITCH_ID 'p'
+#define ROLL_ID 'r'
+
+#define YAW_P_ID  'a'
+#define YAW_I_ID  'b'
+#define YAW_D_ID  'c'
+
+#define PITCH_P_ID  'd'
+#define PITCH_I_ID  'e'
+#define PITCH_D_ID  'f'
+
+#define ROLL_P_ID  'g'
+#define ROLL_I_ID  'h'
+#define ROLL_D_ID  'i'
