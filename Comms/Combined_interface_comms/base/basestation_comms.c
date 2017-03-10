@@ -156,8 +156,8 @@ void Send_data(uint8_t type, uint16_t data)
 
 		Encode_data(&type, &datapacket, totalpacket);
 		char debug[30];
-		sprintf(debug,"\n\r Datatype: %u and packet: %u",type,datapacket);
-		send_string(debug);
+		// sprintf(debug,"\n\r Datatype: %u and packet: %u",type,datapacket);
+		// send_string(debug);
 		//char ch[100];
 
 		//sprintf(ch, "\n\rSending: %u %u", type, datapacket);
