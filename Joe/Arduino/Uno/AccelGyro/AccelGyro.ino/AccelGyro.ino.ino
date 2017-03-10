@@ -47,9 +47,9 @@ THE SOFTWARE.
 
 
 //Lawrence
-#include "PWM.h"
-#include "PID.h"
-#include "utils.h"
+//#include "PWM.h"
+//#include "PID.h"
+//#include "utils.h"
 
 #include "MPU6050_6Axis_MotionApps20.h"
 //#include "MPU6050.h" // not necessary if using MotionApps include file
@@ -65,9 +65,9 @@ THE SOFTWARE.
 // AD0 low = 0x68 (default for SparkFun breakout and InvenSense evaluation board)
 // AD0 high = 0x69
 MPU6050 mpu;
-PID yawPID(1,0,0);
-PID pitchPID(1,0,0);
-PID rollPID(1,0,0);
+//PID yawPID(1,0,0);
+//PID pitchPID(1,0,0);
+//PID rollPID(1,0,0);
 //MPU6050 mpu(0x69); // <-- use for AD0 high
 
 /* =========================================================================
@@ -94,7 +94,7 @@ PID rollPID(1,0,0);
 // ================================================================
 
 //uncomment this for debugging and to test data collection
-//#define SERIAL_ENABLED
+#define SERIAL_ENABLED
 
 
 // uncomment "OUTPUT_READABLE_YAWPITCHROLL" if you want to see the yaw/
@@ -118,7 +118,7 @@ PID rollPID(1,0,0);
 //#define OUTPUT_READABLE_WORLDACCEL
 
 
-#define INTERRUPT_PIN 2  // use pin 2 on Arduino Uno & most boards
+#define INTERRUPT_PIN 7  // use pin 2 on Arduino Uno & most boards
 #define LED_PIN 13 // (Arduino is 13, Teensy is 11, Teensy++ is 6)
 bool blinkState = false;
 
@@ -139,19 +139,19 @@ VectorFloat gravity;    // [x, y, z]            gravity vector
 
 float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
 
-//controller values
-float throttle;
-float targetYaw;
-float targetPitch;
-float targetRoll;
-//gyro values
+////controller values
+//float throttle;
+//float targetYaw;
+//float targetPitch;
+//float targetRoll;
+////gyro values
 float gyroYaw;
 float gyroPitch;
 float gyroRoll;
-//PID output values
-float pidYaw;
-float pidPitch;
-float pidRoll;
+////PID output values
+//float pidYaw;
+//float pidPitch;
+//float pidRoll;
 
 
 // ================================================================
@@ -197,7 +197,7 @@ void setup() {
     #endif
     
     mpu.initialize();
-    init_pwm();
+//    init_pwm();
     
     pinMode(INTERRUPT_PIN, INPUT);
     
@@ -218,10 +218,10 @@ void setup() {
     devStatus = mpu.dmpInitialize();
 
     // supply your own gyro offsets here, scaled for min sensitivity
-    mpu.setXGyroOffset(220);
-    mpu.setYGyroOffset(76);
-    mpu.setZGyroOffset(-85);
-    mpu.setZAccelOffset(1788); // 1688 factory default for my test chip
+    mpu.setXGyroOffset(38);
+    mpu.setYGyroOffset(22);
+    mpu.setZGyroOffset(-4);
+    mpu.setZAccelOffset(1547); // 1688 factory default for my test chip
 
     // make sure it worked (returns 0 if so)
     if (devStatus == 0) {
@@ -280,18 +280,18 @@ void loop() {
         gyroPitch = ypr[1] * 180/M_PI;
         gyroRoll = ypr[2] * 180/M_PI;
     
-        //get throttle data
-        throttle = 0;
-       targetYaw = 0;
-       targetPitch = 0;
-       targetRoll = 0;
-    
-       //apply PID
-       pidYaw = yawPID.updatePID(targetYaw, gyroYaw, DELTA_TIME);
-       pidPitch = pitchPID.updatePID(targetPitch, gyroPitch, DELTA_TIME);
-       pidRoll = rollPID.updatePID(targetRoll, gyroRoll, DELTA_TIME);
-       //update motors
-       setMotors (throttle, pidYaw, pidPitch, pidRoll);
+//        //get throttle data
+//        throttle = 0;
+//       targetYaw = 0;
+//       targetPitch = 0;
+//       targetRoll = 0;
+//    
+//       //apply PID
+//       pidYaw = yawPID.updatePID(targetYaw, gyroYaw, DELTA_TIME);
+//       pidPitch = pitchPID.updatePID(targetPitch, gyroPitch, DELTA_TIME);
+//       pidRoll = rollPID.updatePID(targetRoll, gyroRoll, DELTA_TIME);
+//       //update motors
+//       setMotors (throttle, pidYaw, pidPitch, pidRoll);
     }
 
     // reset interrupt flag and get INT_STATUS byte
