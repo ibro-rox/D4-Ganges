@@ -113,6 +113,12 @@ int main(void)
 					PIDmode = 1;
 					break;
 #endif // ENABLE_UI
+				case BTN_POWER_OFF:
+					send_string("\n\r Power off\n\r");
+					break;
+				case BTN_POWER_ON:
+					send_string("\n\r Power on\n\r");
+					break;
 				}
 				break;
 			}

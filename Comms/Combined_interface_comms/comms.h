@@ -21,6 +21,7 @@
 #define OP_ANGLE_X 15
 #define OP_ANGLE_Y 16
 #define OP_ANGLE_Z 17
+#define OP_TELEMETRY_ACKNOWLEDGE 18
 
 // K value size
 #define CHAR_MAX 6
@@ -30,7 +31,8 @@
 #define BTN_CARGO_HOOK_DOWN 1
 #define	BTN_PID_MODE 2 // Allow setting of K values and disable telemetry
 #define	BTN_FLIGHT_MODE 3 // Receive telemetry
-#define BTN_KILL_SWITCH 4
+#define BTN_POWER_ON 4
+#define BTN_POWER_OFF 5
 
 // ADC pin definitions
 #define	PIN_THRUST 0
