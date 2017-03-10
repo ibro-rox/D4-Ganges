@@ -154,3 +154,9 @@ void send_string(char *str)
 	int i;
 	for( i = 0; str[i]; i++) uart_transmit(str[i]);
 }
+
+void init_timer()
+{
+	TCCR1B |= _BV(CS12) | _BV(CS10);
+	TCNT1 = 0;
+}
