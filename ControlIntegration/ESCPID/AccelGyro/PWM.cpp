@@ -29,29 +29,33 @@ void init_pwm(void)
     pwm_duty(RIGHT_REAR_MOTOR, MIN_THROTTLE_IN);
 }
 
-void pwm_duty(uint8_t motor,uint16_t duty) 
+void pwm_duty(uint8_t motor,float duty) 
 {   //duty is currently in ms, we need to convert it to a value in the correct range. 
     //range ms: 1000-2000 , range registers: 2000-4000 therefore multiply by 2
-    duty = duty*SPEED_TO_PWM_GAIN - (SPEED_TO_PWM_GAIN*MIN_THROTTLE_IN-PWM_DUTY_MIN);
-    Serial.print("duty: ");
-    Serial.println(duty);
+    uint16_t intDuty;
+    
+    duty = duty*SPEED_TO_PWM_GAIN - ((SPEED_TO_PWM_GAIN*MIN_THROTTLE_IN)-PWM_DUTY_MIN);
     //Serial.println("   //check this is within the correct limits");
     if(duty>PWM_DUTY_MAX) duty = PWM_DUTY_MAX;
     else if(duty<PWM_DUTY_MIN) duty = PWM_DUTY_MIN;
+    intDuty = (uint16_t)duty;
+
+    Serial.print("duty: ");
+    Serial.println(inDuty);
 
     switch(motor)
     {
       case LEFT_FRONT_MOTOR:
-        OCR1A = duty;
+        OCR1A = intDuty;
         break;
       case RIGHT_FRONT_MOTOR:
-        OCR1B = duty;
+        OCR1B = intDuty;
         break;
       case LEFT_REAR_MOTOR:
-        OCR1C = duty;
+        OCR1C = intDuty;
         break;
       case RIGHT_REAR_MOTOR:
-        OCR3A = duty;
+        OCR3A = intDuty;
         break;
     }
 }
@@ -59,10 +63,10 @@ void pwm_duty(uint8_t motor,uint16_t duty)
 void setMotors (float throttle, float yaw, float pitch, float roll)
 {
   //reasons for these particular equations are given below
-  pwm_duty(LEFT_FRONT_MOTOR,  (uint16_t)(throttle - roll - pitch + yaw));
-  pwm_duty(RIGHT_FRONT_MOTOR, (uint16_t)(throttle + roll - pitch - yaw));
-  pwm_duty(LEFT_REAR_MOTOR,   (uint16_t)(throttle - roll + pitch - yaw));
-  pwm_duty(RIGHT_REAR_MOTOR,  (uint16_t)(throttle + roll + pitch + yaw));
+  pwm_duty(LEFT_FRONT_MOTOR,  (throttle - roll - pitch + yaw));
+  pwm_duty(RIGHT_FRONT_MOTOR, (throttle + roll - pitch - yaw));
+  pwm_duty(LEFT_REAR_MOTOR,   (throttle - roll + pitch - yaw));
+  pwm_duty(RIGHT_REAR_MOTOR,  (throttle + roll + pitch + yaw));
 }
 /*
 CW motors    A,C
