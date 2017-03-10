@@ -32,7 +32,7 @@ void send_string(char *str)
 int main(void)
 {
 	// Initialise rfm12 and interrupts
-	init_timer();
+	//init_timer();
 	adc_init();
 	rfm12_init(); 
 	init_debug_uart0();
@@ -120,7 +120,7 @@ int main(void)
 		}
 
 		batterylevel = adc_read(PIN_BATTERY);
-		if (TCNT1 >= 5500 && TCNT1 <= 6000)
+		/*if (TCNT1 >= 5500 && TCNT1 <= 6000)
 		{
 			TCNT1 = 0;
 			//send_string("Sending telemetery");
@@ -151,7 +151,7 @@ int main(void)
 			Send_data(OP_ANGLE_Z, 67);
 			_delay_ms(2);
 			rfm12_tick();
-		}
+		}*/
 		//sprintf(ch, "\n\rCounter %u", TCNT1);
 		//send_string(ch);
 		if (serial_interrupt_flag)

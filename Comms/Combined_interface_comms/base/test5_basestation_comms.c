@@ -11,11 +11,13 @@
 //- send adc values and cargo on/off during flight mode (switch is on flight mode)
 // - send each k type values for each channel as the user enters them(switch is on PID/ UI mode)
 // UI is more robust, can re-enter enter details again (starting again from entering yaw/pitch/roll)
-
-// Same as test2 but aiming to add these features :
-// Important feature: get inputs from two more swithces and transmit them
 // Extra feature but might potentially be an important feature to increase data rate:
 // During flight mode, send adc values only when there is a change in the channels to hopefully improve datarate (ACHIEVED!!!!!!!!!!!!!!!)
+
+// Same as test4 but aiming to add these features :
+// Important feature: get inputs from two more swithces and transmit them(ONE OF THEM DONE)
+// do Telemetry interpretation ie do case statement to see what the received data represents: - 3 angle values and voltage of the(DONE!!)
+
 
 #include <avr/io.h>
 
@@ -141,20 +143,27 @@ int main(void)
 	// Button for cargo
 	DDRA &= ~_BV(PA6);// enable input
 	PORTA |= _BV(PA6);// enable pull ups
+	// flight/pid siwtch
 	DDRA &= ~_BV(PA7);// enable input
 	PORTA |= _BV(PA7);// enable pull ups
+	// kill switch
+	DDRA &= ~_BV(PA4);// enable input
+	PORTA |= _BV(PA4);// enable pull ups
+
 
 	DDRD |= _BV(PD6);// SETto output
 	PORTD |= _BV(PD6);// SET TO HIGH
-	DDRD |= _BV(PD7);// SETto output
-	PORTD |= _BV(PD7);// SET TO HIGH
+	// DDRD |= _BV(PD7);// SETto output
+	// PORTD |= _BV(PD7);// SET TO HIGH
 	// button states
 	uint8_t button_present, button_previous;
 	uint8_t flight_present, flight_previous;
+	uint8_t kill_present, kill_previous;
 	flight_previous = 0;
 	button_previous = 0;
-
-	char ch[40];
+	kill_previous = 0;
+	char ch[40], telemetry[40];
+	float angle, voltage;
 	#endif
 	Send_data(OP_BUTTON, flight_present = (PINA & _BV(PA7))? BTN_FLIGHT_MODE:BTN_PID_MODE);// sending an initial mode to the receiver
 	while (1)
@@ -187,7 +196,7 @@ int main(void)
 		if (flight_present)
 		{
 
-			if (rfm12_rx_status() == STATUS_COMPLETE)// checks if there is data received back from drone
+			if (rfm12_rx_status() == STATUS_COMPLETE)
 			{
 				packettype = rfm12_rx_type();
 				data = *rfm12_rx_buffer();
@@ -196,6 +205,30 @@ int main(void)
 				sprintf(ch, "\n\rPacket type: %u and Data: %u", packettype, data);
 				send_string(ch);
 				rfm12_rx_clear();
+				switch(packettype)
+				{
+					case OP_ANGLE_X : // angle needs to be converted from its decimal value to float
+										//angle = ; 
+										sprintf(telemetry,"Gyro angle x: %f", angle);
+										send_string(telemetry);
+									break;
+					case OP_ANGLE_Y: // angle needs to be converted from its decimal value to float
+										//angle = ; 
+										sprintf(telemetry,"Gyro angle y: %f", angle);
+										send_string(telemetry);
+									break;
+					case OP_ANGLE_Z: // angle needs to be converted from its decimal value to float
+										//angle = ; 
+										sprintf(telemetry,"Gyro angle z: %f", angle);
+										send_string(telemetry);
+									break;
+					case OP_BATTERY_LEVEL:  // angle needs to be converted from its decimal value to float
+										voltage = (float)(3.3/1024)*data;// r1 = 100k and r2 is 33k
+										voltage = (float)(133/33)*voltage;
+										sprintf(telemetry,"Battery voltage: %f", voltage);
+										send_string(telemetry);
+									break;
+				}
 			}
 			//else
 				//send_string("\n\r No telemetry :(");
@@ -268,6 +301,32 @@ int main(void)
 				rfm12_tick();
 			}
 			button_previous = button_present;
+
+			kill_present = (PINA & _BV(PA4)) ? 1:0;
+			if ((kill_present == 1) && (kill_previous == 0))
+			{
+				send_string("\n\rKill switch ONN!");
+				Send_data(OP_BUTTON,BTN_POWER_OFF);
+				_delay_ms(2);
+				Send_data(OP_BUTTON,BTN_POWER_OFF);
+				_delay_ms(2);
+				rfm12_tick();
+			}
+			else if ((kill_present == 0) && (kill_previous == 1))
+			{
+				send_string("\n\rKill switch OFF!");
+				Send_data(OP_BUTTON, BTN_POWER_ON);
+				_delay_ms(2);
+				Send_data(OP_BUTTON, BTN_POWER_ON);
+				_delay_ms(2);
+				rfm12_tick();
+			}
+			kill_previous = kill_present;
+
+
+			// DO THE 2 MORE BUTTON FEATURES
+
+
 		}
 		else if (!flight_present)
 		{

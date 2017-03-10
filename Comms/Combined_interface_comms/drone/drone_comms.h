@@ -19,3 +19,5 @@ uint16_t get_1s(uint8_t num);
 void init_uart1();
 void uart_transmit(char data);
 void send_string(char *str);
+
+void init_timer();

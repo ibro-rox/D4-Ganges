@@ -18,6 +18,7 @@ int main(void)
 	// Initialise rfm12 and interrupts
 	init_uart1();
 	rfm12_init();
+	init_timer();
 	sei();
 	send_string("Initialised");
 
@@ -30,6 +31,9 @@ int main(void)
 	cargohookup = 1;
 	uint16_t receiveddata, i;
 	i = 0;
+
+	uint16_t thrust, roll, pitch, yaw;
+
 	char ch[30];
 	float k_value;
 	while (1)
@@ -43,8 +47,8 @@ int main(void)
 		if (rfm12_rx_status() == STATUS_COMPLETE)
 		{
 			i++;
-			sprintf(ch, "i = %u", i);
-			send_string(ch);
+			//sprintf(ch, "i = %u", i);
+			//send_string(ch);
 
 			// Get the received packet type and data
 			receivedpackettype = rfm12_rx_type();
@@ -68,18 +72,22 @@ int main(void)
 			switch (receivedpackettype)
 			{
 			case OP_THRUST:
+				thrust = receiveddata;
 				sprintf(ch, "\n\r Thrust = %u", receiveddata);
 				//send_string(ch);
 				break;
 			case OP_ROLL:
+				roll = receiveddata;
 				sprintf(ch, " Roll = %u", receiveddata);
 				//send_string(ch);
 				break;
 			case OP_YAW:
+				yaw = receiveddata;
 				sprintf(ch, " Yaw = %u", receiveddata);
 				//send_string(ch);
 				break;
 			case OP_PITCH:
+				pitch = receiveddata;
 				sprintf(ch, " Pitch = %u", receiveddata);
 				//send_string(ch);
 				break;
@@ -105,6 +113,12 @@ int main(void)
 					PIDmode = 1;
 					break;
 #endif // ENABLE_UI
+				case BTN_POWER_OFF:
+					send_string("\n\r Power off\n\r");
+					break;
+				case BTN_POWER_ON:
+					send_string("\n\r Power on\n\r");
+					break;
 				}
 				break;
 			}
@@ -165,7 +179,8 @@ int main(void)
 #endif // ENABLE_UI
 
 		}
-		if (i >= 150 && !PIDmode)
+
+		if (TCNT1 >= 5500 && TCNT1 <= 6000 && !PIDmode)
 		{
 			send_string("Sending telemetry");
 			Send_data(OP_THRUST, receiveddata);
@@ -173,7 +188,13 @@ int main(void)
 			Send_data(OP_THRUST, receiveddata);
 			_delay_ms(2);
 			rfm12_tick();
-			i = 0;
+			TCNT1 = 0;
+		}
+
+		if (!PIDmode)
+		{
+			sprintf(ch, "\n\rCurrent potentiometer values: %u %u %u %u", thrust, roll, yaw, pitch);
+			send_string(ch);
 		}
 	}
 	//sprintf(ch, "\n\rI = %u", i);
