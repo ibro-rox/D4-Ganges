@@ -17,7 +17,7 @@
 
 #define SPEED_TO_PWM_GAIN ((PWM_DUTY_MAX-PWM_DUTY_MIN)/(MAX_THROTTLE_IN-MIN_THROTTLE_IN))
 
-#define N_ANGLE 25.55 //scalar to convert to correct range for input angles
+#define N_ANGLE 51.2 //scalar to convert to correct range for input angles
 //#define N_THROTTLE 0.511
 #define DELTA_TIME 0.01
 
