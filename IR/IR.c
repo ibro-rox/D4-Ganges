@@ -38,7 +38,7 @@ int main(void)
 	init_adc();
 	
 	for (;;) 
-	{							
+	{					
 		result = read_adc();
 		
 		voltage = to_distance(result);
