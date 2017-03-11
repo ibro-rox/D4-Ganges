@@ -39,9 +39,10 @@ void pwm_duty(uint8_t motor,float duty)
     if(duty>PWM_DUTY_MAX) duty = PWM_DUTY_MAX;
     else if(duty<PWM_DUTY_MIN) duty = PWM_DUTY_MIN;
     intDuty = (uint16_t)duty;
-
+    #ifdef SERIAL_ENABLED
     Serial.print("duty: ");
-    Serial.println(inDuty);
+    Serial.println(intDuty);
+    #endif
 
     switch(motor)
     {

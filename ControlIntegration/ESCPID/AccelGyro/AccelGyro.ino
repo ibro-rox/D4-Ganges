@@ -65,9 +65,9 @@ THE SOFTWARE.
 // AD0 low = 0x68 (default for SparkFun breakout and InvenSense evaluation board)
 // AD0 high = 0x69
 MPU6050 mpu;
-PID yawPID(2,1,0.5);
-PID pitchPID(2,1,0.5);
-PID rollPID(2,1,0.5);
+PID yawPID(0,0,0);
+PID pitchPID(1.5,0,0);
+PID rollPID(1.5,0,0);
 //PID rollPID(6,4.8,0.7);
 //MPU6050 mpu(0x69); // <-- use for AD0 high
 
@@ -237,15 +237,15 @@ void setup() {
     digitalWrite(SERIAL_INTERRUPT,LOW);  
     
     Serial1.begin(57600);
-    Serial.println("Setup Complete");
-    Serial.println("Waiting for non-zero throttle");
+    //Serial.println("Setup Complete");
+    //Serial.println("Waiting for non-zero throttle");
     while(throttleInput == 0)
     {
       pulse();
       serialEvent();
       delay(100);
     }
-    Serial.println("Non-zero throttle acquired, entering loop");
+    //Serial.println("Non-zero throttle acquired, entering loop");
     init_pwm();     //initialise pwm to 400Hz 5 to 10% duty 
     
     pinMode(GYRO_INTERRUPT, INPUT);   //interrupt for gyro setup
@@ -280,15 +280,18 @@ void setup() {
         mpu.setDMPEnabled(true);
 
         // enable Arduino interrupt detection
-        //Serial.println(F("Enabling interrupt detection (Arduino external interrupt 0)..."));
-
+        #ifdef SERIAL_ENABLED
+        Serial.println(F("Enabling interrupt detection (Arduino external interrupt 0)..."));
+        #endif
 
         // set up ISR cause ISR_name mode
         attachInterrupt(digitalPinToInterrupt(GYRO_INTERRUPT), dmpDataReady, RISING);
         mpuIntStatus = mpu.getIntStatus();
 
         // set our DMP Ready flag so the main loop() function knows it's okay to use it
-        //Serial.println(F("DMP ready! Waiting for first interrupt..."));
+        #ifdef SERIAL_ENABLED
+        Serial.println(F("DMP ready! Waiting for first interrupt..."));
+        #endif
         dmpReady = true;
 
       
@@ -352,11 +355,13 @@ void loop() {
        pidPitch = pitchPID.updatePID(targetPitch, constrain(gyroPitch,-50,50), DELTA_TIME);
        pidRoll = rollPID.updatePID(targetRoll, constrain(gyroRoll,-50,50), DELTA_TIME);
 
+      #ifdef SERIAL_ENABLED 
       Serial.print(pidYaw);
       Serial.print(pidPitch);
       Serial.println(pidRoll);
+      #endif
        
-       //update motors
+      //update motors
        if(throttle==0 || gyroRoll>80 || gyroRoll < -80 || gyroPitch > 80 || gyroPitch < -80)
        {
           setMotors(0,0,0,0);
@@ -366,7 +371,7 @@ void loop() {
        }
        else
        {
-          setMotors(throttle,pidYaw, pidPitch, pidRoll);
+        setMotors(throttle,pidYaw, pidPitch, pidRoll);
        }
     }
 
