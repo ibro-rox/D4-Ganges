@@ -35,6 +35,8 @@ int main (void)
 		pwm_value++;
         pwm_duty(pwm_value);
 		_delay_ms(100);
+        if(pwm_value>=255)
+            pwm_value = 0;
 	}
 }
 
