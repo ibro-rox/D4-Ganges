@@ -66,8 +66,9 @@ THE SOFTWARE.
 // AD0 high = 0x69
 MPU6050 mpu;
 PID yawPID(0,0,0);
-PID pitchPID(1,0,0);
-PID rollPID(1,0,0);
+PID pitchPID(0.4,1e-5,20);
+//PID pitchPID(0.1,0.002,10);
+PID rollPID(0,0,0);
 //PID rollPID(6,4.8,0.7);
 //MPU6050 mpu(0x69); // <-- use for AD0 high
 
@@ -118,7 +119,9 @@ PID rollPID(1,0,0);
 // is present in this case). Could be quite handy in some cases.
 //#define OUTPUT_READABLE_WORLDACCEL
 
-
+unsigned long delta_time=0;
+unsigned long previous_time=0;
+unsigned long time_elapsed=0;
 
 bool blinkState = false;
 
@@ -155,7 +158,7 @@ float pidPitch;
 float pidRoll;
 
 // ================================================================
-// ===          VALUES FOR CERIAL COMMS WITH IL-MATTO           ===
+// ===          VALUES FOR SERIAL COMMS WITH IL-MATTO           ===
 // ================================================================
 
 
@@ -247,10 +250,13 @@ void setup() {
     devStatus = mpu.dmpInitialize();
 
     // supply your own gyro offsets here, scaled for min sensitivity
-    mpu.setXGyroOffset(38);
-    mpu.setYGyroOffset(20);
-    mpu.setZGyroOffset(-6);
-    mpu.setZAccelOffset(1543); // 1688 factory default for my test chip
+    mpu.setXGyroOffset(37);
+    mpu.setYGyroOffset(21);
+    //mpu.setYGyroOffset(20);
+    mpu.setZGyroOffset(-4);
+    mpu.setZAccelOffset(1545); // 1688 factory default for my test chip
+    mpu.setYAccelOffset(2627);
+    mpu.setXAccelOffset(1632);
 
     // make sure it worked (returns 0 if so)
     if (devStatus == 0) {
@@ -329,13 +335,26 @@ void loop() {
 
     // wait for MPU interrupt or extra packet(s) available
     while (!mpuInterrupt && fifoCount < packetSize) {
+        
+
+        previous_time = time_elapsed;
+        time_elapsed = millis();
+        delta_time = time_elapsed - previous_time;
+
         //get gyro data
         gyroYawPrev = gyroYaw;
-        gyroYaw = ypr[0] * 180/M_PI;
-        gyroYaw = (gyroYaw - gyroYawPrev)/DELTA_TIME; 
-        gyroPitch = (ypr[1] * 180/M_PI)-2.45;
-        gyroRoll = (ypr[2] * 180/M_PI)+0.89;
-    
+        gyroYaw = ypr[0] * 180/PI;
+        gyroYaw = (gyroYaw - gyroYawPrev)/delta_time; 
+        gyroPitch = (ypr[1] * 180/PI);
+        gyroRoll = (ypr[2] * 180/PI);
+        #ifdef SERIAL_ENABLED
+            Serial.print("ypr\t");
+            Serial.print(gyroYaw);
+            Serial.print("\t");
+            Serial.print(gyroPitch);
+            Serial.print("\t");
+            Serial.println(gyroRoll);
+         #endif
 
         serialEvent();
         // complete the string when a newline arrives:
@@ -350,16 +369,32 @@ void loop() {
        targetPitch = rawToAngle(pitchInput);
        targetRoll = rawToAngle(rollInput);
 
-       //apply PID
-       pidYaw = yawPID.updatePID(targetYaw, constrain(gyroYaw,-50,50), DELTA_TIME);
-       pidPitch = pitchPID.updatePID(targetPitch, constrain(gyroPitch,-50,50), DELTA_TIME);
-       pidRoll = rollPID.updatePID(targetRoll, constrain(gyroRoll,-50,50), DELTA_TIME);
+         #ifdef SERIAL_ENABLED
+            Serial.print("target typr\t");
+            Serial.print(throttle);
+            Serial.print("\t");
+            Serial.print(targetYaw);
+            Serial.print("\t");
+            Serial.print(targetPitch);
+            Serial.print("\t");
+            Serial.println(targetRoll);
+            Serial.print("delta_time: ");
+            Serial.println(delta_time);
+         #endif
 
-      #ifdef SERIAL_ENABLED 
-      Serial.print(pidYaw);
-      Serial.print(pidPitch);
-      Serial.println(pidRoll);
-      #endif
+       //apply PID
+       pidYaw = yawPID.updatePID(targetYaw, constrain(gyroYaw,-50,50), delta_time);
+       pidPitch = pitchPID.updatePID(targetPitch, constrain(gyroPitch,-50,50), delta_time);
+       pidRoll = rollPID.updatePID(targetRoll, constrain(gyroRoll,-50,50), delta_time);
+
+        #ifdef SERIAL_ENABLED
+            Serial.print("PID ypr\t");
+            Serial.print(pidYaw);
+            Serial.print("\t");
+            Serial.print(pidPitch);
+            Serial.print("\t");
+            Serial.println(pidRoll);
+         #endif
        
       //update motors
        if(throttle==0 || gyroRoll>80 || gyroRoll < -80 || gyroPitch > 80 || gyroPitch < -80)
@@ -410,14 +445,14 @@ void loop() {
             mpu.dmpGetQuaternion(&q, fifoBuffer);
             mpu.dmpGetGravity(&gravity, &q);
             mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-            #ifdef SERIAL_ENABLED
-            Serial.print("ypr\t");
-            Serial.print(ypr[0] * 180/M_PI);
-            Serial.print("\t");
-            Serial.print(ypr[1] * 180/M_PI);
-            Serial.print("\t");
-            Serial.println(ypr[2] * 180/M_PI);
-            #endif
+            // #ifdef SERIAL_ENABLED
+            // Serial.print("ypr\t");
+            // Serial.print(ypr[0] * 180/M_PI);
+            // Serial.print("\t");
+            // Serial.print(ypr[1] * 180/M_PI);
+            // Serial.print("\t");
+            // Serial.println(ypr[2] * 180/M_PI);
+            // #endif
         #endif
 
         #ifdef OUTPUT_READABLE_REALACCEL

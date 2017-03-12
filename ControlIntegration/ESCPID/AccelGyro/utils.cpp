@@ -13,7 +13,7 @@ float rawToThrottle(int controlIn)
   controlIn = (controlIn > MAX_THROTTLE_IN )? MAX_THROTTLE_IN : controlIn;
 	if(output > 4)
 	{	
-		return output;
+		return output/1.5;
 	}
 	return 0;
 }

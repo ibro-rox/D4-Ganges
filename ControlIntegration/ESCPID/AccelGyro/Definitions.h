@@ -17,8 +17,9 @@
 
 #define SPEED_TO_PWM_GAIN ((PWM_DUTY_MAX-PWM_DUTY_MIN)/(MAX_THROTTLE_IN-MIN_THROTTLE_IN))
 
-#define N_ANGLE 51.2 //scalar to convert to correct range for input angles
+#define N_ANGLE 12.8//scalar to convert to correct range for input angles
 //#define N_THROTTLE 0.511
+
 #define DELTA_TIME 0.01
 
 #define GYRO_INTERRUPT 7  // use pin 2 on Arduino Uno & most boards. atmega32u4 boards should use pin 7 to avoid conflict with I2C and UART
@@ -42,3 +43,5 @@
 #define ROLL_P_ID  'g'
 #define ROLL_I_ID  'h'
 #define ROLL_D_ID  'i'
+
+#define PI 3.1415926
