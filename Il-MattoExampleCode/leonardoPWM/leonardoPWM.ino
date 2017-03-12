@@ -4,24 +4,32 @@
 #define PWM_DUTY_MAX 4000
 void init_pwm(void);
 void pwm_duty(uint16_t A,uint16_t B,uint16_t C,uint16_t D);
+bool done = false;
 int x1 =PWM_DUTY_MIN;
 int x2 =PWM_DUTY_MIN;
 void setup() 
 {
   delay(1000);
   init_pwm();
-  pwm_duty(PWM_DUTY_MIN,PWM_DUTY_MIN,PWM_DUTY_MIN,PWM_DUTY_MIN);
-  delay(4000);
+  pwm_duty(PWM_DUTY_MAX,PWM_DUTY_MAX,PWM_DUTY_MAX,PWM_DUTY_MAX);
+  delay(10000);
+  pwm_duty(PWM_DUTY_MAX,PWM_DUTY_MAX,PWM_DUTY_MAX,PWM_DUTY_MAX);
+  delay(10000);
 } 
 
 void loop() {
-    //TXLED1;
-     pwm_duty(x1,x1,x2,x2);
+    //TXLED1;]
+    while(!done)
+    {
+     pwm_duty(x1,x1,x1,x1);
      delay(5);
      if(x1<PWM_DUTY_MAX) x1++;
-     else x1=PWM_DUTY_MIN;
-     if(x2<PWM_DUTY_MAX) x2=x2+2;
-     else x2=PWM_DUTY_MIN;
+     else
+     {
+      x1=PWM_DUTY_MIN;
+      done = true;
+     }
+    }
 
 }
 
@@ -52,14 +60,14 @@ void init_pwm(void)
 }
 void pwm_duty(uint16_t A,uint16_t B,uint16_t C,uint16_t D) 
 {   //uncomment for limits
-    /*if(A>PWM_DUTY_MAX) A = PWM_DUTY_MAX;
+    if(A>PWM_DUTY_MAX) A = PWM_DUTY_MAX;
     else if(A<PWM_DUTY_MIN) A = PWM_DUTY_MIN;
     if(B>PWM_DUTY_MAX) B = PWM_DUTY_MAX;
     else if(B<PWM_DUTY_MIN) B = PWM_DUTY_MIN;
     if(C>PWM_DUTY_MAX) C = PWM_DUTY_MAX;
     else if(C<PWM_DUTY_MIN) C = PWM_DUTY_MIN;
     if(D>PWM_DUTY_MAX) D = PWM_DUTY_MAX;
-    else if(D<PWM_DUTY_MIN) D = PWM_DUTY_MIN;*/
+    else if(D<PWM_DUTY_MIN) D = PWM_DUTY_MIN;
     OCR1A = A;
     OCR1B = B;
     OCR1C = C;

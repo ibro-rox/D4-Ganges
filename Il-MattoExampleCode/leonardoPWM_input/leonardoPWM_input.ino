@@ -2,6 +2,27 @@
 //PWM DUTY for ESCs
 #define PWM_DUTY_MIN 2000 //does this need to be 2020 when we have a big delay?
 #define PWM_DUTY_MAX 4000
+
+
+
+#define THROTTLE_ID 't'
+#define YAW_ID 'y'
+#define PITCH_ID 'p'
+#define ROLL_ID 'r'
+
+#define YAW_P_ID  'a'
+#define YAW_I_ID  'b'
+#define YAW_D_ID  'c'
+
+#define PITCH_P_ID  'd'
+#define PITCH_I_ID  'e'
+#define PITCH_D_ID  'f'
+
+#define ROLL_P_ID  'g'
+#define ROLL_I_ID  'h'
+#define ROLL_D_ID  'i'
+
+
 void init_pwm(void);
 void pwm_duty(uint16_t A,uint16_t B,uint16_t C,uint16_t D);
 int thrust  = PWM_DUTY_MIN;
@@ -18,11 +39,24 @@ int yawInput = 0;
 int pitchInput = 0;
 int rollInput = 0;
 
+//for the k values 
+String yawKpString = "";
+String yawKiString = "";
+String yawKdString = "";
+
+String pitchKpString = "";
+String pitchKiString = "";
+String pitchKdString = "";
+
+String rollKpString = "";
+String rollKiString = "";
+String rollKdString = "";
+
 boolean stringComplete = false;  // whether the string is complete
 char packetFlag;
 
 void pulse(void);
-void serialEvent(void);
+void Serial1Event(void);
 void printInt(void);
 
 void setup() 
@@ -44,7 +78,7 @@ void setup()
   while(throttleInput == 0)
   {
     pulse();
-    serialEvent();
+    Serial1Event();
     delay(100);
   }
   Serial1.println("Non-zero throttle acquired, entering loop");
@@ -56,7 +90,7 @@ void setup()
 
 void loop() 
 {
-    serialEvent();
+    Serial1Event();
   // complete the string when a newline arrives:
   if (stringComplete) {
    printInt();
@@ -125,7 +159,7 @@ float rawToThrottle(int controlIn)
   if(output > 4)
   { 
     output = output*7.8125+2000;
-    Serial1.print(output);
+    //Serial1.print(output);
     return output;
   }
   return 2000;
@@ -142,21 +176,43 @@ void printInt(void)
     Serial1.print(pitchInput);
     Serial1.print("r");
     Serial1.println(rollInput);
-//    Serial1.print("\tt");
-//    Serial1.print((int)rawToThrottle(throttleInput));
-//    Serial1.print("y");
-//    Serial1.print((int)rawToThrottle(yawInput));
-//    Serial1.print("p");
-//    Serial1.print((int)rawToThrottle(pitchInput));
-//    Serial1.print("r");
-//    Serial1.println((int)rawToThrottle(rollInput));
+//    Serial11.print("\tt");
+//    Serial11.print((int)rawToThrottle(throttleInput));
+//    Serial11.print("y");
+//    Serial11.print((int)rawToThrottle(yawInput));
+//    Serial11.print("p");
+//    Serial11.print((int)rawToThrottle(pitchInput));
+//    Serial11.print("r");
+//    Serial11.println((int)rawToThrottle(rollInput));
     
     
     return;
 }
 
 
-void serialEvent(void) {
+void Serial1Event(void) {
+    bool throttle_set = false;
+    bool yaw_set = false;
+    bool pitch_set = false;
+    bool roll_set = false;
+    bool yaw_p_set = false;
+    bool yaw_i_set = false;
+    bool yaw_d_set = false;
+    bool pitch_p_set = false;
+    bool pitch_i_set = false;
+    bool pitch_d_set = false;
+    bool roll_p_set = false;
+    bool roll_i_set = false;
+    bool roll_d_set = false;
+    float yaw_kp;
+    float yaw_ki;
+    float yaw_kd;
+    float pitch_kp;
+    float pitch_ki;
+    float pitch_kd;
+    float roll_kp;
+    float roll_ki;
+    float roll_kd;
   while (Serial1.available()) {
     // get the new byte:
     char inChar = (char)Serial1.read();
@@ -165,35 +221,154 @@ void serialEvent(void) {
     // so the main loop can do something about it:
     if (inChar == '\n') 
     {
-      stringComplete = true;  
-      throttleInput = throttleString.toInt();
-      yawInput = yawString.toInt();
-      pitchInput = pitchString.toInt();
-      rollInput = rollString.toInt();
-      throttleString = "";
-      yawString = "";
-      pitchString = "";
-      rollString = "";
+        stringComplete = true;  
+        if(throttle_set)
+        {
+            throttleInput = throttleString.toInt();
+            throttleString = "";
+        }
+        if(yaw_set)
+        {
+            yawInput = yawString.toInt();
+            yawString = "";
+        }
+        if(pitch_set)
+        {
+            pitchInput = pitchString.toInt();
+            pitchString = "";
+        }
+        if(roll_set)
+        {
+            rollInput = rollString.toInt();
+            rollString = "";
+        }
+        if(yaw_p_set)
+        {
+            yaw_kp = yawKpString.toInt()/100;
+            Serial1.print("yaw_kp:");
+            Serial1.println(yaw_kp);
+            yawKpString = "";
+        }
+        if(yaw_i_set)
+        {
+            yaw_ki = yawKiString.toInt()/100;
+            Serial1.print("yaw_ki:");
+            Serial1.println(yaw_ki);
+            yawKiString = "";
+        }
+        if(yaw_d_set)
+        {
+            yaw_kd = yawKdString.toInt()/100;
+            Serial1.print("yaw_kd:");
+            Serial1.println(yaw_kd);
+            yawKdString = "";
+        }
+        if(pitch_p_set)
+        {
+            pitch_kp = pitchKpString.toInt()/100;
+            Serial1.print("pitch_kp:");
+            Serial1.println(pitch_kp);
+            pitchKpString = "";
+        }
+        if(pitch_i_set)
+        {
+            pitch_ki = pitchKiString.toInt()/100;
+            Serial1.print("pitch_ki:");
+           Serial1.println(pitch_ki);
+           pitchKiString = "";
+        }
+        if(pitch_d_set)
+        {
+            pitch_kd =pitchKdString.toInt()/100;
+            Serial1.print("pitch_kd:");
+            Serial1.println(pitch_kd);
+            pitchKdString = "";
+        }
+        if(roll_p_set)
+        {
+            roll_kp = rollKpString.toInt()/100;
+            Serial1.print("roll_kp:");
+           Serial1.println(roll_kp);
+           rollKpString = "";
+        }
+        if(roll_i_set)
+        {
+            roll_ki = (float)rollKiString.toInt()/100;
+            Serial1.print("roll_ki:"); 
+           Serial1.println(roll_ki);
+           rollKiString = "";
+        }
+        if(roll_d_set)
+        {
+            roll_kd =rollKdString.toInt()/100;
+            Serial1.print("pitch_kd:");
+            Serial1.println(roll_kd);
+            rollKdString = "";
+        }
     }
     else
     {
-      if(inChar == 't' ||inChar == 'y'||inChar == 'p'||inChar == 'r')
+      if(inChar == THROTTLE_ID || inChar == YAW_ID || inChar == PITCH_ID || inChar == ROLL_ID 
+        || inChar == YAW_P_ID|| inChar == YAW_I_ID|| inChar == YAW_D_ID 
+        || inChar == PITCH_P_ID|| inChar == PITCH_I_ID|| inChar == PITCH_D_ID
+        || inChar == ROLL_P_ID|| inChar == ROLL_I_ID|| inChar == ROLL_D_ID)
       {
         packetFlag= inChar;
       }
       else{
         switch (packetFlag) {
-          case 't'://throttle
+          case THROTTLE_ID://throttle
             throttleString += inChar;
+            throttle_set = true;
             break;
-          case 'y': //yaw
+          case YAW_ID: //yaw
             yawString += inChar;
+            yaw_set = true;
             break;
-          case 'p': //pitch 
+          case PITCH_ID: //pitch
             pitchString += inChar;
+            pitch_set = true; 
             break;
-          case 'r': //roll
+          case ROLL_ID: //roll
             rollString += inChar;
+            roll_set = true;
+            break;
+          case YAW_P_ID:
+            yawKpString += inChar;
+            yaw_p_set = true;
+            break;
+          case YAW_I_ID:
+            yawKiString += inChar;
+            yaw_i_set = true;
+            break;
+          case YAW_D_ID:
+            yawKdString += inChar;
+            yaw_d_set = true;
+            break;
+          case PITCH_P_ID:
+            pitchKdString += inChar;
+            pitch_p_set = true;  
+            break;
+          case PITCH_I_ID:
+            pitchKiString += inChar;
+            pitch_i_set = true; 
+            break;
+          case PITCH_D_ID:
+            pitchKdString += inChar;
+            pitch_d_set = true;  
+            break;
+          case ROLL_P_ID:
+            rollKpString += inChar;
+            roll_p_set = true;  
+            break;
+          case ROLL_I_ID:
+            rollKiString += inChar;
+            roll_i_set = true;  
+
+            break;
+          case ROLL_D_ID:
+            rollKdString += inChar;
+            roll_d_set = true;  
             break;
         }
       }
@@ -201,7 +376,6 @@ void serialEvent(void) {
   }
   return;
 }
-
 void pulse(void)
 {
   digitalWrite(6,HIGH);
