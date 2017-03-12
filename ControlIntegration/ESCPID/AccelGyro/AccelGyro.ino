@@ -66,8 +66,8 @@ THE SOFTWARE.
 // AD0 high = 0x69
 MPU6050 mpu;
 PID yawPID(0,0,0);
-PID pitchPID(1.5,0,0);
-PID rollPID(1.5,0,0);
+PID pitchPID(1,0,0);
+PID rollPID(1,0,0);
 //PID rollPID(6,4.8,0.7);
 //MPU6050 mpu(0x69); // <-- use for AD0 high
 
@@ -226,27 +226,6 @@ void setup() {
     mpu.initialize();
 
 
-    /*-----------------------------------------*/
-      // reserve 4 bytes for the input strings:
-    throttleString.reserve(4);
-    yawString.reserve(4);
-    pitchString.reserve(4);
-    rollString.reserve(4);
-    
-    pinMode(SERIAL_INTERRUPT,OUTPUT);    //Interrupt for serial comms
-    digitalWrite(SERIAL_INTERRUPT,LOW);  
-    
-    Serial1.begin(57600);
-    //Serial.println("Setup Complete");
-    //Serial.println("Waiting for non-zero throttle");
-    while(throttleInput == 0)
-    {
-      pulse();
-      serialEvent();
-      delay(100);
-    }
-    //Serial.println("Non-zero throttle acquired, entering loop");
-    init_pwm();     //initialise pwm to 400Hz 5 to 10% duty 
     
     pinMode(GYRO_INTERRUPT, INPUT);   //interrupt for gyro setup
     
@@ -269,9 +248,9 @@ void setup() {
 
     // supply your own gyro offsets here, scaled for min sensitivity
     mpu.setXGyroOffset(38);
-    mpu.setYGyroOffset(22);
-    mpu.setZGyroOffset(-4);
-    mpu.setZAccelOffset(1547); // 1688 factory default for my test chip
+    mpu.setYGyroOffset(20);
+    mpu.setZGyroOffset(-6);
+    mpu.setZAccelOffset(1543); // 1688 factory default for my test chip
 
     // make sure it worked (returns 0 if so)
     if (devStatus == 0) {
@@ -309,8 +288,29 @@ void setup() {
         #endif
     }
 
-   
+    delay(10000);
+    /*-----------------------------------------*/
+      // reserve 4 bytes for the input strings:
+    throttleString.reserve(4);
+    yawString.reserve(4);
+    pitchString.reserve(4);
+    rollString.reserve(4);
     
+    pinMode(SERIAL_INTERRUPT,OUTPUT);    //Interrupt for serial comms
+    digitalWrite(SERIAL_INTERRUPT,LOW);  
+    
+    Serial1.begin(57600);
+    //Serial.println("Setup Complete");
+    //Serial.println("Waiting for non-zero throttle");
+    while(throttleInput == 0)
+    {
+      pulse();
+      serialEvent();
+      delay(100);
+    }
+    //Serial.println("Non-zero throttle acquired, entering loop");
+    init_pwm();     //initialise pwm to 400Hz 5 to 10% duty 
+   
     digitalWrite(LED_PIN, HIGH);
 }
 
@@ -333,8 +333,8 @@ void loop() {
         gyroYawPrev = gyroYaw;
         gyroYaw = ypr[0] * 180/M_PI;
         gyroYaw = (gyroYaw - gyroYawPrev)/DELTA_TIME; 
-        gyroPitch = (ypr[1] * 180/M_PI);
-        gyroRoll = (ypr[2] * 180/M_PI);
+        gyroPitch = (ypr[1] * 180/M_PI)-2.45;
+        gyroRoll = (ypr[2] * 180/M_PI)+0.89;
     
 
         serialEvent();
