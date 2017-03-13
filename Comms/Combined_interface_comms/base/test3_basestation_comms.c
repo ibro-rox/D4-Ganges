@@ -45,17 +45,13 @@ int main(void)
 
 
 	#if UPLINK_TEST
-
 		uint16_t testdata;
-
 		testdata = 0;
-
 	#endif
 
 
 
 	// ADC channels 
-
 	uint16_t thrust, yaw, pitch, roll;
 
 	// telemetry values
@@ -71,18 +67,14 @@ int main(void)
 	button_previous = 0;
 
 	char ch[40];
-
 	while (1)
-
 	{
 
 		//rfm12_tick();
 
 		#if UPLINK_TEST
-
 			Send_data(OP_ROLL, testdata);
 			//sprintf(ch, "\n\rTestdata = %d", testdata);
-
 			//send_string(ch);
 
 			testdata++;
@@ -113,39 +105,52 @@ int main(void)
 
 			thrust = adc_read(PIN_THRUST);
 			
-			Send_data(OP_THRUST, thrust);
-			_delay_ms(2);
-			Send_data(OP_THRUST, thrust);
-			_delay_ms(2);
-			rfm12_tick();// make sure you 'TICK' EVERY TIME YOU SEND_DATA! (IN OUR CASE SEND TWICE)!!!!!!!!!!!!!!!!!!!!!!!!!!
+			if (thrust < 1020)
+			{
+				Send_data(OP_THRUST, thrust);
+				_delay_ms(2);
+				Send_data(OP_THRUST, thrust);
+				_delay_ms(2);
+				rfm12_tick();// make sure you 'TICK' EVERY TIME YOU SEND_DATA! (IN OUR CASE SEND TWICE)!!!!!!!!!!!!!!!!!!!!!!!!!!
+			}
 
 			yaw = adc_read(PIN_YAW);
 
 
-			Send_data(OP_YAW, yaw);
-			_delay_ms(2);
-			Send_data(OP_YAW, yaw);
-			_delay_ms(2);
-			rfm12_tick();// make sure you 'TICK' EVERY TIME YOU SEND_DATA! (IN OUR CASE SEND TWICE)!!!!!!!!!!!!!!!!!!!!!!!!!!
+			if (yaw < 1020)
+			{
+				Send_data(OP_YAW, yaw);
+				_delay_ms(2);
+				Send_data(OP_YAW, yaw);
+				_delay_ms(2);
+				rfm12_tick();// make sure you 'TICK' EVERY TIME YOU SEND_DATA! (IN OUR CASE SEND TWICE)!!!!!!!!!!!!!!!!!!!!!!!!!! 
+			}
 
 
 			pitch = adc_read(PIN_PITCH);
 
-
-			Send_data(OP_PITCH, pitch);
-			_delay_ms(2);
-			Send_data(OP_PITCH, pitch);
-			_delay_ms(2);
-			rfm12_tick();// make sure you 'TICK' EVERY TIME YOU SEND_DATA! (IN OUR CASE SEND TWICE)!!!!!!!!!!!!!!!!!!!!!!!!!!
+			if (pitch < 1020)
+			{
+				Send_data(OP_PITCH, pitch);
+				_delay_ms(2);
+				Send_data(OP_PITCH, pitch);
+				_delay_ms(2);
+				rfm12_tick();// make sure you 'TICK' EVERY TIME YOU SEND_DATA! (IN OUR CASE SEND TWICE)!!!!!!!!!!!!!!!!!!!!!!!!!! 
+			}
 
 			roll = adc_read(PIN_ROLL);
 
+			if (roll < 1020)
+			{
+				Send_data(OP_ROLL, roll);
+				_delay_ms(2);
+				Send_data(OP_ROLL, roll);
+				_delay_ms(2);
+				rfm12_tick();// make sure you 'TICK' EVERY TIME YOU SEND_DATA! (IN OUR CASE SEND TWICE)!!!!!!!!!!!!!!!!!!!!!!!!!!
+			}
 
-			Send_data(OP_ROLL, roll);
-			_delay_ms(2);
-			Send_data(OP_ROLL, roll);
-			_delay_ms(2);
-			rfm12_tick();// make sure you 'TICK' EVERY TIME YOU SEND_DATA! (IN OUR CASE SEND TWICE)!!!!!!!!!!!!!!!!!!!!!!!!!!
+			sprintf(ch, "\n\rThrust %u yaw %u pitch %u roll %u", thrust, yaw, pitch, roll);
+			send_string(ch);
 
 			button_present = (PINA & _BV(PA6)) ? 1:0;
 			//sprintf(ch,"\n\rbutton_present = %u", button_present);

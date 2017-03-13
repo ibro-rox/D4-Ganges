@@ -22,6 +22,8 @@
 #define OP_ANGLE_Y 16
 #define OP_ANGLE_Z 17
 #define OP_TELEMETRY_ACKNOWLEDGE 18
+#define OP_IR_SENSOR 19
+#define OP_NULL 63
 
 // K value size
 #define CHAR_MAX 6
@@ -35,23 +37,28 @@
 #define BTN_POWER_OFF 5
 
 // ADC pin definitions
+//		Base-side
 #define	PIN_THRUST 0
 #define	PIN_ROLL 1
 #define	PIN_YAW 2
 #define	PIN_PITCH 3
+//		Drone-side
 #define PIN_BATTERY 0
+#define PIN_IR_SENSOR 1
 
 // Define bit sizes for the packets
 #define DATA_BIT_SIZE 10
 #define COMMAND_BIT_SIZE 5
 #define ENCRYPT_KEY_BIT_SIZE 1
 
-// Enable comms
-#define ENABLE_UPLINK 1
-#define ENABLE_DOWNLINK 1
+// Enable telemetry back to the base
+#define ENABLE_TELEMETRY 1
+
+// Enable the cargo hook
+#define ENABLE_CARGO_HOOK 1
 
 // Enable encryption
-#define ENABLE_ENCRYPTION 0
+#define ENABLE_ENCRYPTION 1
 
 // Enable/configure UI and setting K values
 #define ENABLE_UI 1
