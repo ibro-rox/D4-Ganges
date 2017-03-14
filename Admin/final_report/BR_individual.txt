@@ -6,9 +6,13 @@ As project leader, my contribution to the project was more administrative than h
 
 3) Design and Simulation
 
-The main point of intersection between the communications and control sub-systems, is the UART interface between the on-board Il-Matto and Arduino Leonardo boards. This interface is difficult to achieve without causing each of the sub-systems to become too laggy to effectively control the UAV. In this setup we took the control system to be more critical to the safe operation of the UAV. As such, the Leonardo board was made the 'Master' in this interface so it could request new TYPR (Throttle Yaw Pitch Roll) values when desired. The Il Matto would interrupt, set a flag, and send the TYPR packet at the next available opportunity. This had to happen 100 times per second to match the Gyroscope data rate. 
+The main point of intersection between the communications and control sub-systems, is the UART interface between the on-board Il-Matto and Arduino Leonardo boards. This interface is difficult to achieve without causing each of the sub-systems to become too laggy to effectively control the UAV. In this setup we took the control system to be more critical to the safe operation of the UAV. As such, the Leonardo board was made the 'Master' in this interface so it could request new TYPR (Throttle Yaw Pitch Roll) values when desired. The Il Matto would interrupt, set a flag, and send the TYPR packet at the next available opportunity. This has to happen 100 times per second to match the Gyroscope data rate. 
 
-Once the 
+*** INSERT CONTROL FLOW DIAGRAM ***
+
+By consulting the communications and control sub-system teams, to see what they wanted from the interface, I wrote a test program investigating each side of the interface to verify the operation and speed of this protocol. The results are shown ***SOMEWHERE-INSERT SCOPE CAPTURE"***. This meant that, when we were able to do a critical path test, I could simply add my interfacing program to the existing communications and control sub-systems, knowing that it already worked correctly.
+
+For power distribution we wanted to use a single 11.1V 3s LiPo battery to power all onboard components. This required a power distribution board with could handle the current spikes due to rapid changes in thrust and also supply a smooth 5V to the Arduino and Il Matto. The Il Matto already contains a 3V3 voltage regulator which needs a minim
 
 
 4) Testing and Results
