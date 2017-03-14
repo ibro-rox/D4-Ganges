@@ -17,21 +17,34 @@ One of our key requirements was that we wanted seperate microcontrollers for the
 
 Utilising the on-chip DMP on the IMU allowed us to acquire pre-processed YPR data which massively reduced the computing strain on our microcontroller and allowed us time to process the PID values for the previous YPR whilst the DMP processes the next YPR. This gives us parallel processing of the IMU data thus giving us a finer resolution for control, but introduces the problem of synchronising these separate processes. 
 
-Use of PWM controlled ESCs meant we needed 4 16-bit timer outputs from the control sub-system to finely adjust our motors 
+Use of PWM controlled ESCs meant we needed 4 16-bit timer outputs from the control sub-system to finely adjust our motors. This meant upgrading to a more powerful microcontroller, adding to the cost of the design.
 
-
+The Power Distribution Board (PDB) meant we could power all the on-board components from the same supply and meant we could reliably power up. This did increase the weight of the drone.
 
 
 Ease of Use
 
+Our startup sequence is straightforward but also includes a number of safety features; IMU settling time, motor arming sequence, optional ESC calibration. The user interface is a standard UAV setting except that the throttle is centered at zero and not free-floating. The controller is ergonomically designed and can be run off batteries.
 
 
 Creativity and Innovation
+
+Own chassis, controller, cargo-acquisition hook.
+Live telemetry of altitude and battery voltage.
+Crumple zone chassis
 
 
 
 Aesthetics
 
+Indian flag on controller
+Sexy controller
+Tactile switches
+Extra fiddling switch
+Hook
+Clear acrylic
+No LEDs :(
+Wires everywhere :(
 
 
 Cost
@@ -39,3 +52,13 @@ Cost
 
 
 Reliability
+
+Powers up correcty and consitently
+Communications very robust
+Fairly stable control
+
+Hook jams up
+Doesn't reliably fly
+Effective as a lawnmower
+Electronics reliable
+Electronics protected from crashes
