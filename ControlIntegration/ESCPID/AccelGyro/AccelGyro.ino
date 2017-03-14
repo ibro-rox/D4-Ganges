@@ -66,10 +66,11 @@ THE SOFTWARE.
 // AD0 high = 0x69
 MPU6050 mpu;
 PID yawPID(0,0,0);
-PID pitchPID(0.4,1e-5,20);
+PID pitchPID(0.4,1e-5,18);
+//PID pitchPID(0.4,1e-5,18);
 //PID pitchPID(0.1,0.002,10);
-PID rollPID(0,0,0);
-//PID rollPID(6,4.8,0.7);
+//PID rollPID(0.4,1e-5,18);
+PID rollPID(0.4,2e-5,18);
 //MPU6050 mpu(0x69); // <-- use for AD0 high
 
 /* =========================================================================
