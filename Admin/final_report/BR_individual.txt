@@ -1,6 +1,6 @@
 1) Contribution
 
-As project leader, my contribution to the project was more administrative than hands-on, but involved integrating all the design modules together. I gave myself some auxillary roles involving tuning the PID controller, interfacing the IR sensor, managing power distribution, and measuring battery voltage. In addition to these roles I was involved to some degree in the development of every design module to ensure tasks were being completed successfully and would integrate smoothly, with minimal fault-finding required. 
+As project leader, my contribution to the project was more administrative than hands-on, but involved integrating all the design modules together. I gave myself some smaller auxillary roles involving tuning the PID controller, interfacing the IR sensor, managing power distribution, and measuring battery voltage. In addition to these roles I was involved to some degree in the development of every design module to ensure tasks were being completed successfully and would integrate smoothly, with minimal fault-finding required. 
 
 2) Specification
 
@@ -12,7 +12,8 @@ The main point of intersection between the communications and control sub-system
 
 By consulting the communications and control sub-system teams, to see what they wanted from the interface, I wrote a test program investigating each side of the interface to verify the operation and speed of this protocol. The results are shown ***SOMEWHERE-INSERT SCOPE CAPTURE"***. This meant that, when we were able to do a critical path test, I could simply add my interfacing program to the existing communications and control sub-systems, knowing that it already worked correctly.
 
-For power distribution we wanted to use a single 11.1V 3s LiPo battery to power all onboard components. This required a power distribution board with could handle the current spikes due to rapid changes in thrust and also supply a smooth 5V to the Arduino and Il Matto. The Il Matto already contains a 3V3 voltage regulator which needs a minim
+For power distribution we wanted to use a single 11.1V 3s LiPo battery to power all onboard components. This required a power distribution board (PDB) with could handle the current spikes due to rapid changes in thrust and also supply a smooth 5V to the Arduino and Il Matto. The Il Matto already contains a 3V3 voltage regulator which needs a minimum 4.5V input to operate correctly. The current requirements on the PDB meant I had to supplement the tri-pad board with an additional cable and solder. This ensured we could safely operate the motors at high thrust without damaging the LiPo or the rest of the UAV. Of course this extra cable added weight to the drone. Initially to verify the correct operation of the PDB I used a bench DMM to check for continuity errors, then powered the ESCs without motors connected. The 5V regulator was then added and again tested using the above procedure, with the Arduino and Il Matto boards instead of the ESCs. Next, I performed a full power distribution test with all components connected, using a current limited (500mA) PSU to protect from unexpected current surges, but without driving the motors. Following these successful tests I powered all the components including the motors simultaneously, again with a current limit (5A). Finally a full PDB test with the LiPo battery was performed which was successful on the first test, as expected.    
+
 
 
 4) Testing and Results
