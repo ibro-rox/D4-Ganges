@@ -1,0 +1,18 @@
+1) Contribution
+
+As project leader, my contribution to the project was more administrative than hands-on, but involved integrating all the design modules together. I gave myself some auxillary roles involving tuning the PID controller, interfacing the IR sensor, managing power distribution, and measuring battery voltage. In addition to these roles I was involved to some degree in the development of every design module to ensure tasks were being completed successfully and would integrate smoothly, with minimal fault-finding required. 
+
+2) Specification
+
+3) Design and Simulation
+
+The main point of intersection between the communications and control sub-systems, is the UART interface between the on-board Il-Matto and Arduino Leonardo boards. This interface is difficult to achieve without causing each of the sub-systems to become too laggy to effectively control the UAV. In this setup we took the control system to be more critical to the safe operation of the UAV. As such, the Leonardo board was made the 'Master' in this interface so it could request new TYPR (Throttle Yaw Pitch Roll) values when desired. The Il Matto would interrupt, set a flag, and send the TYPR packet at the next available opportunity. This had to happen 100 times per second to match the Gyroscope data rate. 
+
+Once the 
+
+
+4) Testing and Results
+
+5) Management
+
+6) Evaluation and Reflection
