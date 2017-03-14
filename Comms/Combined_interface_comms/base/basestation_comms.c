@@ -37,25 +37,19 @@ void adc_init()//[1]
 
 
 uint16_t adc_read(int n)//[1]
-
 {
-
 	ADMUX = n;// represents PA2
 
 	// start conversion
-
 	ADCSRA |= _BV(ADSC);
 
 	// wait for conversion to complete
-
 	//while(!(ADCSRA & _BV(ADIF))){};
 
 	while(ADCSRA & _BV(ADSC));
-
 	ADC = (ADCH << 8) | ADCL;// [1]
 
-	return ADC;
-
+	return (n == PIN_ROLL || n == PIN_YAW) ? 1023 - ADC : ADC;
 }
 
 
@@ -195,51 +189,23 @@ void Encode_data(uint8_t* type, uint8_t* data, uint16_t totalpacket)
 #if ENABLE_ENCRYPTION
 
 uint16_t Encrypt_data(uint16_t packet)
-
 {
+	// Get the encryption key from the first 3 bits of the packet
+	uint8_t encryption_key;
+	encryption_key = (packet & 7);
 
 	// Retrieve bits that are shifted out when the right shift is done
-
 	uint8_t rotated_out_bits;
+	rotated_out_bits = (packet >> 3) & get_1s(encryption_key);
 
-	rotated_out_bits = (packet & ((uint16_t) pow(2, encryption_key)));
-	char ch[100];
-	sprintf(ch, "\n\rBit mask = %u", (uint16_t) pow(2, encryption_key));
-	send_string(ch);
-	sprintf(ch, "\n\rEncryption key = %u", encryption_key);
-	send_string(ch);
-	sprintf(ch, "\n\rRotated out bits = %u", rotated_out_bits);
-	send_string(ch);
-
-
-	// Get completely rotated bits by adding the shifted out bits to the
-
-	// original packet right-shifted by the required number of bits.
-
+	// Right shift packet and add on rotated-out bits in their new position
 	uint16_t encrypted_packet;
+	encrypted_packet = (packet >> encryption_key) + (rotated_out_bits << (13 + 3 - encryption_key));
 
-	encrypted_packet = (packet >> encryption_key) + (rotated_out_bits << (COMMAND_BIT_SIZE + DATA_BIT_SIZE - encryption_key));
-	sprintf(ch, "\n\rRotated packet = %u", encrypted_packet);
-	send_string(ch);
-
-
-	// Add on the encryption key to the MSBs of the packet
-
-	encrypted_packet = encrypted_packet + (encryption_key << (COMMAND_BIT_SIZE + DATA_BIT_SIZE));
-	sprintf(ch, "\n\rFully encrypted packet = %u\n\r", encrypted_packet);
-	send_string(ch);
-
-
-	// Adjust encryption key for next transmission
-
-	encryption_key = (encryption_key < 3) ? encryption_key + 5 : encryption_key - 3;
-
-	if (encryption_key == 0) encryption_key = 5;
-
-
+	// Remove any values from the first 3 bits and add on the encryption key
+	encrypted_packet = (encrypted_packet & 65528) + encryption_key;
 
 	return encrypted_packet;
-
 }
 
 #endif
@@ -270,20 +236,49 @@ void Decode_data(uint8_t* type, uint16_t* data, uint16_t totalpacket)
 #if ENABLE_ENCRYPTION
 uint16_t Decrypt_data(uint16_t packet)
 {
-	// Retrieve the encryption key
+	// Get the encryption key from the first 3 bits of the packet
 	uint8_t encryption_key;
-	encryption_key = (packet >> (DATA_BIT_SIZE + COMMAND_BIT_SIZE));
+	encryption_key = (packet & 7);
+
+	// Remove the encryption key from the packet
+	packet = (packet & 65528);
 
 	// Retrieve bits that are shifted out when the left shift is done
 	uint8_t rotated_out_bits;
-	rotated_out_bits = (packet >> (DATA_BIT_SIZE + COMMAND_BIT_SIZE - encryption_key));
+	rotated_out_bits = (packet >> (16 - encryption_key)) & get_1s(encryption_key);
 
-	// Get completely rotated bits by adding the shifted out bits to the
-	// original packet left-shifted by the required number of bits.
-	// It is & with a sequence of 1s to remove the encryption key from the overall packet
+	// Left shift packet and add on rotated-out bits in their previous position
 	uint16_t decrypted_packet;
-	decrypted_packet = ((packet << encryption_key) & ((uint16_t)pow(2, DATA_BIT_SIZE + COMMAND_BIT_SIZE) - 1)) + rotated_out_bits;
+	decrypted_packet = (packet << encryption_key) + (rotated_out_bits << 3);
+
+	// Remove any values from the first 3 bits and add on the encryption key
+	decrypted_packet = (decrypted_packet & 65528) + encryption_key;
 
 	return decrypted_packet;
 }
+
+uint16_t get_1s(uint8_t num)
+{
+	// Generate a variable that is num 1's
+	uint16_t out;
+	out = 1;
+
+	uint8_t i;
+	for (i = 1; i < num; i++)
+	{
+		out = (out << 1);
+		out++;
+	}
+
+	return out;
+}
 #endif
+
+double to_distance(uint16_t adc_value)
+{
+	double distance, volts;
+	volts = (adc_value*3.3) / 1024;
+	distance = 24 / volts;
+
+	return distance;
+}

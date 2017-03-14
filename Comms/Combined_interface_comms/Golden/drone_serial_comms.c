@@ -119,8 +119,8 @@ int main(void)
 #endif
 		}
 
-		batterylevel = adc_read(PIN_BATTERY);
-		/*if (TCNT1 >= 5500 && TCNT1 <= 6000)
+		/*batterylevel = adc_read(PIN_BATTERY);
+		if (TCNT1 >= 5500 && TCNT1 <= 6000)
 		{
 			TCNT1 = 0;
 			//send_string("Sending telemetery");
@@ -130,30 +130,10 @@ int main(void)
 			Send_data(OP_BATTERY_LEVEL, batterylevel);
 			_delay_ms(2);
 			rfm12_tick();
-
-			Send_data(OP_ANGLE_X, 23);
-			_delay_ms(2);
-			rfm12_tick();
-			Send_data(OP_ANGLE_X, 23);
-			_delay_ms(2);
-			rfm12_tick();
-
-			Send_data(OP_ANGLE_Y, 53);
-			_delay_ms(2);
-			rfm12_tick();
-			Send_data(OP_ANGLE_Y, 53);
-			_delay_ms(2);
-			rfm12_tick();
-
-			Send_data(OP_ANGLE_Z, 67);
-			_delay_ms(2);
-			rfm12_tick();
-			Send_data(OP_ANGLE_Z, 67);
-			_delay_ms(2);
-			rfm12_tick();
 		}*/
 		//sprintf(ch, "\n\rCounter %u", TCNT1);
 		//send_string(ch);
+
 		if (serial_interrupt_flag)
 			send_packet(&desired_values);
 	}

@@ -180,9 +180,10 @@ int main(void)
 
 		}
 
+
 		if (TCNT1 >= 5500 && TCNT1 <= 6000 && !PIDmode)
 		{
-			send_string("Sending telemetry");
+			//send_string("Sending telemetry");
 			Send_data(OP_THRUST, receiveddata);
 			_delay_ms(2);
 			Send_data(OP_THRUST, receiveddata);
@@ -193,8 +194,8 @@ int main(void)
 
 		if (!PIDmode)
 		{
-			sprintf(ch, "\n\rCurrent potentiometer values: %u %u %u %u", thrust, roll, yaw, pitch);
-			send_string(ch);
+			//sprintf(ch, "\n\rCurrent potentiometer values: %u %u %u %u", thrust, roll, yaw, pitch);
+			//send_string(ch);
 		}
 	}
 	//sprintf(ch, "\n\rI = %u", i);

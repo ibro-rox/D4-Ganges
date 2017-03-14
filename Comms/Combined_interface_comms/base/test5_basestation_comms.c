@@ -20,19 +20,13 @@
 
 
 #include <avr/io.h>
-
 #include <stdio.h>// for sprintf()
-
 #include <avr/interrupt.h>
-
 #include <util/delay.h>
-
 #include <math.h>
-
 #include <stdlib.h>
 
 #include "rfm12.h"
-
 #include "basestation_comms.h"
 
 //***************
@@ -202,8 +196,8 @@ int main(void)
 				data = *rfm12_rx_buffer();
 
 				Retrieve_data(&packettype, &data);
-				sprintf(ch, "\n\rPacket type: %u and Data: %u", packettype, data);
-				send_string(ch);
+				//sprintf(ch, "\n\rPacket type: %u and Data: %u", packettype, data);
+				//send_string(ch);
 				rfm12_rx_clear();
 				switch(packettype)
 				{
@@ -225,16 +219,21 @@ int main(void)
 					case OP_BATTERY_LEVEL:  // angle needs to be converted from its decimal value to float
 										voltage = (float)(3.3/1024)*data;// r1 = 100k and r2 is 33k
 										voltage = (float)(133/33)*voltage;
-										sprintf(telemetry,"Battery voltage: %f", voltage);
+										sprintf(telemetry,"\n\rBattery voltage: %f", voltage);
 										send_string(telemetry);
 									break;
+					case OP_IR_SENSOR:
+						voltage = to_distance(data);
+						sprintf(telemetry, "\n\rIR sensor: %f", voltage);
+						send_string(telemetry);
+						break;
 				}
 			}
 			//else
 				//send_string("\n\r No telemetry :(");
 
-			thrust_present = adc_read(PIN_THRUST);
-			if (thrust_present != thrust_previous)
+			thrust_present = (kill_present) ? 512 : adc_read(PIN_THRUST);
+			if (thrust_present != thrust_previous && thrust_present < 1020)
 			{
 				Send_data(OP_THRUST, thrust_present);
 				_delay_ms(2);
@@ -244,8 +243,8 @@ int main(void)
 				thrust_previous = thrust_present;
 			}
 
-			yaw_present = adc_read(PIN_YAW);
-			if (yaw_present != yaw_previous)
+			yaw_present = (kill_present) ? 512 : adc_read(PIN_YAW);
+			if (yaw_present != yaw_previous && yaw_present < 1020)
 			{
 				Send_data(OP_YAW, yaw_present);
 				_delay_ms(2);
@@ -255,9 +254,9 @@ int main(void)
 				yaw_previous = yaw_present;
 			}
 
-			pitch_present = adc_read(PIN_PITCH);
+			pitch_present = (kill_present) ? 512 : adc_read(PIN_PITCH);
 
-			if (pitch_present != pitch_previous)
+			if (pitch_present != pitch_previous && pitch_present < 1020)
 			{
 				Send_data(OP_PITCH, pitch_present);
 				_delay_ms(2);
@@ -267,9 +266,9 @@ int main(void)
 				pitch_previous = pitch_present;
 			}
 
-			roll_present = adc_read(PIN_ROLL);
+			roll_present = (kill_present) ? 512 : adc_read(PIN_ROLL);
 
-			if (roll_present != roll_previous)
+			if (roll_present != roll_previous && roll_present < 1020)
 			{
 				Send_data(OP_ROLL, roll_present);
 				_delay_ms(2);
@@ -305,7 +304,7 @@ int main(void)
 			kill_present = (PINA & _BV(PA4)) ? 1:0;
 			if ((kill_present == 1) && (kill_previous == 0))
 			{
-				send_string("\n\rKill switch ONN!");
+				send_string("\n\rKill switch ON!");
 				Send_data(OP_BUTTON,BTN_POWER_OFF);
 				_delay_ms(2);
 				Send_data(OP_BUTTON,BTN_POWER_OFF);
