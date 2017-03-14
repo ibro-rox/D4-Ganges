@@ -94,7 +94,7 @@ MPU6050 mpu;
 // ================================================================
 
 //uncomment this for debugging and to test data collection
-#define SERIAL_ENABLED
+//#define SERIAL_ENABLED
 
 
 // uncomment "OUTPUT_READABLE_YAWPITCHROLL" if you want to see the yaw/

@@ -13,7 +13,7 @@ void setup()
   init_pwm();
   pwm_duty(PWM_DUTY_MAX,PWM_DUTY_MAX,PWM_DUTY_MAX,PWM_DUTY_MAX);
   delay(10000);
-  pwm_duty(PWM_DUTY_MAX,PWM_DUTY_MAX,PWM_DUTY_MAX,PWM_DUTY_MAX);
+  pwm_duty(PWM_DUTY_MIN,PWM_DUTY_MIN,PWM_DUTY_MIN,PWM_DUTY_MIN);
   delay(10000);
 } 
 
@@ -21,14 +21,15 @@ void loop() {
     //TXLED1;]
     while(!done)
     {
-     pwm_duty(x1,x1,x1,x1);
+     
      delay(5);
-     if(x1<PWM_DUTY_MAX) x1++;
+     if(x1<3000) x1++;
      else
      {
       x1=PWM_DUTY_MIN;
       done = true;
      }
+     pwm_duty(x1,x1,x1,x1);
     }
 
 }
