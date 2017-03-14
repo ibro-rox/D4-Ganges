@@ -21,7 +21,12 @@ void loop() {
     //TXLED1;]
     while(!done)
     {
+<<<<<<< HEAD
      delay(10);
+=======
+     
+     delay(5);
+>>>>>>> fb66fb724a31beca1f1b45b917341487443c35df
      if(x1<3000) x1++;
      else
      {
