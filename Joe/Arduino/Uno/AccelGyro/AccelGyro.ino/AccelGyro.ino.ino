@@ -219,9 +219,9 @@ void setup() {
 
     // supply your own gyro offsets here, scaled for min sensitivity
     mpu.setXGyroOffset(38);
-    mpu.setYGyroOffset(22);
-    mpu.setZGyroOffset(-4);
-    mpu.setZAccelOffset(1547); // 1688 factory default for my test chip
+    mpu.setYGyroOffset(20);
+    mpu.setZGyroOffset(-6);
+    mpu.setZAccelOffset(1543); // 1688 factory default for my test chip
 
     // make sure it worked (returns 0 if so)
     if (devStatus == 0) {
@@ -258,6 +258,7 @@ void setup() {
 
     // configure LED for output
     pinMode(LED_PIN, OUTPUT);
+    //delay(10000);
 }
 
 
@@ -331,7 +332,7 @@ void loop() {
             Serial.print("ypr\t");
             Serial.print(ypr[0] * 180/M_PI);
             Serial.print("\t");
-            Serial.print(ypr[1] * 180/M_PI);
+            Serial.print(ypr[1] * 180/M_PI-5);
             Serial.print("\t");
             Serial.println(ypr[2] * 180/M_PI);
             #endif
