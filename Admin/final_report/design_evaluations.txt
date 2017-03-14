@@ -1,0 +1,41 @@
+Difficulty of Specification Attempted
+
+At the start of this project we knew we wanted to find a balance of the diffculty we wanted to attempt, but leave ourselves something achievable.
+
+We knew early on that we didn't want to accept the pre-built controller and instead build our own customisable one. This allowed us to achieve practical two-way communications between ground and air, something which went beyond the specification. 
+
+We wanted to devolve as much of the reponsibility for control from the pilot, by using absolute angles to control the UAV. This poses a more difficult control problem and although we have a demonstrably working control system, we were not able to achieve full, independent, stable flight.
+
+Designing and building our own chassis out of acrylic sheets allowed us to come in under budget, but meant thet the frame was extremely brittle meaning testing the drone safely and non-destuctively became more of an issue.
+
+Our successful extra features such as, servo-actuated cargo acquisition, IR sensor telemetry, real-time PID tuning, and battery voltage reading were only attempted once the more critical modules had been completed. 
+  
+
+Quality of Electronic Design
+
+One of our key requirements was that we wanted seperate microcontrollers for the on-board communications and control modules. This allowed for separate processing of these two critical functions. This presented the considerable problem of synchronising communications between these two sub-systems. Due to excellent cooperation between the two sub-system teams, we mitigated this problem and produced robust communications between the Communications and Control sub-systems.
+
+Utilising the on-chip DMP on the IMU allowed us to acquire pre-processed YPR data which massively reduced the computing strain on our microcontroller and allowed us time to process the PID values for the previous YPR whilst the DMP processes the next YPR. This gives us parallel processing of the IMU data thus giving us a finer resolution for control, but introduces the problem of synchronising these separate processes. 
+
+Use of PWM controlled ESCs meant we needed 4 16-bit timer outputs from the control sub-system to finely adjust our motors 
+
+
+
+
+Ease of Use
+
+
+
+Creativity and Innovation
+
+
+
+Aesthetics
+
+
+
+Cost
+
+
+
+Reliability
