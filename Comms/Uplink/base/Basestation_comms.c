@@ -75,7 +75,7 @@ void Encode_data(uint8_t* type, uint8_t* data, uint16_t totalpacket)
 	*data = totalpacket;
 
 	// Type, encryption key and 2 bits of data are held in the 8 MSBs
-	*type = (totalpacket >> DATA_BIT_SIZE);
+	*type = (totalpacket >> 8);
 }
 
 //!

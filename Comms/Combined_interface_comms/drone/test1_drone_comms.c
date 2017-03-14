@@ -22,15 +22,14 @@ int main(void)
 
 	uint8_t receivedpackettype;
 	uint16_t receiveddata, i;
-	//i = 0;
+
+	uint16_t thrust, roll, pitch, yaw;
+
 	char ch[30];
 	while (1)
 	{
 		rfm12_tick();
-		//rfm12_poll();
-		//receivedpackettype = rfm12_read_fifo_inline();
-		//sprintf(ch, "\n\rFIFO: %u", receivedpackettype);
-		//if (receivedpackettype != 0) send_string(ch);
+
 		// Wait for data to be fully received
 		if (rfm12_rx_status() == STATUS_COMPLETE)
 		{
@@ -42,9 +41,9 @@ int main(void)
 			rfm12_rx_clear();
 			// Decrypt (if enabled) and extract 10-bit data and packet type from the received packet 
 			Retrieve_data(&receivedpackettype, &receiveddata);
+			
 			//sprintf(ch, "\n\rReceived: %u %u", receivedpackettype, receiveddata);
 			//send_string(ch);
-			//if (receiveddata > 1000) break;
 
 #if UPLINK_TEST
 			//send_string("\n\rReceived transmission:");
@@ -54,35 +53,42 @@ int main(void)
 			// Send received data to UART
 			//sprintf(ch, "\n\r Data = %u", receiveddata);
 			//send_string(ch);
+
+			//if (receiveddata > 1000) break;
 #endif
 #if ENABLE_CONTROLS
 			switch (receivedpackettype)
 			{
 			case OP_THRUST:
-				sprintf(ch, "\n\r Thrust = %u", receiveddata);
+				thrust = receiveddata;
+
+				sprintf(ch, "\n\r Thrust = %u", thrust);
 				send_string(ch);
 				break;
 			case OP_ROLL:
-				sprintf(ch, " Roll = %u", receiveddata);
+				roll = receiveddata;
+
+				sprintf(ch, " Roll = %u", roll);
 				send_string(ch);
 				break;
 			case OP_YAW:
-				sprintf(ch, " Yaw = %u", receiveddata);
+				yaw = receiveddata;
+
+				sprintf(ch, " Yaw = %u", yaw);
 				send_string(ch);
 				break;
 			case OP_PITCH:
-				sprintf(ch, " Pitch = %u", receiveddata);
+				pitch = receiveddata;
+
+				sprintf(ch, " Pitch = %u", pitch);
 				send_string(ch);
 				break;
 			}
 #endif
 
-			// print off the adc data
-
 		}
 	}
-	sprintf(ch, "\n\rI = %u", i);
-	send_string(ch);
+
 	while (1)
 	{
 

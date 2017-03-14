@@ -65,7 +65,7 @@ void test_encode()
 	uint8_t packettype;
 	packettype = (2 << 2) + msb2;
 
-	// Sent data: [00001011] [1110 0110]  
+	// Sent data: packettype = [00001011] lsb8 = [1110 0110]  
 
 	// Decode
 	send_string("Decoding data\n");
@@ -83,6 +83,7 @@ void test_encode()
 	send_string(sendData);
 }
 
+// Original encryption/decryption code
 uint16_t test_decrypt(uint16_t packet)
 {
 	// Retrieve the encryption key
@@ -144,6 +145,7 @@ uint16_t test_encrypt(uint16_t packet)
 	return encrypted_packet;
 }
 
+// Updated encryption/decryption code
 uint16_t get_1s(uint8_t num)
 {
 	// Generate a variable that is num 1's
