@@ -1,7 +1,31 @@
-// This code involves taking a copy from drone_comms.c and simply printing off the received data off putty
+// 
 // Arthur: Joel And Mohammed
 // Date : 3/1/17
-// this code is also for test 1 im mentioned in my pink book
+
+// Pin Outs
+/*
+	Il Matto Pins	|	Output/function
+	----------------------------------------
+	PA0				|	Battery level
+	PA1				|	IR Sensor
+					|
+	PB4				|	RFM12 (SEL)
+	PB5				|	RFM12 (SDI)
+	PB6				|	RFM12 (SDO)
+	PB7				|	RFM12 (SCK)
+					|
+	PC0				|	Battery level LED
+					|
+	PD1				|	Leonardo (UART RX)
+	PD2				|	Leonardo (Interrupt)
+	PD3				|	RFM12 (IRQ)
+	PD7				|	Cargo hook servo
+					|
+	VCC				|	RFM12 (3V3)
+					|	Cargo hook servo
+	GND				|	RFM12 (GND)
+*/
+
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
@@ -32,26 +56,26 @@ void send_string(char *str)
 int main(void)
 {
 	// Initialise rfm12 and interrupts
-	//init_timer();
-	adc_init();
-	rfm12_init(); 
+	init_timer();
+	init_adc();
+	rfm12_init();
 	init_debug_uart0();
-
-	DDRD |= _BV(PD2);			// Set PD2 to output
-	PORTD &= ~_BV(PD2);
-	EICRA |= _BV(ISC01) | _BV(ISC00); 	// Set to trigger on rising edge
-	EIMSK |= _BV(INT0); 			// Enable interrupt 
-	sei();
-
+	init_pwm();
+	init_interrupt();
+	init_LED();
+	
 	struct euler_angles desired_values;
 
 	uint8_t receivedpackettype;
 	uint16_t receiveddata;
-	uint16_t batterylevel;
-	
-	// Counter 
-	uint16_t counter;
-	counter = 0;
+	uint16_t batterylevel, irheight;
+
+	uint8_t PIDmode;
+	PIDmode = 0;
+
+	// Counter for telemetry
+	//uint16_t counter;
+	//counter = 0;
 
 	char ch[100];
 	while (1)
@@ -61,11 +85,12 @@ int main(void)
 		// Wait for data to be fully received
 		if (rfm12_rx_status() == STATUS_COMPLETE)
 		{
-			counter++;
+			//counter++;
 			// Get the received packet type and data
 			receivedpackettype = rfm12_rx_type();
 			receiveddata = *rfm12_rx_buffer();
 			rfm12_rx_clear();
+			//send_string("received");
 
 			// Decrypt (if enabled) and extract 10-bit data and packet type from the received packet 
 			Retrieve_data(&receivedpackettype, &receiveddata);
@@ -101,36 +126,69 @@ int main(void)
 			case OP_BUTTON:
 				switch (receiveddata)
 				{
+#if ENABLE_CARGO_HOOK
 				case BTN_CARGO_HOOK_UP:
 					// Set cargo hook up
+					pwm_duty(SERVO_PWM_DUTY_MIN);
+					//send_string("\n\rHook up");
 					break;
 				case BTN_CARGO_HOOK_DOWN:
 					// Set cargo hook down
+					pwm_duty(SERVO_PWM_DUTY_MAX);
+					//send_string("\n\rHook down");
 					break;
+#endif // ENABLE_CARGO_HOOK
 				case BTN_FLIGHT_MODE:
-
+					//send_string("\n\rEntering flight mode");
+					PIDmode = 0;
 					break;
 				case BTN_PID_MODE:
-
+					//send_string("\n\rEntering PID mode");
+					PIDmode = 1;
 					break;
 				}
 				break;
 			}
-#endif
+#endif		
+			
+			receivedpackettype = OP_NULL;
+			receiveddata = OP_NULL;
 		}
 
-		/*batterylevel = adc_read(PIN_BATTERY);
-		if (TCNT1 >= 5500 && TCNT1 <= 6000)
+		batterylevel = adc_read(PIN_BATTERY);
+
+		// Send telemetry back to the base
+		if (TCNT1 >= 5500 && TCNT1 <= 6000 && !PIDmode)
 		{
 			TCNT1 = 0;
-			//send_string("Sending telemetery");
+			//send_string("Sending telemetry");
+
+			// Flash LED if battery level is low
+			if (batterylevel < 886)
+			{
+				PINC |= _BV(PC0);
+			}
+
+#if ENABLE_TELEMETRY
 			Send_data(OP_BATTERY_LEVEL, batterylevel);
 			_delay_ms(2);
 			rfm12_tick();
 			Send_data(OP_BATTERY_LEVEL, batterylevel);
 			_delay_ms(2);
 			rfm12_tick();
-		}*/
+
+			irheight = adc_read(PIN_IR_SENSOR);
+
+			Send_data(OP_IR_SENSOR, irheight);
+			_delay_ms(2);
+			rfm12_tick();
+			Send_data(OP_IR_SENSOR, irheight);
+			_delay_ms(2);
+			rfm12_tick();
+			//sprintf(ch, "\n\rBattery %u Ir sensor %u", batterylevel, irheight);
+			//send_string(ch);
+#endif // ENABLE_TELEMETRY
+		}
 		//sprintf(ch, "\n\rCounter %u", TCNT1);
 		//send_string(ch);
 
@@ -236,9 +294,6 @@ void Send_data(uint8_t type, uint16_t data)
 	uint8_t datapacket;
 	Encode_data(&type, &datapacket, totalpacket);
 
-	//char ch[100];
-	//sprintf(ch, "\n\rSending: %u %u", type, datapacket);
-	//send_string(ch);
 	// Send packet to the buffer for transmission
 	rfm12_tx(sizeof(datapacket), type, &datapacket);
 }
@@ -279,10 +334,12 @@ uint16_t Encrypt_data(uint16_t packet)
 
 #endif
 
-void adc_init()//[1]
+void init_adc()//[1]
 {
 	// In ADCSRA Enable ADC (set ADEN) and prescaler of 64
 	ADCSRA |= _BV(ADEN) | _BV(ADPS2) | _BV(ADPS1);
+	// Set Vcc as the reference voltage
+	ADMUX |= _BV(REFS0);
 }
 
 
@@ -307,4 +364,44 @@ void init_timer()
 {
 	TCCR1B |= _BV(CS12) | _BV(CS10);
 	TCNT1 = 0;
+}
+
+
+#if ENABLE_CARGO_HOOK
+void init_pwm(void)
+{
+	/* TIMER 2 */
+	DDRD |= _BV(PD6); /* PWM out */
+	DDRD |= _BV(PD7); /* inv. PWM out */
+
+
+	TCCR2A = _BV(WGM20) | /* fast PWM/MAX */
+		_BV(COM2A1); /* A output */
+	TCCR2B = _BV(CS21) |
+		_BV(CS22);   /* 1/256 prescaling */
+}
+
+void pwm_duty(uint8_t duty)
+{
+	duty = duty > SERVO_PWM_DUTY_MAX ? SERVO_PWM_DUTY_MAX : duty;
+	duty = duty < SERVO_PWM_DUTY_MIN ? SERVO_PWM_DUTY_MIN : duty;
+	//printf("\nPWM=%3u  ==>  ", duty);
+	OCR2A = duty;
+}
+#endif // ENABLE_CARGO_HOOK
+
+void init_interrupt()
+{
+	DDRD |= _BV(PD2);			// Set PD2 to output
+	PORTD &= ~_BV(PD2);
+	EICRA |= _BV(ISC01) | _BV(ISC00); 	// Set to trigger on rising edge
+	EIMSK |= _BV(INT0); 			// Enable interrupt 
+	sei();
+}
+
+// Set up LED for the battery level
+void init_LED()
+{
+	DDRC |= _BV(PC0);
+	PORTC &= ~_BV(PC0);
 }
