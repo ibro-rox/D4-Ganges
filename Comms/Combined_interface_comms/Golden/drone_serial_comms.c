@@ -45,13 +45,13 @@ volatile uint8_t serial_interrupt_flag = 0;
 ISR(INT0_vect)
 {
 	serial_interrupt_flag = 1; 			// Interrupt sets flag could be replaced
-}	
+}										// with longer ISR if immediately needed
 
 void send_string(char *str)
 {
 	int i;
 	for (i = 0; str[i]; i++) printf(str);
-}						// with longer ISR if immediately needed
+}						
 
 int main(void)
 {
@@ -164,10 +164,10 @@ int main(void)
 			//send_string("Sending telemetry");
 
 			// Flash LED if battery level is low
-			if (batterylevel < 886)
+			/*if (batterylevel < 886)
 			{
 				PINC |= _BV(PC0);
-			}
+			}*/
 
 #if ENABLE_TELEMETRY
 			Send_data(OP_BATTERY_LEVEL, batterylevel);
@@ -197,6 +197,7 @@ int main(void)
 	}
 }
 
+// Ben's code
 void send_packet(struct euler_angles *input)
 {
 	if (is_valid_packet(input))
@@ -212,6 +213,7 @@ uint8_t is_valid_packet(struct euler_angles *input)
 	return ((input->throttle <= 1023) && (input->yaw <= 1023) &&
 		(input->pitch <= 1023) && (input->roll <= 1023));
 }
+//
 
 
 void Retrieve_data(uint8_t* type, uint16_t* data)

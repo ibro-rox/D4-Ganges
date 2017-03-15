@@ -1,0 +1,125 @@
+25/02/17 15:00-15:35 All present (Joe, Ben, Mohammed, Lawrence, Joel)
+Agenda
+-----------
+Discuss and assign subsystem roles.
+
+Assign admin roles.
+
+Discuss:
+	- For the human controller will we use the Spektrum or our own?
+	- Chassis - Acrylic, aluminium or MDF?
+	- Extra features?
+Plan for Monday:
+	- 150 word abstract
+	- High level block diagram
+
+Minutes
+---------
+Roles:
+	- Communications:	Ground to air - Joel
+				Air to ground - Mohammed
+				Controller - Mohammed
+	- Control:		Gyro/accelerometer interface - Joe
+				PID Controller - Lawrence
+				IR sensors - Ben
+	- Chassis		Overall design - Joel & Lawrence
+				Cargo acquisition mechanism - Joe
+	- Power Management - Ben
+	- Integration - Ben
+	- File logging - Mohammed
+	- Soldering - Mohammed
+
+Admin roles:
+	- Leader/Administrator - Ben
+	- Treasurer - Lawrence
+	- Communications officer - Joe
+	- Secretary - Joel
+	- Documenter - Mohammed
+
+Decided to:
+	- Use our own controller.
+	- Laser-cut acrylic chassis.
+	- Extra features are an IR sensor for measuring height, downlink communications, remotely tunable PID and security on the communications.
+	- Use 3 Il Mattos
+
+26/02/17 18:15-18:45 All present (Joe, Ben, Mohammed, Lawrence, Joel)
+Agenda
+-----------
+What needs discussing with Tim Forcer?
+What do we need to bring?
+Does the abstract need editing?
+Is everyone agreed on the schematic diagram?
+Use Github?
+How are people getting on?
+
+Minutes
+---------
+Decided the specification part of the abstract could be skimmed down.
+Agreed that the schematic diagram is complete.
+Everyone happy to use Github.
+Decided to use 2 transceivers on each end (i.e. two slaves connected to both Il Mattos). Extra slave of the SD card on the drone.
+
+27/02/17 10:10-10:25 All present (Joe, Ben, Mohammed, Lawrence, Joel)
+Agenda
+-----------
+What needs discussing at the clinic?
+Does the abstract need more editing?
+
+Minutes
+---------
+To dicuss at the clinic:
+	- Simulation - what are they expecting?
+	- Control
+	- Thoughts on components
+	- Ask about marking - is more hardware design required?
+	- Is the frequency band of the wireless transceivers wide enough?
+Request different frequency bands for the transceivers on the requisition form.
+Abstract size needs reducing further
+
+3/03/17 11:38-11:58 All present (Joe, Ben, Mohammed, Lawrence, Joel) with Rob Maunder
+Agenda
+-----------
+Run through the project proposal form
+Any other advice from Rob?
+
+Minutes
+---------
+Explained the block diagram:
+	- Focus on integration of blocks
+	- Explained our roles in terms of integration
+	- Power for the groun Il Matto needs to be considered
+	- Look at power distribution on the drone
+Ensure we have distinct roles.
+Risks:
+	- Have we considered if the Leonardo is powerful enough?
+	- Do we have enough knowledge of PID? We have found code that handles it.
+Design completion milestones:
+	- e.g. for comms: 1. SPI interface 2. SPI transmitting, 3. SPI receiving 4. two way
+	- Rough guideline of one milestone per interface
+	- Milestones for different paths through the block diagram
+
+9/03/17 13:02-13:19 All present (Joe, Ben, Mohammed, Lawrence, Joel)
+Agenda
+-----------
+Plan for the rest of the construction time
+
+Minutes
+---------
+Work on critical path at the moment - add on extra features such as telemetry later on.
+For the communications add more efficient comms scheme first then add the code to change k values remotely.
+	- K values vary from 0-10.23.
+Chassis is glued - can work on any other stuff that needs doing (e.g. servo mechanism).
+Finalise extra features by Friday.
+Checked that we will all have enough to write on the report.
+Get the ESCs calibrated and get the critical path done today.
+
+10/03/17 17:49-18:01 All present (Joe, Ben, Mohammed, Lawrence, Joel)
+Agenda
+-----------
+Plan for the last weekend of construction
+
+Minutes
+---------
+Mohammed and Joe are away - give each other our numbers to allow quick contact if required.
+Joel, Lawrence and Ben will do the PID tuning over the weekend.
+Bring a 12v power supply with a max current of 4/5A and a positive centre if possible. 
