@@ -31,7 +31,7 @@ Our start-up sequence is straightforward and includes a number of safety feature
 
 Designed our own servo-actuated cargo hook to enable quick and easy pick-up and drop-off of the cargo. This adds weight and complexity to the electronics, but was easy to bolt onto the critical path design.
 
-Able to read the altitude and battery level in real time using a PuTTy console. Could be implemented using the Il Matto TFT screen so a Laptop isn't required.
+Able to read the altitude and battery level in real time using a PuTTY console. Could be implemented using the Il Matto TFT screen so a Laptop isn't required.
 
 The ability to repair the chassis quickly and easily allowed for rapid testing, but this unbalanced the weight distribution of the drone and led to inconsistent flights.
 
