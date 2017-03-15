@@ -1,0 +1,93 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% EL D4 
+% University of Southampton
+%
+% author : Lawrence Gray (lg5g15)
+%
+% edited : 03-14-2017
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[a4paper,11pt]{article}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PACKAGES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[margin=1in]{geometry}
+\renewcommand{\baselinestretch}{1.2} % line spacing
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% DOCUMENT BEGIN
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage[T1]{fontenc}
+\begin{document}
+  
+\begin{center}
+{\Large{\textbf{Costings}}} \\ [\baselineskip]
+\end{center}
+
+%\begin{abstract}
+%Summarise your work in less than 100 words stating briefly what was achieved.  
+%\end{abstract}
+\section{Physical components}
+In the project proposal form estimates were made towards the costings, now that the project is done better and more realistic estimates can be made. This cost differs from this original as more components were included in the project than originally planned and some components broke in the testing process so the prices in Table 1 includes replacement for those parts.
+\begin{table}[htp]
+\begin{tabular}{|l|l|l|l|}
+	\hline
+	Component & Amount & Single Cost/\textsterling & Bulk Cost/\textsterling  \\
+	\hline
+	20A ESC & 4 & 23.95 & 23.95\\
+	\hline
+	Clockwise 2204 2300KV motors & 2 & 11.78 & 11.78\\
+	\hline
+    Counter-Clockwise 2204 2300KV motors & 2 & 11.78 & 11.78\\
+	\hline
+    Thumb Joystick & 2 & 10.39 & 3.98\\
+	\hline
+	Propeller Pack & 1 & 1.25 & 1.00\\
+	\hline
+	Female XT60 battery connector & 1 & 1.00 & 1.00\\
+	\hline
+	ESC Connector Pack & 1 & 3.50 & 1.99\\
+	\hline
+	1550MAh LiPo Battery & 1 & 14.99 & 12.86\\
+	\hline    
+	Arduino Leonardo & 1 & 18.50 & 5.64\\
+	\hline
+	RFM12B-S2 transceiver modules & 2 & 12.00 & 3.78\\
+	\hline
+	5V Regulator & 1 & 1.63 & 0.79\\
+	\hline
+	LiPo Charger & 1 & 14.99 & 14.99\\
+	\hline
+	Atmel At-Mega 644p & 2 & 12.62 & 7.24 \\ 
+	\hline
+	Micro Servo & 1 & 7.70 & 1.93\\ 
+	\hline
+	MPU-6050 Gyroscope Chip & 1 & 1.50 & 1.50 \\ 
+	\hline
+	Miscellaneous  & 1 & 8.00 & 6.00\\ 
+	\hline
+	A2 5mm acrylic sheet  & 2 & 21.10 & 8.49 \\ 
+	\hline
+	A4 3mm acrylic sheet  & 1 & 2.64 & 1.35\\ 
+	\hline
+    Labour (\textsterling20/hour)  & 2 & 0 & 40\\ 
+	\hline
+	\textbf{Total}& &179.32&160.05\\
+	\hline
+\end{tabular}
+\caption{Table showing total costings for parts for prototyping and manufacturing}
+\end{table}
+\newline
+The bulk cost includes the labor costing for manufacturing the quad-copter. This was estimated to be 2 hours. The two hours broken down are as follows; A skilled worker will first laser cut the frame and glue it together which should take 30 minutes. They then must program all of the micro-controllers and calibrate the ESCs, this should take another 30 minutes. The circuits should take 20 minutes to connect together and mount. Finally the last 40 minutes will be spent on testing and verifying that everything is in a working order.  
+
+There are other costs that also need to be considered, the first being man hours for the development. From the time sheet that we filled out throughout the project there was an estimated 700 hours that was spent on developing and building the quad-copter. At \textsterling75 an hour this comes to \textsterling52,500. This time can be split up into different categories being Software development, board production and development and debugging. The breakdown for these categories is 300 hours, 50 hours and 350 hours respectively. 
+
+The Extra cost that are involved with manufacturing a product are getting a CE mark at \textsterling2000 and the manufacturing setup costs at \textsterling100000.
+This brings the total development and manufacturing cost to \textsterling154679.32.
+
+Finally calculation were made to find out how many quad-copters needed to be sold in order to turn a profit. If they are sold at \textsterling300 which would be a profit margin of 46.7\% at a 100\% yield we would have to sell 1105 units to break even. In reality you will never get a 100\% yield so at a worst case of 90\% profit yield we would need to sell 1228 units. 
+\end{document}
