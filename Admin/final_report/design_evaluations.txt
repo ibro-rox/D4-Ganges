@@ -1,59 +1,59 @@
-Difficulty of Specification Attempted
+1) Difficulty of Specification Attempted
 
-At the start of this project we knew we wanted to find a balance of the diffculty we wanted to attempt, but leave ourselves something achievable.
+At the start of this project we knew we wanted to find a balance of the difficulty we wanted to attempt, but leave ourselves something achievable.
 
-We knew early on that we didn't want to accept the pre-built controller and instead build our own customisable one. This allowed us to achieve practical two-way communications between ground and air, something which went beyond the specification. 
+We knew early on that we didn't want to accept the pre-built controller and instead build our own customisable one. This allowed us to achieve practical two-way communications between ground and air. 
 
-We wanted to devolve as much of the reponsibility for control from the pilot, by using absolute angles to control the UAV. This poses a more difficult control problem and although we have a demonstrably working control system, we were not able to achieve full, independent, stable flight.
+We wanted to devolve as much of the responsibility for control from the pilot, by using absolute angles to control the UAV. This poses a more difficult control problem and although we have a demonstrably working control system, we were not able to achieve full, independent, stable flight.
 
-Designing and building our own chassis out of acrylic sheets allowed us to come in under budget, but meant thet the frame was extremely brittle meaning testing the drone safely and non-destuctively became more of an issue.
+Designing and building our own chassis out of acrylic sheets allowed us to come in on budget, but meant that the frame was extremely brittle and heavy meaning testing the drone safely and non-destructively became a priority.
 
 Our successful extra features such as, servo-actuated cargo acquisition, IR sensor telemetry, real-time PID tuning, and battery voltage reading were only attempted once the more critical modules had been completed. 
   
 
-Quality of Electronic Design
+2) Quality of Electronic Design
 
-One of our key requirements was that we wanted seperate microcontrollers for the on-board communications and control modules. This allowed for separate processing of these two critical functions. This presented the considerable problem of synchronising communications between these two sub-systems. Due to excellent cooperation between the two sub-system teams, we mitigated this problem and produced robust communications between the Communications and Control sub-systems.
+We wanted separate micro-controllers for the on-board communications and control modules. This presented the considerable problem of synchronising communications between these two sub-systems. 
 
-Utilising the on-chip DMP on the IMU allowed us to acquire pre-processed YPR data which massively reduced the computing strain on our microcontroller and allowed us time to process the PID values for the previous YPR whilst the DMP processes the next YPR. This gives us parallel processing of the IMU data thus giving us a finer resolution for control, but introduces the problem of synchronising these separate processes. 
+Utilising the on-chip DMP on the IMU allowed us to acquire pre-processed YPR data which massively reduced the computing strain on our micro-controller. This gives us parallel processing of the past and present IMU data thus giving us a finer resolution for control. This introduces the problem of synchronising these separate processes. 
 
-Use of PWM controlled ESCs meant we needed 4 16-bit timer outputs from the control sub-system to finely adjust our motors. This meant upgrading to a more powerful microcontroller, adding to the cost of the design.
+Use of PWM controlled ESCs meant we needed 4 16-bit timer outputs from the control sub-system to finely adjust our motors. This meant upgrading to a more powerful micro-controller, adding to the cost of the design.
 
 The Power Distribution Board (PDB) meant we could power all the on-board components from the same supply and meant we could reliably power up. This did increase the weight of the drone.
 
 
-Ease of Use
+3) Ease of Use
 
-Our startup sequence is straightforward but also includes a number of safety features; IMU settling time, motor arming sequence, optional ESC calibration. The user interface is a standard UAV setting except that the throttle is centered at zero and not free-floating. The controller is ergonomically designed and can be run off batteries.
-
-
-Creativity and Innovation
-
-Own chassis, controller, cargo-acquisition hook.
-Live telemetry of altitude and battery voltage.
-Crumple zone chassis
+Our start-up sequence is straightforward and includes a number of safety features; IMU settling time, motor arming sequence, optional ESC calibration, communications handshaking. The pilot interface is a standard UAV set-up, except that the throttle is centred at zero and not free-floating. The controller is ergonomic and can be run off batteries. The current lack of LEDs indicating the front makes piloting difficult at large distances.
 
 
+4) Creativity and Innovation
 
-Aesthetics
+Designed our own servo-actuated cargo hook to enable quick and easy pick-up and drop-off of the cargo. This adds weight and complexity to the electronics, but was easy to bolt onto the critical path design.
 
-Indian flag on controller
-Sexy controller
-Tactile switches
-Extra fiddling switch
-Hook
-Clear acrylic
-No LEDs :(
-Wires everywhere :(
+Able to read the altitude and battery level in real time using a PuTTy console. Could be implemented using the Il Matto TFT screen so a Laptop isn't required.
+
+The ability to repair the chassis quickly and easily allowed for rapid testing, but this unbalanced the weight distribution of the drone and led to inconsistent flights.
 
 
-Cost
+5) Aesthetics
+
+Transparent acrylic chassis is less of an eye-sore, but equally makes piloting at a long distance difficult. Etching into the plastic to add our company name is easily identifiable as a brand.
+
+Our controller also matches the aesthetic style of the drone. The switches are placed at convenient locations for rapid killing of motors if necessary.
+
+The coat-hanger wire propeller guards are minimalistic but robust enough to deal with low velocity impacts.
+
+As this is still a prototype there are flying wires used but we used ribbon cable wherever possible to minimise crossed wires.
+
+
+6) Cost
 
 
 
-Reliability
+7) Reliability
 
-Powers up correcty and consitently
+Powers up correctly and consistently on connection to the LiPo. Communications system was heavily tested to ensure we could conduct test flights safely
 Communications very robust
 Fairly stable control
 
@@ -62,3 +62,8 @@ Doesn't reliably fly
 Effective as a lawnmower
 Electronics reliable
 Electronics protected from crashes
+
+
+
+EXTRAS
+//We mitigated this problem by testing  and produced robust communications between the Communications and Control sub-systems.
