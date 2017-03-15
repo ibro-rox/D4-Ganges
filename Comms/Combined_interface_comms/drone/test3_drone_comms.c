@@ -192,11 +192,6 @@ int main(void)
 			TCNT1 = 0;
 		}
 
-		if (!PIDmode)
-		{
-			//sprintf(ch, "\n\rCurrent potentiometer values: %u %u %u %u", thrust, roll, yaw, pitch);
-			//send_string(ch);
-		}
 	}
 	//sprintf(ch, "\n\rI = %u", i);
 	//send_string(ch);
