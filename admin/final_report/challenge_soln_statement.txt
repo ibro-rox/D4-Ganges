@@ -16,6 +16,7 @@ Specification
  - The Communications shall be in the radio frequency band
  - Telemetry data could be transmitted back to the base station
  - Telemetry data could be stored locally on an SD Card 
+ - Telemetry Transmission rate should be 1 packet/second
  - The gyroscope should produce new data at least 100 times per second
  - The UAV should be able to drop off cargo whilst in flight
  - The UAV could be able to pick up cargo whilst in flight
@@ -27,5 +28,3 @@ Specification
  - The control loop should update at a rate of at least 100 times/second
  - The UAV should warn the user of low battery states
  - The chassis should have a centre of mass within 5cm of the geometric centre
- 
-
