@@ -27,5 +27,5 @@ Specification
  - The control loop should update at a rate of at least 100 times/second
  - The UAV should warn the user of low battery states
  - The chassis should have a centre of mass within 5cm of the geometric centre
- - 
+ 
 
