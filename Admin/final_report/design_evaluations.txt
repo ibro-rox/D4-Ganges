@@ -1,55 +1,40 @@
 1) Difficulty of Specification Attempted
 
 At the start of this project we knew we wanted to choose a design which was challenging, but also achievable.
-
 We knew early on that we didn't want to accept the pre-built controller and instead build our own proprietary one. This helped us to achieve practical two-way communications between ground and air. 
-
 We wanted to devolve as much of the responsibility for control from the pilot by using absolute angle measurements to provide feedback to the UAV. This poses a more difficult control problem and although we have a demonstrably working control system, we were not able to achieve full, independent, stable flight.
-
 Designing and building our own chassis out of acrylic sheets allowed us to come in on budget, but meant that the frame was extremely brittle and heavy, meaning testing the drone safely and non-destructively became a challenge.
-
-Our successful extra features; servo-actuated cargo acquisition, IR sensor telemetry, real-time PID tuning, communications encryption, battery voltage reading were only integrated once the more critical modules had been completed. 
+Our successful extra features; servo-actuated cargo acquisition, IR sensor telemetry, real-time PID tuning, communications encryption, battery voltage reading were only integrated once the more critical modules had been completed.
   
 
 2) Quality of Electronic Design
 
 We wanted separate micro-controllers for the on-board communications and control modules. This presented the considerable problem of synchronising communications between these two sub-systems. 
-
 Utilising the on-chip DMP on the IMU allowed us to acquire pre-processed attitude data which massively reduced the computing strain on our micro-controller. This gives us parallel processing of the past and present IMU data thus giving us a finer resolution for control. This introduces the problem of synchronising these separate processes. 
-
 Use of PWM controlled ESCs meant we needed 4 16-bit timer outputs from the control sub-system to finely adjust our motors. This meant upgrading to a more powerful micro-controller.
-
 The Power Distribution Board (PDB) meant we could power all the on-board components from the same supply and meant we could reliably power up. This did increase the weight of the drone.
 
 
 3) Ease of Use
 
 Our start-up sequence includes a number of safety features; IMU settling time, motor arming sequence, optional ESC calibration. 
-
 The pilot interface is a standard UAV set-up, except that the throttle is centred at zero and not free-floating. 
-
 The controller is ergonomic and can be run off batteries. 
-
 The current lack of LEDs indicating the front makes piloting difficult at large distances.
 
 
 4) Creativity and Innovation
 
 We designed our own servo-actuated cargo hook to enable quick and easy pick-up and drop-off of the cargo. This adds weight and complexity to the electronics, but was easy to bolt onto the critical path design.
-
 We were able to read the altitude and battery level in real time using a serial terminal. This could be implemented using the Il Matto TFT screen so the Laptop isn't required.
-
 The ability to repair the chassis quickly and easily allowed for rapid testing, but this unbalanced the weight distribution of the drone and led to inconsistent test flights.
 
 
 5) Aesthetics
 
 Transparent acrylic chassis is less of an eye-sore, but equally makes piloting at a long distance difficult. Etching into the plastic to add our company name makes it easily identifiable as a brand.
-
 Our controller also matches the aesthetic style of the drone. The switches are placed at convenient locations for rapid killing of motors if necessary.
-
 The coat-hanger wire propeller guards are minimalistic but robust enough to deal with low velocity impacts.
-
 As this is still a prototype there are flying wires used but we used ribbon cable wherever possible to minimise crossed wires.
 
 
@@ -64,9 +49,7 @@ My Life for the last 3 weeks
 The UAV powers up correctly and consistently on connection to the LiPo.
 The Communications system was heavily tested to ensure we could conduct test flights safely.
 We achieved tethered single axis stability through a number of tests.
-
 The current cargo acquisition hook doesn't fully extend and gets stuck in a particular position.
 We cannot reliably achieve stable flight, but this only requires tuning of the PID gains.
-
 Throughout our fully integrated testing, the electronics systems remained robust and very rarely experienced a failure.
 The chassis performed very well with regard to protecting the electronics from impacts.
