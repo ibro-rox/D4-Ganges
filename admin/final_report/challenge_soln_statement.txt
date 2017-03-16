@@ -1,0 +1,31 @@
+﻿Challenge Solution statement
+
+Same-day parcel delivery is a difficult proposition for many businesses, even those that restrict the service to large cities. The current solution of couriers using vans and motorcycles is inefficient due to congestion in built up areas, especially if the deliveries are spread out across a delivery district. To improve efficiency of small parcel deliveries, Team Ganges proudly presents its Project Itchen prototype – a UAV designed from the ground up for cargo transport. By opening the skies to Itchen for its deliveries, same-day delivery will no longer be restricted to cities and become a reality for customers across the country. 
+
+Many commercially available UAVs exist on the market already, however the key thing holding them back from adoption in the deliveries market is the question of cargo. The most common type of payload-carrying drone is a camera drone, which has the payload securely affixed to the drone chassis. This is excellent during flight, but is less optimal for package delivery, as the recipient would have to approach the live UAV to remove the package. To solve this challenge, Team Ganges will provide a mechanism to drop-off the package once it has reached its destination and is at a low enough altitude. This will reduce the turn-around time of the drone and allow it to drop-off the package when the recipient is not present.
+
+The solution concept also addresses the problem of interference with other transmitters, through avoiding the use of a commercial transmitter in favour of a proprietary solution. This allows for the communications between the UAV and the Base Station to be encrypted, and the UAV identify true instructions from the base station over interference from other users and devices.
+
+Specification
+ - The UAV should use 4 2205 2300kV motors
+ - The motors must use an arming procedure
+ - The propellers shall be 5" in diameter with a pitch of 3"/rev
+ - Motor speeds shall be controlled by 1-2ms PWM ESCs (Electronic Speed Controllers)
+ - The UAV shall be powered by a single 3 Cell LiPo battery
+ - The battery capacity should be more than 1500mAh
+ - The Communications shall be in the ISM radio frequency band
+ - Telemetry data could be transmitted back to the base station
+ - Telemetry data could be stored locally on an SD Card 
+ - Telemetry Transmission rate should be 1 packet/second
+ - The IMU should produce new data at least 100 times per second
+ - The UAV should be able to drop off cargo whilst in flight
+ - The UAV could be able to pick up cargo whilst in flight
+ - The communications could be encrypted
+ - Packet loss from the communications should be less than 1 in 100
+ - Communications speed should be at least 400 packets/second (One 10-bit word per packet)
+ - The PID gain constants could be updated over the communications uplink
+ - The UAV should be able to detect altitudes of between 15cm to 100cm
+ - The control loop should update at a rate of at least 100 times/second to match IMU 
+ - The UAV should warn the user of low battery status
+ - The chassis should have a centre of mass within 5cm of the geometric centre
+ - UAV should recover from a 15 degree inclination.

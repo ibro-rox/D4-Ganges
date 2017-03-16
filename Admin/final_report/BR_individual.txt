@@ -1,42 +1,114 @@
 1) Contribution
 
-As team leader, my contribution to the project was more administrative than hands-on, however did include integrating all the design modules together. I gave myself some smaller auxillary roles involving tuning the PID controller, interfacing the IR sensor, managing power distribution, and measuring battery voltage. In addition to these roles I was involved to some degree in the development of every design module to ensure tasks were being completed successfully and would integrate smoothly, with minimal fault-finding required. 
+As team leader, my contribution to the project was more administrative than hands-on, however did include integrating all the design modules together. I gave myself some smaller auxiliary roles involving tuning the PID controller, interfacing the IR sensor, managing power distribution, and measuring battery voltage. In addition to these roles I was involved to some degree in the development of every design module to ensure tasks were being completed successfully and would integrate smoothly, with minimal fault-finding required. 
+
+For reference, full critical system integration is identified as: The Communications module sending instructions over a radio channel to an on-board receiver, which buffers and forwards the data to the control element, on request. The control element processes these and the IMU data to afford control to the motors.
 
 2) Specification
 
+2.1) Integration
+
+The communications and control modules need to fit together seamlessly so that the correct operation of both systems is not affected. The packet transmission time should not exceed 3ms to ensure that neither system is slowed too much by the interface.
+
+2.2) PID Tuning
+
+The PID gains of the controller for all three axes of rotation (Yaw, Pitch, Roll) must be tuned such that drone maintains stable flight for and responds accurately to the pilot's input. 
+
+2.3) Power Distribution
+
+Every component on-board must be correctly powered from a single LiPo battery. The controller must be powered by a USB supply from a Laptop.
+
+2.4) IR Sensor
+
+The IR Sensor must accurately measure the current altitude within its operating range (15 to 80cm) to aid the pilot in landing and cargo acquisition manoeuvres.
+
+
 3) Design and Simulation
 
-The main point of intersection between the communications and control sub-systems, is the UART interface between the on-board Il-Matto and Arduino Leonardo boards. This interface is difficult to achieve without causing each of the sub-systems to become too laggy to effectively control the UAV. In this setup we took the control system to be more critical to the safe operation of the UAV. As such, the Leonardo board was made the 'Master' in this interface so it could request new TYPR (Throttle Yaw Pitch Roll) values when desired. The Il Matto would interrupt, set a flag, and send the TYPR packet at the next available opportunity. This has to happen 100 times per second to match the Gyroscope data rate. 
+
+3.1) Communications and Control Integration
+
+The main point of intersection between the communications and control sub-systems, is the UART interface between the on-board Il Matto and Arduino Leonardo boards. This interface is difficult to achieve without causing each of the sub-systems to become too laggy to effectively control the UAV. In this set-up we took the control system to be more critical to the safe operation of the UAV. As such, the Leonardo board was made the 'Master' in this interface so it could request new TYPR (Throttle Yaw Pitch Roll) values when desired.
+
+Our packet format was dictated by the fact that the serial library chosen could only transmit 8-bit bytes. To simplify the process we constructed a packet format of 
+
+ The Il Matto would interrupt, set a flag, and send the TYPR packet at the next available opportunity. This has to happen 100 times per second to match the IMU data rate. This process is shown in the control flow diagram.
 
 *** INSERT CONTROL FLOW DIAGRAM ***
 
-By consulting the communications and control sub-system teams, to see what they wanted from the interface, I wrote a test program investigating each side of the interface to verify the operation and speed of this protocol. The results are shown ***SOMEWHERE-INSERT SCOPE CAPTURE"***. This meant that, when we were able to do a critical path test, I could simply add my interfacing program to the existing communications and control sub-systems, knowing that it already worked correctly.
+The protocol could not have packets which exceed 3ms in length. To achieve this we initially tested with a baud rate of 9600, however we found this to be too slow to transmit our 17 byte packets. ***DOUBLE CHECK THIS!*** 
 
-For power distribution we wanted to use a single 11.1V 3s LiPo battery to power all onboard components. This required a power distribution board (PDB) with could handle the current spikes due to rapid changes in thrust and also supply a smooth 5V to the Arduino and Il Matto. The Il Matto already contains a 3V3 voltage regulator which needs a minimum 4.5V input to operate correctly. The current requirements on the PDB meant I had to supplement the tri-pad board with an additional cable and solder. This ensured we could safely operate the motors at high thrust without damaging the LiPo or the rest of the UAV. Of course this extra cable added weight to the drone. Initially to verify the correct operation of the PDB I used a bench DMM to check for continuity errors, then powered the ESCs without motors connected. The 5V regulator was then added and again tested using the above procedure, with the Arduino and Il Matto boards instead of the ESCs. Next, I performed a full power distribution test with all components connected, using a current limited (500mA) PSU to protect from unexpected current surges, but without driving the motors. Following these successful tests I powered all the components including the motors simultaneously, again with a current limit (5A). Finally a full PDB test with the LiPo battery was performed which was successful on the first test, as expected.
+3.2) PID Tuning 
 
-As part of the design process I compiled our design plan into a high-level block diagram and later an EAGLE schematic of the complete electronic design. This EAGLE schematic allowed us to accurately plan out our on-board layout and ensure that we had enough power connections for every component. This schematic was also used as a reference by the team to ensure consistent assembly of the circuitry. 
+In order to gauge how to tune our PID controller, we researched PID gain values for similar Quad-copter configurations, as well as the methods for fine tuning the control. Since the PID gains vary considerably from one drone to the next, these researched values were used as initial 'ballpark' values which we would later refine during the tuning stage. We wanted to implement a feature which would allow us to update PID gains 'on the fly' but we were not able to get this to work efficiently.
 
-I would say that we should have re-evaluated our approach to flight testing, and i::
+3.3) Power Distribution
 
+For power distribution we wanted to use a single 11.1V 3s LiPo battery to power all on-board components. This required a power distribution board (PDB) with could handle the current spikes due to rapid changes in thrust but also supply a smooth 5V to the Arduino and Il Matto. The Il Matto already contains a 3V3 voltage regulator which needs a minimum 4.5V input to operate correctly. The current requirements on the PDB meant I had to supplement the tri-pad board with an additional cable and solder. This ensured we could safely operate the motors at high thrust without damaging the LiPo or the rest of the UAV. Of course this extra cable added weight to the drone. 
 
-Initially, our approach to testing our fully integrated UAV was to tether it down and throttle it to see if it could enter a stable flight. This testing method proved fruitless as the UAV was never under its own control, but instead was influenced by the tethering setup. We concluded that we ought to let the drone fly free of tethers in a wide open space. Unfortunately, this led to the back legs and feet snapping off a number of times due to a consistent pitch backwards on take-off. We re-evaluated our approach to tuning the PID controller. Instead of trying to tune all the axes of rotation concurrently, we decided to suspend the drone such that only one axis was rotated around (Dubbed Balance testing). The center of mass was intially placed (wrongly) below the axis of rotation leading to incorrect PID values. We realised this error and continued testing with the centre of mass now above the axis of rotation, leading to an inherently more unstable initial condition, which offered a better test of the control. Again, we saw the consistent pitch backward being exhibited by the drone. After an exhaustive debugging procedure we concluded that the problem lay in one of the ESCs being un-calibrated with respect to the other three and as such never provided the balanced thrust required to maintain stable flight. After this was rectified we contained with the balance testing, to great effect. We were able to perform tuning of the Pitch and Roll PID values but were unable to tune the Yaw control, or indeed do a full flight test, before the final handin. 
+3.4) The IR sensor has proprietary chip which handles the signal processing involved in estimating the distance. This module then outputs an analogue voltage when powered. This means the IR sensor effectively acts like potentiometer. I wrote a test program which performs a 10-bit ADC conversion and outputs the ADC value over a UART interface to the PuTTY terminal. The ADC value is not the actual distance so must be converted to a distance in cm. The approximate relation is ***INSERT IR SENSOR EQN M'HERE WITH REFERENCE TO THE DATASHEET***. This relation can vary from sensor to sensor so a calibration routine must be implemented to be able to collect reasonable data.  
+
+3.5) As part of the design process I compiled our design plan into a high-level block diagram and later an EAGLE schematic of the complete electronic design. This EAGLE schematic allowed us to accurately plan out our on-board layout and ensure that we had enough power connections for every component. This schematic was also used as a reference by the team to ensure consistent assembly of the circuitry. (Appendix C of Team Report)
 
 
 4) Testing and Results
 
+
+4.1) By consulting the communications and control sub-system teams, to see what they wanted from the interface, I wrote a test program investigating each side of the interface to verify the operation and speed of this protocol. These results are show that the used Baud Rate of 9600 is too  ***SOMEWHERE-INSERT SCOPE CAPTURE"***. This meant that, when we were able to do the critical path test, I could simply add my interfacing program to the existing communications and control sub-systems, knowing that it already worked correctly. 
+
+4.2) Initially, our approach to testing our fully integrated UAV was to tether it down and throttle it to see if it could enter a stable flight. This testing method proved fruitless as the UAV was never under its own control, but instead was influenced by the tethering set-up.
+***INSERT TETHERED SETUP PICTURE M'HERE***
+ We concluded that we ought to let the drone fly free of tethers in a wide open space. Unfortunately, this led to the back legs and feet snapping off a number of times due to a consistent pitch backwards on take-off. We re-evaluated our approach to tuning the PID controller. Instead of trying to tune all the axes of rotation concurrently, we decided to suspend the drone such that only one axis was rotated around (Dubbed Balance testing).
+***INSERT INITIAL BALANCE TESTING PIC***
+  The centre of mass was initially placed (wrongly) below the axis of rotation leading to incorrect PID values. We realised this error and continued testing with the centre of mass now above the axis of rotation. This gave us an inherently more unstable initial condition, which offered a better test of the control.
+***INSERT FINAL BALANCE TESTING PIC***
+   Again, we saw the consistent pitch backward being exhibited by the drone. After an exhaustive debugging procedure we concluded that the problem lay in one of the ESCs being un-calibrated with respect to the other three and as such never provided the balanced thrust required to maintain stable flight. After this was rectified we contained with the balance testing, to great effect.
+***INSERT PICTURE SHOWING SUCCESSFUL BALANCE TEST***
+    We were able to perform tuning of the Pitch and Roll PID values but were unable to tune the Yaw control, or indeed do a full flight test, before the final hand-in. 
+
+4.3) Initially to verify the correct operation of the PDB I used a bench DMM to check for continuity errors, then powered the ESCs without motors connected. The 5V regulator was then added and again tested using the above procedure, with the Arduino and Il Matto boards instead of the ESCs. Next, I performed a full power distribution test with all components connected, using a current limited (500mA) PSU to protect from unexpected current surges, but without driving the motors. Following these successful tests I powered all the components including the motors simultaneously, again with a current limit (5A). Finally a full PDB test with the LiPo battery was performed which was successful on the first test, as expected.
+
+4.4) To calibrate the IR sensor very roughly I placed a planar surface at 75cm from the sensor, measured the ADC value at that distance, then scaled the conversion to the desired value (75cm). This gave us a reasonably good approximation of the current altitude, if the drone was below 1m in altitude. To improve our altitude measuring capabilities we could have included an ultra-sound module but our research showed that the very noisy environment created by the motors severely affects the the accuracy of the ultrasound modules. Another option could be using a barometric sensor to detect altitude change due to changing air pressure. 
+
+
 5) Management
 
-As team leader, my approach to managing the team was to designate specific roles to the team as early on as possible, whilst ensuring everyone was content with their role and place in the team. Built into this strategy was a sense of redundancy, in that no one was solely responsible for a particular sub-system. This meant that if a team member was away from meetings or working sessions, we would still be able to discuss problems reasonably well. Fortunately the entire team was very responsive to this and were very consistent in attending meetings and lab time. We worked coesively as a single unit throughout the duration of the project with no personal conflicts or arguing. The only disagreements were due to different approaches to the same engineering problem, which lent itself to a very healthy working environment. I felt it was important that the team met and worked together face-to-face at every opportunity, but also allowed for a period of time away from the project, unless there was a critical task that needed to be performed. 
+5.1) Approach to Management
 
-After a couple of days of intial research into the project, it became clear who was suitable for certain roles within the team. I partioned the team such that one pair was responsible for communications (J Trickey and M Ibrahim) and another pair (L Gray and J Hindmarsh) were responsible for control. I worked closely with both pairs throughout the project, with them consulting me to ensure consitency in the design and keeping me up to date with their progress or resolving any issues quickly and efficiently. This meant when we came to integrate modules together I already had a firm grasp of the entire system functionality, easing the integration process.
+As team leader, my approach to managing the team was to designate specific roles to the team as early on as possible, whilst ensuring everyone was content with their role and place in the team. Built into this strategy was a sense of redundancy, in that no one was solely responsible for a particular sub-system. This meant that if a team member was away from meetings or working sessions, we would still be able to discuss problems reasonably well. Fortunately the entire team was very responsive to this and were consistent in attending meetings and lab time. We worked cohesively as a single unit throughout the duration of the project with no personal conflicts or arguing. The only disagreements were due to different approaches to the same engineering problem, which lent itself to a very healthy working environment. I felt it was important that the team met and worked together face-to-face at every opportunity, but also allowed for a period of time away from the project. 
 
-For convenience full critical system integration is identified as the Communications moduele sending instructions over RF to the control element which processes these and the IMU data to afford control to the motors. With regard to the planning process we identified a critical path for the construction of the drone electronics, that would enable basic functionality that we could work on in the labs. Up until the point we could perform a full critical system integration, we worked on some of the extra functions if and only if the critcal task had already been performed. We planned for full critical system integration to be finalised on Thursday 9th March and from that point onwards we would concerntrate on tuning our PID controller and adding extra functionality if possible.
+5.2) Management Roles
 
-We drew a fairly broad risk assessment, based on our intensive research, early on in the project and fortunately very little went wrong in our approach to the electronic systems, that we didn't expect to go wrong. The chassis did shatter a number of times during flight and tethered tests, but we always ensured we were able to bring the drone back to flying condition or left enough time to manufacture a completely new frame. Any expected long term absences (more than 24hrs) were declared to me by the team in the first few days of the project so we could work around the team members' schedule without compromising the progress of the project.
+I designated the team to complete various administrative roles within the team which would continue throughout the project. These included Treasurer(L Gray), Minutes(J Trickey), Documentation/Photography(M Ibrahim) and external communications(J Hindmarsh). Each of the team members had these auxiliary roles to fulfil. 
 
-In conclusion, with regard to my managerial approach, I would say that it was a true pleasure to manage such a dedicated, motivated, and intelligent team. The team always worked together as a unit which made it a true team effort. They made my experience on the project very enjoyable. 
+5.3) Designating Technical Roles
+
+After a couple of days of initial research into the project, it became clear who was suitable for certain roles within the team. I partitioned the team such that one pair was responsible for communications (J Trickey and M Ibrahim) and another pair (L Gray and J Hindmarsh) were responsible for control. I worked closely with both pairs throughout the project, with them consulting me to ensure consistency in the design and keeping me up to date with their progress. This included resolving any issues quickly and efficiently. This meant when we came to integrate modules together I already had a firm grasp of the entire system functionality, easing the integration process.
+
+5.4) Project Planning
+
+With regard to the planning process we identified this as the critical path for the construction of the drone electronics, that would enable basic functionality. Up until the point we could perform a full critical system integration, we worked on some of the extra functions if and only if the critical task had already been performed. We planned for full critical system integration to be finalised on Thursday 9th March and from that point onwards we would concentrate on tuning our PID controller and adding extra functionality if possible.
+
+5.5) Risk Management
+
+We drew up a fairly broad risk assessment, based on our intensive research early on in the project. Fortunately, very little went wrong in our approach, that we didn't expect to go wrong. The chassis did shatter a number of times during flight and tethered tests, but we always ensured we were able to bring the drone back to flying condition or left enough time to manufacture a new frame. Any expected long term absences (more than 24hrs) were declared to me by the team in the first few days of the project so we could work around the team members' schedule without compromising the progress of the project.
+
+5.6) Reflections on Management
+
+In conclusion, with regard to my managerial approach, I would say that it was a true pleasure to manage such a dedicated, motivated, and intelligent team. We always worked together as a unit. They made my experience on the project very enjoyable. 
 
 
 
 
 6) Evaluation and Reflection
+
+Overall, I am pleased with how we developed the project. Although we were not able to sustain a stable flight in the testing phase, the process we went through to get to that stage was challenging and fulfilling. 
+Retrospectively, we should have re-evaluated our approach to flight testing procedure, and approached it in a more structured and thoughtful way.
+
+
+References	PID tuning guide - http://iflyquad.com/2016/01/05/depth-pid-tuning-guide/
+			Basic Quadcopter control - http://andrew.gibiansky.com/downloads/pdf/Quadcopter%20Dynamics,%20Simulation,%20and%20Control.pdf
+			How to recognise incorrect PID - https://www.youtube.com/watch?v=YNzqTGEl2xQ
+
+Appendices
+Appendix A - Pictures

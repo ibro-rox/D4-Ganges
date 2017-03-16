@@ -27,7 +27,18 @@ struct euler_angles {
 uint8_t is_valid_packet(struct euler_angles *input);
 void send_packet(struct euler_angles *input);
 
-void adc_init();
+void init_adc();
 uint16_t adc_read(int n);
 
 void init_timer();
+
+#define SERVO_PWM_DUTY_MAX 20
+#define SERVO_PWM_DUTY_MIN 1
+#define PWM_PRESCALER 8UL
+#define PWM_FREQUENCY 50
+#define PWM_OFFSET 0
+
+void init_pwm(void);
+void pwm_duty(uint8_t duty);
+
+void init_interrupt();

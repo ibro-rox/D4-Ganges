@@ -54,7 +54,6 @@ void Retrieve_data(uint8_t* type, uint16_t* data)
 		totalpacket = Decrypt_data(totalpacket);
 	#endif // ENCRYPTION_ENABLED
 
-
 	// Split the decrypted packet into the data and the packet type
 	Decode_data(type, data, totalpacket);
 }

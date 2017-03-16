@@ -1,0 +1,34 @@
+Appendix C gives a high-level block diagram of the final design of the system.
+
+---------------
+COMMUNICATIONS
+---------------
+
+The ground control and the drone communicate with each other over a 433MHz FSK scheme using RFM12B-S2 transceiver modules. These modules are both controlled by Il Mattos using the SPI protocol and a micro-controller library. Potentiometer and switch data is sent to the drone and telemetry is sent back to the base.
+
+The Spektrum DX6e remote control transmitter and receiver system was rejected at the design stage as it would require taking four PWM outputs from the receiver into the micro-controller which proved difficult in early testing. 
+
+---------------
+UAV
+---------------
+On-board the drone, there are two micro-controllers - an Arduino Leonardo and an Il Matto. 
+
+The Leonardo handles the PID control to ensure stable flight according to the user's control inputs. It achieves this by receiving angle data from a IMU module over an I2C interface and controller inputs from the Il Matto using UART. After processing this data, it controls the flight of the UAV through four PWM channels to four ESCs, which in turn control four 2205 brushless motors using higher power three-phase control signals.
+
+The Il Matto is responsible for receiving the user's inputs from the transceiver module and passing on potentiometer data to the Leonardo when requested. It also controls a servo using PWM to raise and lower the cargo hook as per the data received from switches on the ground. It also sends telemetry received from an IR sensor and a battery voltage circuit back to the ground through the transceivers. SD card is not present on the final design.
+
+This system is powered by a 1550mAh 11.1V LiPo battery via a power distribution circuit that ensures the correct voltage is supplied to each component on-board the UAV.
+
+For the chassis, a clear acrylic I-frame was laser-cut and glued together with Super Glue.
+
+Using two micro-controllers to handle control and communications separately, allows the control to remain accurate by reducing computational strain, and a faster data rate from the ground to be achieved. The PWM outputs to the ESCs only use a very small range of timer values. This requires the timers to have a high precision to ensure fine control of the motors. Initially, an Il Matto was considered for the control but as this only supplies one 16-bit timer and two 8-bit timers, it was decided that this would not supply the required precision. The Leonardo on the other hand has two 16-bit timers with 4 outputs which allow sufficient control of its PWM outputs. 
+
+For communications, the Il Matto was used as we have experience of programming it, and it has the required hardware to interface with the various modules on the drone.
+
+---------------
+GROUND CONTROL
+---------------
+On the ground, an Il Matto uses its built-in ADC to take four different analogue voltages from two X-Y potentiometers for user-controlled thrust, yaw, pitch, and roll. It sends this data to a transceiver for transmission to the drone. Switches taken as inputs to the Il-Matto, allow the user to control the cargo hook, toggle between PID and flight mode, and activate a kill switch for safety. A UART interface with a PC allows telemetry to be read and logged, and new K values for the PID controller to be input.
+
+As an Il Matto was being used with the transceiver on the drone, the use of an Il Matto on the ground made software easier to develop.
+
