@@ -8,11 +8,11 @@ For reference, full critical system integration is identified as: The Communicat
 
 2.1) Integration
 
-The communications and control modules need to fit together seamlessly so that the correct operation of both systems is not affected.
+The communications and control modules need to fit together seamlessly so that the correct operation of both systems is not affected. The packet transmission time should not exceed 3ms to ensure that neither system is slowed too much by the interface.
 
 2.2) PID Tuning
 
-The PID gains of the controller for all three axes of rotation (Yaw, Pitch, Roll) must be tuned such that drone maintains stable flight and responds accurately to the pilot's input. 
+The PID gains of the controller for all three axes of rotation (Yaw, Pitch, Roll) must be tuned such that drone maintains stable flight for and responds accurately to the pilot's input. 
 
 2.3) Power Distribution
 
@@ -20,7 +20,7 @@ Every component on-board must be correctly powered from a single LiPo battery. T
 
 2.4) IR Sensor
 
-The IR Sensor must accurately measure the current altitude within its operating range (15 to 80cm) to aid the pilot in landing and cargo acquisition manoeuvres
+The IR Sensor must accurately measure the current altitude within its operating range (15 to 80cm) to aid the pilot in landing and cargo acquisition manoeuvres.
 
 
 3) Design and Simulation
@@ -28,9 +28,15 @@ The IR Sensor must accurately measure the current altitude within its operating 
 
 3.1) Communications and Control Integration
 
-The main point of intersection between the communications and control sub-systems, is the UART interface between the on-board Il Matto and Arduino Leonardo boards. This interface is difficult to achieve without causing each of the sub-systems to become too laggy to effectively control the UAV. In this set-up we took the control system to be more critical to the safe operation of the UAV. As such, the Leonardo board was made the 'Master' in this interface so it could request new TYPR (Throttle Yaw Pitch Roll) values when desired. The Il Matto would interrupt, set a flag, and send the TYPR packet at the next available opportunity. This has to happen 100 times per second to match the IMU data rate. This process is shown in the control flow diagram.
+The main point of intersection between the communications and control sub-systems, is the UART interface between the on-board Il Matto and Arduino Leonardo boards. This interface is difficult to achieve without causing each of the sub-systems to become too laggy to effectively control the UAV. In this set-up we took the control system to be more critical to the safe operation of the UAV. As such, the Leonardo board was made the 'Master' in this interface so it could request new TYPR (Throttle Yaw Pitch Roll) values when desired.
+
+Our packet format was dictated by the fact that the serial library chosen could only transmit 8-bit bytes. To simplify the process we constructed a packet format of 
+
+ The Il Matto would interrupt, set a flag, and send the TYPR packet at the next available opportunity. This has to happen 100 times per second to match the IMU data rate. This process is shown in the control flow diagram.
 
 *** INSERT CONTROL FLOW DIAGRAM ***
+
+The protocol could not have packets which exceed 3ms in length. To achieve this we initially tested with a baud rate of 9600, however we found this to be too slow to transmit our 17 byte packets. ***DOUBLE CHECK THIS!*** 
 
 3.2) PID Tuning 
 
@@ -48,7 +54,7 @@ For power distribution we wanted to use a single 11.1V 3s LiPo battery to power 
 4) Testing and Results
 
 
-4.1) By consulting the communications and control sub-system teams, to see what they wanted from the interface, I wrote a test program investigating each side of the interface to verify the operation and speed of this protocol. The results are show that  ***SOMEWHERE-INSERT SCOPE CAPTURE"***. This meant that, when we were able to do the critical path test, I could simply add my interfacing program to the existing communications and control sub-systems, knowing that it already worked correctly. 
+4.1) By consulting the communications and control sub-system teams, to see what they wanted from the interface, I wrote a test program investigating each side of the interface to verify the operation and speed of this protocol. These results are show that the used Baud Rate of 9600 is too  ***SOMEWHERE-INSERT SCOPE CAPTURE"***. This meant that, when we were able to do the critical path test, I could simply add my interfacing program to the existing communications and control sub-systems, knowing that it already worked correctly. 
 
 4.2) Initially, our approach to testing our fully integrated UAV was to tether it down and throttle it to see if it could enter a stable flight. This testing method proved fruitless as the UAV was never under its own control, but instead was influenced by the tethering set-up.
 ***INSERT TETHERED SETUP PICTURE M'HERE***
@@ -66,7 +72,6 @@ For power distribution we wanted to use a single 11.1V 3s LiPo battery to power 
 
 
 5) Management
-
 
 5.1) Approach to Management
 
