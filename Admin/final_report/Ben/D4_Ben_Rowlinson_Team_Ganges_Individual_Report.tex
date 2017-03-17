@@ -54,6 +54,7 @@ Dr Yoshishige Tsuchiya\\
 \nomenclature{DMM}{Digital Multimeter}
 \nomenclature{ESC}{Electronic Speed Controller}
 \nomenclature{PSU}{Power Supply Unit}
+\nomenclature{Il Matto/Il-Matto/MCU}{Il Matto Micro-controller development board}
 \printnomenclature
 \newpage
 
@@ -72,73 +73,89 @@ Every component on-board must be correctly powered from a single LiPo battery, v
 \subsection{IR Proximity Sensor}
 The IR Sensor must accurately measure the current altitude within its operating range (15 to 100cm) to aid the pilot in landing and cargo acquisition manoeuvres.
 \subsection{Battery Voltage Measurement}
-The Battery Voltage Measurement circuit must measure the Battery voltage to an accuracy of 0.1V, without drawing a high current ($\leq$0.1mA), so the pilot can monitor the power usage of the UAV.
+The Battery Voltage Measurement circuit must measure the Battery voltage to an accuracy of $\pm$0.1V, without drawing a high current ($\leq$0.1mA), so the pilot can monitor the power usage of the UAV.
 
 \section{Design and Simulation}
 \subsection{Communications and Control Integration}
-The main point of intersection between the communications and control sub-systems, is the UART interface between the on-board Il Matto and Arduino Leonardo boards. This interface can be difficult to achieve without causing each of the sub-systems to experience too much latency to effectively control the UAV. In this design, we took the control system to be more critical to the safe operation of the UAV. As such, the Leonardo board was made the 'Master' in this interface, so it could request new TYPR values when desired. Our design called for a maximum packet transmission time of ~3ms. Equation \ref{eqn:Data Rate} shows how to calculate the time taken to transmit a packet. 
+The main point of intersection between the communications and control sub-systems, is the UART interface between the on-board Il Matto and Arduino Leonardo boards. By consulting the communications and control sub-system teams, we drew up an initial control flow diagram for the Leonardo (Figure \ref{fig:Control Flow} in Appendix \ref{app:Figures}). I will be focusing on the "Request desired TYPR data" and "Receive desired TYPR data" sections.\\ 
+The interface between these modules can be difficult to achieve without causing each of the sub-systems to experience too much latency to effectively control the UAV. In this design, we took the control system to be more critical to the safe operation of the UAV. As such, the Leonardo board was made the 'Master' in this interface, so it could request new TYPR values when desired. Our design called for a maximum packet transmission time of ~3ms. Equation \ref{eqn:Data Rate} shows how to calculate the time taken to transmit a packet. 
 
 \begin{equation}
-Time Taken = (Number Of Bytes \times Byte Length) \div Baud Rate
+Time\_Taken = (Number\_Of\_Bytes \times Byte\_Length) \div Baud\_Rate
 \label{eqn:Data Rate}
 \end{equation} 
 
- When the Leonardo wants to receive data it interrupts the Il Matto on the rising edge of a short pulse (using pulse() in onboard\_serial\_comms.ino line???). This would set a flag (serial\_interrupt\_flag) on the Il Matto, which would send the TYPR packet at the next available opportunity. This has to happen 100 times per second to match the IMU data rate. The entire control process is shown in the control flow diagram (Figure \ref{fig:Control Flow} in Appendix \ref{app:Figures}).//
- 
-Our packet format was dictated by the fact that the serial library chosen could only transmit 8-bit bytes, plus 1 start and 1 stop bit. To simplify the receiving procedure we constructed a 17-byte packet format of \["t\%d\%d\%dy\%d\%d\%dp\%d\%d\%dr\%d\%d\%d\backslash n"\]
-The chars 't', 'y', 'p' and 'r' are identifiers. '\%d' is an int 0-9 with the 10-bit ADC value from the X-Y potentiometers being represented by "\%d\%d\%d". The packet is closed by a newline character '$\backslash$n'. The Arduino then leaves the receiving function after changing the desired TYPR values. The ADC values only range from 256 to 768 therefore only "\%d\%d\%d" is needed to represent the full range of ADC values. This is by no means an optimal solution but significantly eases the receiving procedure on the Leonardo, as the string can be read in 1 char at time and the values simply assigned to the correct TYPR value. A similar procedure could be used to update PID gain values.  
+\[Number\_of\_Bytes = 17\]
+\[Byte\_Length = 10\]
+\[Baud\_Rate = 57600\]
+
+ When the Leonardo wants to receive data it interrupts the Il Matto on the rising edge of a short pulse (using pulse() in AccelGyro.ino line???). This sets a flag (serial\_interrupt\_flag) on the Il Matto, which sends the TYPR packet at the next available opportunity, and resets the flag. This has to happen 100 times per second to match the IMU data rate.\\
+Our packet format was dictated by the fact that the serial library chosen could only transmit 8-bit bytes, plus 1 start and 1 stop bit. To simplify the receiving procedure we constructed a 17-byte packet format of \["t\%c\%c\%cy\%c\%c\%cp\%c\%c\%cr\%c\%c\%c\backslash n"\]
+The chars 't', 'y', 'p' and 'r' are identifiers. '\%c' is a char 0-9, with the 10-bit ADC value from the X-Y potentiometers being represented by "\%c\%c\%c". The packet is closed by a newline character '$\backslash$n'. The Arduino then leaves the receiving function (serial\_event() in AccelGyro.ino line???) after changing the desired TYPR values. The ADC values only range from 256 to 768 therefore only "\%c\%c\%c" is needed to represent the full range of ADC values we are expecting. This is by no means an optimal solution but significantly eases the receiving procedure on the Leonardo, as the string can be read in 1 char at time into a string. The string is then converted to an int and assigned to the correct TYPR value. A similar procedure could be used to update PID gain values.  
 
 
 \subsection{PID Tuning}
-In order to gauge how to tune our PID controller, we researched PID gain values for similar Quad-copter configurations, as well as the methods for fine tuning the control. Since the PID gains vary considerably from one drone to the next, these researched values were used as initial values which we would later refine during the tuning stage. We wanted to implement a feature which would allow us to update PID gains 'on the fly' but we were not able to get this to function correctly.
+In order to gauge how to tune our PID controller, we researched PID gain values for similar Quad-copter configurations, as well as the methods for fine tuning the control \cite{PID tuning guide}\cite{Quadcopter Control Theory}. Since the PID gains vary considerably from one drone to the next, these researched values and methods were used as initial values which we would later refine during the tuning stage. We wanted to implement a feature which would allow us to update PID gains 'on the fly' but we were not able to get this to function correctly.
+
 \subsection{Power Distribution}
-For power distribution we wanted to use a single 11.1V 3s LiPo battery to power all on-board components. This required a PDB with could handle the current spikes due to rapid changes in thrust but also supply a smooth 5V to the Arduino and Il Matto. The Il Matto already contains a 3V3 voltage regulator which needs a minimum 4.5V input to operate correctly. The current requirements on the PDB meant I had to supplement the tri-pad board with an additional cable and solder. This ensured we could safely operate the motors at high thrust without damaging the LiPo or the rest of the UAV. Of course this extra cable added weight to the drone. 
+For power distribution we wanted to use a single 11.1V 3s LiPo battery to power all on-board components. This required a PDB which could handle the current spikes due to rapid changes in thrust but also supply a smooth 5V to the Arduino and Il Matto. The Il Matto already contains a 3V3 voltage regulator which needs a minimum 4.5V input to operate correctly. The current requirements on the PDB meant I had to supplement the tri-pad board with additional cable and solder. This ensured we could safely operate the motors at high current without damaging the LiPo or the rest of the UAV. This extra cable added weight to the drone. The schematic for the PDB is found in Appendix C of the Team Report.
+
 \subsection{IR Proximity Sensor}
-The IR sensor has proprietary chip which handles the signal processing involved in estimating the distance. This module then outputs an analogue voltage when powered. This means the IR sensor effectively acts like potentiometer. I wrote a test program which performs a 10-bit ADC conversion and outputs the ADC value over a UART interface to the PuTTY serial terminal. The ADC value is not the actual distance so must be converted to a distance in cm. The approximate relation is shown in Equation \ref{eqn:IR Voltage} and Equation \ref{eqn:IR Distance} .
+The Sharp GP2Y0A21YK0F IR Proximity Sensor has proprietary chip which handles the signal processing involved in estimating the distance. This module then outputs an analogue voltage when powered, which corresponds to the distance according to Figure 2 in the IR Sensor Datasheet\cite{IR Sensor Datasheet}. This output means the IR sensor effectively acts like potentiometer. A test program was written which performs a 10-bit ADC conversion and outputs the ADC value over a UART interface to a serial terminal (PuTTY).\\ The ADC value is not the actual distance so must be converted to a distance in cm. The approximate conversion and relation is shown in Equation \ref{eqn:IR Voltage} and Equation \ref{eqn:IR Distance} respectively.
 
 \begin{equation}
-voltage = (adc_{val}*V_{cc})/adc_{res} 
+V_{IR} = (adc_{val}*V_{cc})/adc_{res}
 \label{eqn:IR Voltage}
 \end{equation}
 
+\[V_{cc} = 3.3V\]
+\[adc_{res} = 2^{10} = 1024\]
+
 \begin{equation}
-distance \approx k/voltage
+distance \approx k_{IR}/V_{IR}
 \label{eqn:IR Distance}
 \end{equation}
-The constant k can vary from sensor to sensor so a calibration routine must be implemented to be able to collect reasonable data. For our sensor we found: \[k\approx24\]
+The constant k can vary from sensor to sensor so a calibration routine must be implemented to be able to collect reasonable data. For our sensor we found: \[k_{IR}\approx24\] Any distance readings below 15cm or above 100cm can be disregarded by the pilot, as this is outside the accurate operating range of the sensor. The measurement only takes place when the on-board Il Matto transmits telemetry back to ground control.
 
 \subsection{Battery Voltage Measurement}
-Insert something about BVM
+The battery voltage of up to 12.6V must be stepped down to a safe input ($\leq$3.3V) for the Il Matto ADC input. This is achieved by taking a divided voltage into the Il Matto. This measurement only takes place when the on-board Il Matto transmits telemetry.
+
+\begin{equation}
+V_{adc} = (R_2 \times V_{LiPo})/(R_1 + R_2)
+\label{eqn:battery voltage}
+\end{equation}
+\[ R_1 = 100k\Omega \] 
+\[R_2 = 33k\Omega \]
+
+The voltage into the Il Matto is converted to a 10-bit integer and transmitted back to ground control, where it is converted back to a float.
 
 \subsection{Schematic}
-As part of the design process I compiled our design plan into a high-level block diagram and later an EAGLE schematic of the complete electronic design. This EAGLE schematic allowed us to accurately plan out our on-board layout and ensure that we had enough power connections for every component. This schematic was also used as a reference by the team to ensure consistent assembly of the circuitry. (Appendix C of Team Report)
+As part of the design process, I compiled our design plan into a high-level block diagram and later an EAGLE schematic of the complete electronic design. This EAGLE schematic allowed us to accurately plan out our on-board layout and ensure that we had enough power connections for every component. This schematic was also used as a reference by the team to ensure consistent assembly of the circuitry. (Appendix C of Team Report)
 
 
 
 \section{Testing and Results}
 \subsection{Communications and Control Integration}
-By consulting the communications and control sub-system teams, to see what they wanted from the interface, I wrote a test program investigating each side of the interface to verify the operation and speed of this protocol. The protocol could not use packets which exceeded 3ms in time. The bottom, dark blue signal on these (Figure \ref{fig:9600 Baud} and Figure \ref{fig:57600 Baud} in \ref{app:Figures}) oscilloscope traces is the short pulse transmission from the Leonardo which requests the TYPR data.  
-
+I wrote a pair of test programs (onboard\_serial\_test\_ard\_3.ino and onboard\_serial\_test\_final.c) investigating each side of the interface to verify the operation and speed of the protocol described in 3.1. The protocol could not use packets which exceeded 3ms in time. The Channel 1 signal on these oscilloscope traces is the short pulse transmission from the Leonardo (line ?? of onboard\_serial\_test\_ard\_3.ino) which requests the TYPR data (line?? of onboard\_serial\_test\_final.c), shown on Channel 2 (Figure \ref{fig:9600 Baud} and Figure \ref{fig:57600 Baud} in Appendix \ref{app:Figures}).  \\
 We initially tested with a baud rate of 9600, however we found this to be too slow to transmit the 17 byte packets in the specified time of 3ms (One packet took ~17.71ms @ 9600). A reduced packet size of 13-bytes is still not able to achieve the correct data rate (Figure \ref{fig:9600 Baud} in Appendix \ref{app:Figures}). 
-Switching to a baud rate of 57600 we were able to transmit a packet in 2.95ms (Figure \ref{fig:57600 Baud} in Appendix \ref{app:Figures}).
-
-We attempted faster baud rates, such as 115200, but we found the data was more likely to be corrupted, so 57600 baud was settled on.
-These tests meant that when we were able to do the critical path test. I could simply add my interfacing program to the existing communications and control sub-systems, knowing that it already worked correctly.
+Switching to a baud rate of 57600 we were able to transmit a packet in 2.95ms (Figure \ref{fig:57600 Baud} in Appendix \ref{app:Figures}).\\
+We attempted faster baud rates, such as 115200, but we found the data was more likely to be corrupted, so 57600 baud was settled on.\\
+These tests meant that when we were able to do a critical path test, I could simply insert my interfacing program into the existing communications and control sub-systems, knowing that it already worked correctly.
 \subsection{PID Tuning}
-Initially, our approach to testing our fully integrated UAV was to tether it down and throttle it to see if it could enter a stable flight. This testing method proved fruitless as the UAV was never under its own control, but instead was influenced by the tethering set-up (Figure \ref{fig:Tethered} in Appendix \ref{app:Figures}).\\
-
- We concluded that we ought to let the drone fly free of tethers in a wide open space. Unfortunately, this led to the back legs and feet snapping off a number of times due to a consistent pitch backwards on take-off.\\ 
- We re-evaluated our approach to tuning the PID controller. Instead of trying to tune all the axes of rotation concurrently, we decided to suspend the drone such that only one axis was rotated around (Dubbed Balance testing : Figure \ref{fig:Initial Balance} in Appendix \ref{app:Figures}).\\
-
-  The centre of mass was initially placed below the axis of rotation leading to incorrect PID values. We realised this error and continued testing with the centre of mass now above the axis of rotation (Figure \ref{fig:Final Balance} in Appendix \ref{app:Figures}). This gave us an inherently more unstable initial condition, which offered a better test of the control. Again, we saw the consistent pitch backward being exhibited by the drone. After an exhaustive debugging procedure we concluded that the problem lay in one of the ESCs being un-calibrated with respect to the other three and as such never provided the balanced thrust required to maintain stable flight. After this was rectified we contained with the balance testing, to great effect.
-    We were able to perform tuning of the Pitch and Roll PID values but were unable to tune the Yaw control, or indeed do a full flight test, before the final hand-in.
+Initially, our approach to testing our fully integrated UAV was to tether it down and apply throttle to see if it could achieve a stable flight. This testing method proved fruitless as the UAV was never under its own control, but instead was heavily influenced by the tethering set-up (Figure \ref{fig:Tethered} in Appendix \ref{app:Figures}).\\
+We concluded that we ought to let the drone fly independently of tethers in a wide open space. Unfortunately, this led to the back legs and feet snapping off a number of times due to a consistent pitch backwards on take-off and landing.\\ 
+We re-evaluated our approach to tuning the PID controller. Instead of trying to tune all the axes of rotation concurrently, we decided to suspend the drone from string such that only one axis was rotated around (Dubbed Balance testing : Figure \ref{fig:Initial Balance} in Appendix \ref{app:Figures}). This practice was taken from \cite{How to recognise incorrect PI Gains}\\
+The centre of mass in these tests was initially placed below the axis of rotation leading to incorrect PID values. We realised this error and continued testing with the centre of mass now above the axis of rotation (Figure \ref{fig:Final Balance} in Appendix \ref{app:Figures}). This gave us an inherently more unstable initial condition, which offered a better test of our control system. Again, we saw the consistent pitch backward being exhibited by the drone.\\ After an exhaustive debugging procedure, including IMU re-calibration, adding YPR offsets, and re-positioning the IMU, we concluded that the problem lay in one of the ESCs being un-calibrated with respect to the other three and as such never provided the balanced thrust required to maintain stable flight. After this was rectified we continued with the balance testing and soon established some viable PID gains for Pitch and Roll.
+We were able to perform tuning of the Pitch and Roll PID values but were unable to tune the Yaw control before the final hand-in. A fully tuned, independent flight test has not yet been performed on the UAV.
+    
 \subsection{Power Distribution}
- Initially to verify the correct operation of the PDB I used a bench DMM to check for continuity errors, then powered the ESCs without motors connected. The 5V regulator was then added and again tested using the above procedure, with the Arduino and Il Matto boards instead of the ESCs. Next, I performed a full power distribution test with all components connected, using a current limited (500mA) PSU to protect from unexpected current surges, but without driving the motors. Following these successful tests I powered all the components including the motors simultaneously, again with a current limit (5A). Finally a full PDB test with the LiPo battery was performed which was successful on the first test, as expected.
+ Initially to verify the correct operation of the PDB I used a bench DMM to check for continuity errors, then powered the ESCs without motors connected. The 5V regulator was then added and again tested using the above procedure, with the Arduino and Il Matto boards instead of the ESCs. Next, I performed a full power distribution test with all components connected, using a current limited (500mA) PSU to protect from unexpected current surges, but without driving the motors. Following these successful tests I powered all the components including the motors simultaneously, again with a current limit (5A). Finally a full PDB test with the LiPo battery was performed which was successful on the first test and remained operational throughout the testing stage.
+ 
 \subsection{IR Proximity Sensor}
-To calibrate the IR sensor very roughly I placed a planar surface at 75cm from the sensor, measured the ADC value at that distance, then scaled the conversion to the desired value (75cm). This gave us a reasonably good approximation of the current altitude, if the drone was below 1m in altitude. To improve our altitude measuring capabilities we could have included an ultra-sound module but our research showed that the very noisy environment created by the motors severely affects the the accuracy of the ultrasound modules. Another option could be using a barometric sensor to detect altitude change due to changing air pressure. 
+To calibrate the IR sensor I placed a planar surface at 75cm from the sensor, measured the ADC value at that distance, then scaled the conversion to the desired value (75cm) to find the value of $k_{IR}$. This gave us a reasonably good approximation of the current altitude, if the drone was in operating range. To improve our altitude measuring capabilities we could have included an ultra-sound module but our research showed that the very noisy environment created by the motors severely affects the the accuracy of the ultrasound modules. Another option could be using a barometric sensor to detect altitude change due to changing air pressure. 
 
 \subsection{Battery Voltage Measurement}
-Insert something about BVM
+To test the operation of the Battery Voltage Measurement on the final design, we integrated my test code into the existing drone communications code (drone\_serial\_comms.c line 180 and test5\_basestation\_comms.c line 219). The telemetry code was already available to me so we could insert my code easily. We tested the measurements at range of voltages from 11.1-12.6V and all these results fell into the desired range of $\pm$0.1V
 
 \section{Management and Team Working}
 \subsection{Approach to Management}
@@ -203,7 +220,10 @@ Appendix including all figures used in this report
 \setboolean{@twoside}{false}
 \begin{figure}[!h]
     \includepdf[pages=-,pagecommand={},width=\textwidth]{D4-Ganges_Control_flow_diagram.pdf}
-    \caption{Diagram showing the flow of control in the Control Micro-controller}
+    \caption{Control Flow Diagram}
+    \medskip
+    \small
+    Diagram showing the flow of control in the Control Micro-controller
     \label{fig:Control Flow}
 \end{figure}
 \newpage
@@ -213,7 +233,7 @@ Appendix including all figures used in this report
     \medskip
     \small
     \centering
-    With 13-byte packet. Time taken = 13.4ms.\\ Channel 1: Transmission request from Leonardo, Channel 2: UART Transmission from Il Matto, Channel 3: Ignore 
+    With 13-byte packet. Time taken = 13.4ms. "t00y00p00r00$\backslash$n"\\ Channel 1: Transmission request from Leonardo, Channel 2: UART Transmission from Il Matto, Channel 3: Ignore 
     \label{fig:9600 Baud}
 \end{figure}
 
@@ -223,7 +243,7 @@ Appendix including all figures used in this report
     \medskip
     \small
     \centering
-    With 17-byte packet. Time taken = 2.95ms.\\Channel 1: Transmission request from Leonardo, Channel 2: UART Transmission from Il Matto
+    With 17-byte packet. Time taken = 2.95ms. "t512y554p747r350$\backslash$n" \\Channel 1: Transmission request from Leonardo, Channel 2: UART Transmission from Il Matto
     \label{fig:57600 Baud}
 \end{figure}
 \newpage
