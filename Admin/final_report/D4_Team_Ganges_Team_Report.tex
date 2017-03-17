@@ -22,11 +22,34 @@
 \usepackage{wrapfig}
 \usepackage{microtype}
 \usepackage[T1]{fontenc}
+\usepackage{lmodern}
 \usepackage{array}
 \usepackage[utf8]{inputenc}
 \usepackage[margin=1in]{geometry}
 \usepackage{caption} % for sub-figure
 \usepackage{subcaption}% for sub-figure
+\usepackage{placeins}
+
+\usepackage{listings}
+\usepackage{color}
+\usepackage{pdfpages}
+\definecolor{mygray}{rgb}{0.4,0.4,0.4}
+
+\lstset{
+basicstyle=\footnotesize\sffamily\color{black},
+commentstyle=\color{mygray},
+frame=single,
+breaklines=true,% helps wrap huge lines in the code to fit onto the page
+numbers=left,
+numbersep=5pt,
+numberstyle=\tiny\color{mygray},
+keywordstyle=\color{blue},
+showspaces=false,
+showstringspaces=false,
+stringstyle=\color{cyan},
+tabsize=1
+}
+
 \renewcommand{\baselinestretch}{1.2} % line spacing
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -44,14 +67,11 @@ Ben Rowlinson, Lawrence Gray, Joel Trickey,\\ Joseph Hindmarsh and Mohammed Ibra
 \tableofcontents
 \newpage
 
-\listoffigures
-\newpage
-
 \section{Challenge Solution Statement}
 \subsection{Challenges}
-Same-day parcel delivery is a difficult proposition for many businesses, even those that restrict the service to large cities. The current solution of couriers using vans and motorcycles is inefficient due to congestion in built up areas, especially if the deliveries are spread out across a delivery district. To improve efficiency of small parcel deliveries, Team Ganges proudly presents its Project Itchen prototype – a UAV designed from the ground up for cargo transport. By opening the skies to Itchen for its deliveries, same-day delivery will no longer be restricted to cities and become a reality for customers across the country.\\ 
-Many commercially available UAVs exist on the market already, however the key thing holding them back from adoption in the deliveries market is the question of cargo. The most common type of payload-carrying drone is a camera drone, which has the payload securely affixed to the drone chassis. This is excellent during flight, but is less optimal for package delivery, as the recipient would have to approach the live UAV to remove the package. To solve this challenge, Team Ganges will provide a mechanism to drop-off the package once it has reached its destination and is at a low enough altitude. This will reduce the turn-around time of the drone and allow it to drop-off the package when the recipient is not present.\\
-The solution concept also addresses the problem of interference with other transmitters, through avoiding the use of a commercial transmitter in favour of a proprietary solution. This allows for the communications between the UAV and the Base Station to be encrypted, and the UAV identify true instructions from the base station over interference from other users and devices.\\
+Same-day parcel delivery is a difficult proposition for many businesses, with it currently only being available in selected cities. This is due to needing a high enough concentration of orders to make sending couriers worthwhile for the company, which cannot be achieved reliably in less densely populated areas. To improve efficiency of small parcel deliveries, Team Ganges proudly presents its Project Itchen prototype – a UAV designed from the ground up for cargo transport. By opening the skies to Itchen for its deliveries, same-day delivery will no longer be restricted to cities and become a reality for customers across the country.//
+Many commercially available UAVs exist on the market already, however the key thing holding them back from adoption in the deliveries market is the question of cargo. The most common type of payload-carrying drone is a camera drone, which has the payload securely affixed to the drone chassis. This is excellent during flight, but is less optimal for package delivery, as the recipient would have to approach the live UAV to remove the package. To solve this challenge, Team Ganges will provide a mechanism to drop-off the package once it has reached its destination and is at a low enough altitude. This will reduce the turn-around time of the drone and allow it to drop-off the package when the recipient is not present.//
+The solution concept also addresses the problem of interference with other transmitters, through avoiding the use of a commercial transmitter in favour of a proprietary solution. This allows for the communications between the UAV and the Base Station to be encrypted, and the UAV identify true instructions from the base station over interference from other users and devices.//
 \newpage
 \subsection{Specification}
 \begin{itemize}
@@ -125,7 +145,7 @@ Our controller also matches the aesthetic style of the drone. The switches are p
 The coat-hanger wire propeller guards are minimalistic but robust enough to deal with low velocity impacts.
 As this is still a prototype there are flying wires used but we used ribbon cable wherever possible to minimise crossed wires.
 \subsection{Cost}
-\#\#\#DO SOMETHING HERE\#\#\#
+See section 4.1.
 \subsection{Reliability}
 The UAV powers up correctly and consistently on connection to the LiPo.
 The Communications system was heavily tested to ensure we could conduct test flights safely.
@@ -193,7 +213,7 @@ There are other costs that also need to be considered, the first being person-ho
 \subsection{Conformance Marking and Manufacturing Set-Up}
 The extra costs that are involved with manufacturing a product are getting a CE mark at \textsterling2,000 and the manufacturing setup costs at \textsterling100,000.\\
 \subsection{Expected Profits}
-Finally, calculations were made to find out how many quad-copters needed to be sold in order to turn a profit. If they are sold at \textsterling300 which would be a profit margin of 46.7\% at a 100\% yield we would have to sell 1105 units to break even. In reality you will never get a 100\% yield so at a worst case of 90\% manufacturing yield we would need to sell 1228 units.\\
+Finally, calculations were made to find out how many quad-copters needed to be sold in order to turn a profit. If they are sold at \textsterling300 which would be a profit margin of 46.7\% at a 100\% yield we would have to sell 1105 units to break even. In reality you will never get a 100\% yield so at a worst case of 90\% manufacturing yield we would need to sell 1228 units. These values are not too unreasonable as for a delivery company as, in order to get a large coverage of a country a company would need at least 2000 quad-copters which would be a very good start in order to turn a profit.\\ 
 
 \newpage
 \section{Final Product}
@@ -231,7 +251,7 @@ Finally, calculations were made to find out how many quad-copters needed to be s
     \caption{Table comparing the Specification to the Achieved results}
   \end{table}
 \end{center}
-
+\FloatBarrier
 
 \newpage
 \subsection{Working of the Final Product}
@@ -252,22 +272,248 @@ The serial cable in the remote controller is used to view telemetry of the batte
 \appendix
 \newpage
 \section{Design Completion Form}
-
+\begin{figure}[!htp]
+\centering
+\includegraphics[height=0.9\textwidth,angle=90]{Design_Completion1.pdf}
+\end{figure}
+\FloatBarrier
+\begin{figure}[!htp]
+\centering
+\includegraphics[height=0.9\textwidth,angle=-90]{Design_Completion2.pdf}
+\end{figure}
+\FloatBarrier
 \newpage
 \section{Project Completion Form}
+--------------\\
+Cost estimates\\
+--------------\\
+The final estimated costings are outlined in section 4 of the main team report.\\
+
+Our estimate at the beginning of the project of the total development and manufacturing costs was £135,143.55. The actual total came to £154,679.32. This £19,535.77 difference is largely due to the man hours being significantly more than expected (700 vs 440). Development and testing was a more time-consuming task than we thought initially.\\
+
+--------------\\
+Design Changes\\
+--------------\\
+The design remained largely unchanged from that which was laid out in the Project Proposal Form. A couple of features, SD card logging and remote PID tuning, could not be implemented fully due to time-constraints from more critical systems.\\
+
+---------------------------------\\
+Discrepancy in Project activities\\
+---------------------------------\\
+Development and testing of the communications took longer than anticipated and as such the tesing of the RFM12B-S2 modules was also done on Monday. Encryption was a less time-critical feature and testing of it was done after the two-way communications was comprehensively tested.\\
+
+Battery voltage telemetry and operation of PDB were not completed.\\
+
+The rest of our activities were undertaken just as planned.\\
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[height=0.9\textwidth,angle=90]{PCF1.pdf}
+\end{figure}
+\FloatBarrier
+\begin{figure}[!htp]
+\centering
+\includegraphics[height=0.9\textwidth,angle=-90]{PCF2.pdf}
+\end{figure}
+\FloatBarrier
 
 \newpage
 \section{Circuit Diagrams}
-
+\begin{figure}[!htp]
+\centering
+\includegraphics[height=0.9\textwidth,angle=90]{schematic.pdf}
+\end{figure}
+\FloatBarrier
+\begin{figure}[!htp]
+\centering
+\includegraphics[height=0.9\textwidth,angle=90]{BlockDiagram.pdf}
+\end{figure}
+\FloatBarrier
 \newpage
 \section{Software Listings}
-
+\subsection{PID\_values\_test\_2.c}
+ \lstinputlisting[language=C++]{../../Comms/ControllerInterface/PID_values_test_2.c}
+\subsection{PID\_values\_test\_3.c}
+ \lstinputlisting[language=C++]{../../Comms/ControllerInterface/PID_values_test_3.c}
+\subsection{test2\_basestation\_comms.c}
+ \lstinputlisting[language=C++]{../../Comms/Combined_interface_comms/base/test2_basestation_comms.c}
+ \subsection{test3\_basestation\_comms.c}
+ \lstinputlisting[language=C++]{../../Comms/Combined_interface_comms/base/test3_basestation_comms.c}
+ \subsection{test5\_basestation\_comms.c}
+ \lstinputlisting[language=C++]{../../Comms/Combined_interface_comms/base/test5_basestation_comms.c}
+  \subsection{Uplink/drone\_comms.c}
+ \lstinputlisting[language=C++]{../../Comms/Uplink/drone/drone_comms.c}
+   \subsection{basestation\_comms.c}
+ \lstinputlisting[language=C++]{../../Comms/Uplink/base/Basestation_comms.c}
+   \subsection{encode\_test.c}
+ \lstinputlisting[language=C++]{ ../../Comms/Uplink/base/encode_test.c}
+   \subsection{comms.h}
+ \lstinputlisting[language=C++]{../../Comms/Combined_interface_comms/comms.h}
+   \subsection{Combined\_interface\_comms/drone\_comms.c}
+ \lstinputlisting[language=C++]{../../Comms/Combined_interface_comms/drone/drone_comms.c}
+   \subsection{test1\_drone\_comms.c}
+ \lstinputlisting[language=C++]{../../Comms/Combined_interface_comms/drone/test1_drone_comms.c}
+    \subsection{test2\_drone\_comms.c}
+ \lstinputlisting[language=C++]{../../Comms/Combined_interface_comms/drone/test2_drone_comms.c}
+    \subsection{test3\_drone\_comms.c}
+ \lstinputlisting[language=C++]{../../Comms/Combined_interface_comms/drone/test3_drone_comms.c}
+ \subsection{drone\_serial\_comms.c}
+ \lstinputlisting[language=C++]{../../Comms/Combined_interface_comms/Golden/drone_serial_comms.c}
+\subsection{ESCPID/AccelGyro/AccelGyro.ino}
+\lstinputlisting[language=C++]{../../ControlIntegration/ESCPID/AccelGyro/AccelGyro.ino}
+\subsection{ESCPID/AccelGyro/Definitions.h}
+\lstinputlisting[language=C++]{../../ControlIntegration/ESCPID/AccelGyro/Definitions.h}
+\subsection{ESCPID/AccelGyro/PWM.cpp}
+\lstinputlisting[language=C++]{../../ControlIntegration/ESCPID/AccelGyro/PWM.cpp}
+\subsection{ESCPID/AccelGyro\_TEST/utils.cpp}
+\lstinputlisting[language=C++]{../../ControlIntegration/ESCPID/AccelGyro/utils.cpp}
+\subsection{ESCPID\_TEST/AccelGyro/AccelGyro.ino}
+\lstinputlisting[language=C++]{../../ControlIntegration/ESCPID_TEST/AccelGyro/AccelGyro.ino}
+\subsection{ServoPID/AccelGyro/AccelGyro.ino}
+\lstinputlisting[language=C++]{../../ControlIntegration/ServoPID/AccelGyro/AccelGyro.ino}
+\subsection{leonardoPWM.ino}
+\lstinputlisting[language=C++]{../../Il-MattoExampleCode/leonardoPWM/leonardoPWM.ino}
+\subsection{leonardoPWM\_input.ino}
+\lstinputlisting[language=C++]{../../Il-MattoExampleCode/leonardoPWM_input/leonardoPWM_input.ino}
+   \subsection{i2c-lib-test/main.c}
+ \lstinputlisting[language=C++]{"../../Joe/i2c lib test/main.c"}
+   \subsection{onboard\_serial\_test\_ard\_3.ino}
+ \lstinputlisting[language=C++]{../../Onboard_serial/onboard_serial_test_ard_3/onboard_serial_test_ard_3.ino} 
+   \subsection{onboard\_serial\_test\_final.c}
+ \lstinputlisting[language=C++]{../../Onboard_serial/onboard_serial_test_final.c} 
+    \subsection{SD\_card\_test\_main.cpp}
+ \lstinputlisting[language=C++]{../../Joe/SD/SD_card_test_main.cpp}
+    \subsection{apps.h}
+ \lstinputlisting[language=C++]{../../Joe/SD/apps.h}  
 \newpage
 \section{Project Meeting Agendas and Minutes}
+25/02/17 15:00-15:35 All present (Joe, Ben, Mohammed, Lawrence, Joel)\\
+Agenda\\
+-----------\\
+Discuss and assign subsystem roles.\\
 
+Assign admin roles.\\
+
+Discuss:
+	- For the human controller will we use the Spektrum or our own?\\
+	- Chassis - Acrylic, aluminium or MDF?\\
+	- Extra features?\\
+Plan for Monday:\\
+	- 150 word abstract\\
+	- High level block diagram\\
+
+Minutes\\
+---------\\
+Roles:\\
+	- Communications:	Ground to air - Joel\\
+				Air to ground - Mohammed\\
+				Controller - Mohammed\\
+	- Control:		Gyro/accelerometer interface - Joe\\
+				PID Controller - Lawrence\\
+				IR sensors - Ben\\
+	- Chassis		Overall design - Joel \& Lawrence\\
+				Cargo acquisition mechanism - Joe\\
+	- Power Management - Ben\\
+	- Integration - Ben\\
+	- File logging - Mohammed\\
+	- Soldering - Mohammed\\
+
+Admin roles:\\
+	- Leader/Administrator - Ben\\
+	- Treasurer - Lawrence\\
+	- Communications officer - Joe\\
+	- Secretary - Joel\\
+	- Documenter - Mohammed\\
+
+Decided to:\\
+	- Use our own controller.\\
+	- Laser-cut acrylic chassis.\\
+	- Extra features are an IR sensor for measuring height, downlink communications, remotely tunable PID and security on the communications.\\
+	- Use 3 Il Mattos\\
+
+26/02/17 18:15-18:45 All present (Joe, Ben, Mohammed, Lawrence, Joel)\\
+Agenda\\
+-----------\\
+What needs discussing with Tim Forcer?\\
+What do we need to bring?\\
+Does the abstract need editing?\\
+Is everyone agreed on the schematic diagram?\\
+Use Github?\\
+How are people getting on?\\
+
+Minutes\\
+---------\\
+Decided the specification part of the abstract could be skimmed down.\\
+Agreed that the schematic diagram is complete.\\
+Everyone happy to use Github.\\
+Decided to use 2 transceivers on each end (i.e. two slaves connected to both Il Mattos). Extra slave of the SD card on the drone.\\
+
+27/02/17 10:10-10:25 All present (Joe, Ben, Mohammed, Lawrence, Joel)\\
+Agenda\\
+-----------\\
+What needs discussing at the clinic?\\
+Does the abstract need more editing?\\
+
+Minutes\\
+---------\\
+To dicuss at the clinic:\\
+	- Simulation - what are they expecting?\\
+	- Control\\
+	- Thoughts on components\\
+	- Ask about marking - is more hardware design required?\\
+	- Is the frequency band of the wireless transceivers wide enough?\\
+Request different frequency bands for the transceivers on the requisition form.\\
+Abstract size needs reducing further\\
+
+3/03/17 11:38-11:58 All present (Joe, Ben, Mohammed, Lawrence, Joel) with Rob Maunder\\
+Agenda\\
+-----------\\
+Run through the project proposal form\\
+Any other advice from Rob?\\
+
+Minutes\\
+---------\\
+Explained the block diagram:\\
+	- Focus on integration of blocks\\
+	- Explained our roles in terms of integration\\
+	- Power for the groun Il Matto needs to be considered\\
+	- Look at power distribution on the drone\\
+Ensure we have distinct roles.\\
+Risks:\\
+	- Have we considered if the Leonardo is powerful enough?\\
+	- Do we have enough knowledge of PID? We have found code that handles it.\\
+Design completion milestones:\\
+	- e.g. for comms: 1. SPI interface 2. SPI transmitting, 3. SPI receiving 4. two way\\
+	- Rough guideline of one milestone per interface\\
+	- Milestones for different paths through the block diagram\\
+
+9/03/17 13:02-13:19 All present (Joe, Ben, Mohammed, Lawrence, Joel)\\
+Agenda\\
+-----------\\
+Plan for the rest of the construction time\\
+
+Minutes\\
+---------\\
+Work on critical path at the moment - add on extra features such as telemetry later on.\\
+For the communications add more efficient comms scheme first then add the code to change k values remotely.\\
+	- K values vary from 0-10.23.\\
+Chassis is glued - can work on any other stuff that needs doing (e.g. servo mechanism).\\
+Finalise extra features by Friday.\\
+Checked that we will all have enough to write on the report.\\
+Get the ESCs calibrated and get the critical path done today.\\
+
+10/03/17 17:49-18:01 All present (Joe, Ben, Mohammed, Lawrence, Joel)\\
+Agenda\\
+-----------\\
+Plan for the last weekend of construction\\
+
+Minutes\\
+---------\\
+Mohammed and Joe are away - give each other our numbers to allow quick contact if required.\\
+Joel, Lawrence and Ben will do the PID tuning over the weekend.\\
+Bring a 12v power supply with a max current of 4/5A and a positive centre if possible. \\
 \newpage
 \section{Images}
-\begin{figure}[ht]
+\begin{figure}[!htp]
 \caption{Final product images}
     \begin{subfigure}{\textwidth}
     \includegraphics[width=0.9\linewidth]{remote.jpg} 
@@ -282,5 +528,5 @@ The serial cable in the remote controller is used to view telemetry of the batte
     
     \label{fig:my_label}
 \end{figure}
-  
+ \FloatBarrier
 \end{document}
