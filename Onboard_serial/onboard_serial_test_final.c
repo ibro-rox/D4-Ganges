@@ -65,7 +65,7 @@ void send_packet(struct euler_angles *input)
 {
 	if(is_valid_packet(input))
 	{
-		printf("y");//printf("t%dy%dp%dr%d\n", input->throttle, input->yaw, input->pitch, input->roll); //
+		printf("t%dy%dp%dr%d\n", input->throttle, input->yaw, input->pitch, input->roll); //
 	}
 	
 	else 
