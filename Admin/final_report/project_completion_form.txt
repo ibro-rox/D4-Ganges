@@ -3,7 +3,9 @@ Appendix E
 --------------
 Cost estimates
 --------------
-The estimated costings are outlined in section 4 of the main team report.
+The final estimated costings are outlined in section 4 of the main team report.
+
+Our estimate at the beginning of the project of the total development and manufacturing costs was £135,143.55. The actual total came to £154,679.32. This £19,535.77 difference is largely due to the man hours being significantly more than expected (700 vs 440). Development and testing was a more time-consuming task than we thought initially.
 
 --------------
 Design Changes
@@ -14,3 +16,7 @@ The design remained largely unchanged from that which was laid out in the Projec
 Discrepancy in Project activities
 ---------------------------------
 Development and testing of the communications took longer than anticipated and as such the tesing of the RFM12B-S2 modules was also done on Monday. Encryption was a less time-critical feature and testing of it was done after the two-way communications was comprehensively tested.
+
+
+
+
