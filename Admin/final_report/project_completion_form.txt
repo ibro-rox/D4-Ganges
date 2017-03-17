@@ -1,0 +1,16 @@
+Appendix E
+
+--------------
+Cost estimates
+--------------
+The estimated costings are outlined in section 4 of the main team report.
+
+--------------
+Design Changes
+--------------
+The design remained largely unchanged from that which was laid out in the Project Proposal Form. A couple of features, SD card logging and remote PID tuning, could not be implemented fully due to time-constraints from more critical systems.
+
+---------------------------------
+Discrepancy in Project activities
+---------------------------------
+Development and testing of the communications took longer than anticipated and as such the tesing of the RFM12B-S2 modules was also done on Monday. Encryption was a less time-critical feature and testing of it was done after the two-way communications was comprehensively tested.
