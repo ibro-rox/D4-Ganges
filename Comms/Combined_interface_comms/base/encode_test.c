@@ -38,41 +38,25 @@ void send_string(char *str)
 	for (i = 0; str[i]; i++) uart_transmit(str[i]);
 }//***************void test_encode_decode()
 
-void test_encode()
+void test_encode(uint16_t totalpacket)
 {
 	// Encode
 	send_string("Encoding data\n");
-	// 998 = 11 1110 0110
-	uint16_t ADCoutput;
-	ADCoutput = 998;
-	// 1110 0110
-	uint8_t lsb8;
-	lsb8 = ADCoutput;
-	// 11 0000 0000
-	uint16_t msb2;
-	msb2 = ADCoutput - lsb8;
-	// 00 0000 0011
-	msb2 = msb2 >> 8;
-	// 0000 1011
-	uint8_t packettype;
-	packettype = (2 << 2) + msb2;
 
-	// Sent data: [00001011] [1110 0110]  
+	uint8_t data, type;
+	data = totalpacket;
+	type = (totalpacket >> 8);
 
 	// Decode
 	send_string("Decoding data\n");
-	// 0000 1011 1110 0110
-	uint16_t receiveddata;
-	receiveddata = (packettype << 8) + lsb8;
-	// 0000 0011 1110 0110
-	uint16_t decodeddata;
-	decodeddata = receiveddata & (uint16_t)1023;
-	uint8_t decodedpackettype;
-	decodedpackettype = (packettype >> 2);
 
-	char sendData[30];
-	sprintf(sendData, "Decoded data: %d\n", decodeddata);
-	send_string(sendData);
+	uint16_t decodeddata, receivedtotalpacket;
+	receivedtotalpacket = data + (type << 8);
+
+	decodeddata = receivedtotalpacket & (uint16_t)1023;
+	decodedpackettype = (receivedtotalpacket >> 10);
+
+	return (decodedpackettype != packettype && decodeddata != ADCoutput) ? 1 : 0;
 }
 
 uint16_t test_decrypt(uint16_t packet)
@@ -152,4 +136,17 @@ int main(void)
 	}
 
 	while (1) {};
+
+	// Test encode
+	/*uint16_t testpacket;
+	for (testpacket = 0; testpacket < 65535; testpacket++)
+	{
+		if (test_encode(testpacket) == 0)
+		{
+			send_string("Error!");
+			break;
+		}
+	}
+
+	while (1) {};*/
 }

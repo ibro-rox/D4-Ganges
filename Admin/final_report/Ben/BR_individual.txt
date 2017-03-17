@@ -16,11 +16,11 @@ The PID gains of the controller for all three axes of rotation (Yaw, Pitch, Roll
 
 2.3) Power Distribution
 
-Every component on-board must be correctly powered from a single LiPo battery. The controller must be powered by a USB supply from a Laptop.
+Every component on-board must be correctly powered from a single LiPo battery, via a Power Distribution Board. The controller must be powered by a USB supply from a Laptop.
 
 2.4) IR Sensor
 
-The IR Sensor must accurately measure the current altitude within its operating range (15 to 80cm) to aid the pilot in landing and cargo acquisition manoeuvres.
+The IR Sensor must accurately measure the current altitude within its operating range (15 to 100cm) to aid the pilot in landing and cargo acquisition manoeuvres.
 
 
 3) Design and Simulation
@@ -30,17 +30,17 @@ The IR Sensor must accurately measure the current altitude within its operating 
 
 The main point of intersection between the communications and control sub-systems, is the UART interface between the on-board Il Matto and Arduino Leonardo boards. This interface is difficult to achieve without causing each of the sub-systems to become too laggy to effectively control the UAV. In this set-up we took the control system to be more critical to the safe operation of the UAV. As such, the Leonardo board was made the 'Master' in this interface so it could request new TYPR (Throttle Yaw Pitch Roll) values when desired.
 
-Our packet format was dictated by the fact that the serial library chosen could only transmit 8-bit bytes. To simplify the process we constructed a packet format of 
-
  The Il Matto would interrupt, set a flag, and send the TYPR packet at the next available opportunity. This has to happen 100 times per second to match the IMU data rate. This process is shown in the control flow diagram.
 
 *** INSERT CONTROL FLOW DIAGRAM ***
 
-The protocol could not have packets which exceed 3ms in length. To achieve this we initially tested with a baud rate of 9600, however we found this to be too slow to transmit our 17 byte packets. ***DOUBLE CHECK THIS!*** 
+Our packet format was dictated by the fact that the serial library chosen could only transmit 8-bit bytes. To simplify the receiving procedure we constructed a 17-byte packet format of "txxxyxxxpxxxrxxx\n". The chars 't', 'y', 'p' and 'r' are identifiers. 'x' is a char 0-9 with the 10-bit ADC value from the X-Y potentiometers being represented by "xxx". The packet is closed by a newline character '\n'. The Arduino then leaves the receiving function. As an aside, the ADC values only range from 256 to 768 therefore only "xxx" is needed to represent the full range of ADC values. This by no means an optimal solution but significantly eases the receiving procedure, as the string can be read in 1 char at time and the values simply assigned to the correct TYPR value. A similar procedure could be used to update PID gain values, but we were unable to implement this feature fully.  
+
+The protocol could not have packets which exceed 3ms in time. To achieve this we initially tested with a baud rate of 9600, however we found this to be too slow to transmit the 17 byte packets (One packet took ~17.71ms @ 9600). Switching to a baud rate of 57600 we were able to transmit a packet in 2.95ms. We attempted faster baud rates but the data was more likely to be corrupted so 57600 was settled on.  
 
 3.2) PID Tuning 
 
-In order to gauge how to tune our PID controller, we researched PID gain values for similar Quad-copter configurations, as well as the methods for fine tuning the control. Since the PID gains vary considerably from one drone to the next, these researched values were used as initial 'ballpark' values which we would later refine during the tuning stage. We wanted to implement a feature which would allow us to update PID gains 'on the fly' but we were not able to get this to work efficiently.
+In order to gauge how to tune our PID controller, we researched PID gain values for similar Quad-copter configurations, as well as the methods for fine tuning the control. Since the PID gains vary considerably from one drone to the next, these researched values were used as initial 'ballpark' values which we would later refine during the tuning stage. We wanted to implement a feature which would allow us to update PID gains 'on the fly' but we were not able to get this to function correctly.
 
 3.3) Power Distribution
 
@@ -77,13 +77,15 @@ For power distribution we wanted to use a single 11.1V 3s LiPo battery to power 
 
 As team leader, my approach to managing the team was to designate specific roles to the team as early on as possible, whilst ensuring everyone was content with their role and place in the team. Built into this strategy was a sense of redundancy, in that no one was solely responsible for a particular sub-system. This meant that if a team member was away from meetings or working sessions, we would still be able to discuss problems reasonably well. Fortunately the entire team was very responsive to this and were consistent in attending meetings and lab time. We worked cohesively as a single unit throughout the duration of the project with no personal conflicts or arguing. The only disagreements were due to different approaches to the same engineering problem, which lent itself to a very healthy working environment. I felt it was important that the team met and worked together face-to-face at every opportunity, but also allowed for a period of time away from the project. 
 
-5.2) Management Roles
+5.2) Designating Technical Roles
 
-I designated the team to complete various administrative roles within the team which would continue throughout the project. These included Treasurer(L Gray), Minutes(J Trickey), Documentation/Photography(M Ibrahim) and external communications(J Hindmarsh). Each of the team members had these auxiliary roles to fulfil. 
+After a couple of days of initial research into the project, it became clear who was suitable for certain roles within the team. I partitioned the team such that one pair was responsible for communications (J Trickey and M Ibrahim) and another pair (L Gray and J Hindmarsh) were responsible for control. I worked closely with both pairs throughout the project, with them consulting me to ensure consistency in the design and keeping me up to date with their progress. This included resolving any issues quickly and efficiently. This meant when we came to integrate modules together I already had a firm grasp of the entire system functionality, easing the integration process. 
 
-5.3) Designating Technical Roles
+5.3) Management Roles
 
-After a couple of days of initial research into the project, it became clear who was suitable for certain roles within the team. I partitioned the team such that one pair was responsible for communications (J Trickey and M Ibrahim) and another pair (L Gray and J Hindmarsh) were responsible for control. I worked closely with both pairs throughout the project, with them consulting me to ensure consistency in the design and keeping me up to date with their progress. This included resolving any issues quickly and efficiently. This meant when we came to integrate modules together I already had a firm grasp of the entire system functionality, easing the integration process.
+I designated the team to complete various administrative roles within the team which would continue throughout the project. These included Treasurer(L Gray), Minutes(J Trickey), Documentation/Photography(M Ibrahim) and external communications(J Hindmarsh). Each of the team members had these auxiliary roles to fulfil.
+
+
 
 5.4) Project Planning
 
@@ -93,14 +95,22 @@ With regard to the planning process we identified this as the critical path for 
 
 We drew up a fairly broad risk assessment, based on our intensive research early on in the project. Fortunately, very little went wrong in our approach, that we didn't expect to go wrong. The chassis did shatter a number of times during flight and tethered tests, but we always ensured we were able to bring the drone back to flying condition or left enough time to manufacture a new frame. Any expected long term absences (more than 24hrs) were declared to me by the team in the first few days of the project so we could work around the team members' schedule without compromising the progress of the project.
 
-5.6) Reflections on Management
 
-In conclusion, with regard to my managerial approach, I would say that it was a true pleasure to manage such a dedicated, motivated, and intelligent team. We always worked together as a unit. They made my experience on the project very enjoyable. 
 
 
 
 
 6) Evaluation and Reflection
+
+6.1) On My Contribution	
+
+6.2) On the Team's Progress
+
+6.3) On Management
+
+In conclusion, with regard to my managerial approach, I would say that it was a true pleasure to manage such a dedicated, motivated, and intelligent team. We always worked together as a unit. They made my experience on the project very enjoyable. 
+
+6.4) Overall
 
 Overall, I am pleased with how we developed the project. Although we were not able to sustain a stable flight in the testing phase, the process we went through to get to that stage was challenging and fulfilling. 
 Retrospectively, we should have re-evaluated our approach to flight testing procedure, and approached it in a more structured and thoughtful way.
