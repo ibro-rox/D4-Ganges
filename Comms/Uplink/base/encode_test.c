@@ -46,41 +46,35 @@ void send_string(char *str)
 //
 
 // Joel's encoding and encryption test
-void test_encode()
+uint8_t test_encode(uint16_t totalpacket)
 {
 	// Encode
-	send_string("Encoding data\n");
-	// 998 = 11 1110 0110
-	uint16_t ADCoutput;
-	ADCoutput = 998;
-	// 1110 0110
-	uint8_t lsb8;
-	lsb8 = ADCoutput;
-	// 11 0000 0000
-	uint16_t msb2;
-	msb2 = ADCoutput - lsb8;
-	// 00 0000 0011
-	msb2 = msb2 >> 8;
-	// 0000 1011
-	uint8_t packettype;
-	packettype = (2 << 2) + msb2;
+	//send_string("Encoding data\n");
 
-	// Sent data: packettype = [00001011] lsb8 = [1110 0110]  
+	uint8_t encodeddata, encodedpackettype;
+	encodeddata = totalpacket;
+	encodedpackettype = (totalpacket >> 8);
+
+	uint16_t totalencodedpacket;
+	totalencodedpacket = encodeddata + (encodedpackettype << 8);
 
 	// Decode
-	send_string("Decoding data\n");
-	// 0000 1011 1110 0110
-	uint16_t receiveddata;
-	receiveddata = (packettype << 8) + lsb8;
-	// 0000 0011 1110 0110
-	uint16_t decodeddata;
-	decodeddata = receiveddata & (uint16_t)1023;
-	uint8_t decodedpackettype;
-	decodedpackettype = (packettype >> 2);
+	//send_string("Decoding data\n");
 
-	char sendData[30];
-	sprintf(sendData, "Decoded data: %d\n", decodeddata);
-	send_string(sendData);
+	uint16_t decodeddata;
+	uint8_t decodedpackettype;
+
+	decodeddata = totalencodedpacket & (uint16_t)1023;
+	decodedpackettype = (totalencodedpacket >> DATA_BIT_SIZE);
+
+	uint16_t totaldecodedpacket;
+	totaldecodedpacket = encodeddata + (decodedpackettype << 8);
+
+	//char sendData[30];
+	//sprintf(sendData, "Decoded data: %d\n", decodeddata);
+	//send_string(sendData);
+
+	return (encodeddata == decodeddata && encodedpackettype == decodedpackettype) ? 1 : 0;
 }
 
 // Original encryption/decryption code
@@ -229,4 +223,23 @@ int main(void)
 	}
 
 	while (1) {};
+
+	// Test encoding
+	/*
+	for (testpacket = 0; testpacket < 65536; testpacket++)
+	{
+		if (test_encode(testpacket) == 0)
+		{
+			sprintf(ch, "Error encoding %u", testpacket);
+			send_string(ch);
+			break;
+		}
+		else
+		{
+			sprintf(ch, "\n\rSuccessfully encoded and decoded %u", testpacket);
+			send_string(ch);
+		}
+	}
+
+	while (1) {};*/
 }
